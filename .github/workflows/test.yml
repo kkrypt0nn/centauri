@@ -18,6 +18,19 @@ jobs:
         goos: [ linux, windows, darwin ]
         goarch: [ "386", amd64, arm64 ]
         exclude:
+          - os: { fullName: ubuntu-latest }
+            goos: darwin
+          - os: { fullName: ubuntu-latest }
+            goos: windows
+          - os: { fullName: windows-latest }
+            goos: linux
+          - os: { fullName: windows-latest }
+            goos: darwin
+          - os: { fullName: macos-latest }
+            goos: linux
+          - os: { fullName: macos-latest }
+            goos: windows
+
           # Not a valid combination
           - goarch: "386"
             goos: darwin
