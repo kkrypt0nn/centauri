@@ -9,8 +9,8 @@ import (
 	"net/http"
 )
 
-// GetSelfUser returns the current discord.User
-func (c *RestClient) GetSelfUser() (*discord.User, error) {
+// GetCurrentUser returns the current discord.User
+func (c *RestClient) GetCurrentUser() (*discord.User, error) {
 	requestEndpoint := RestEndpoint + "users/@me"
 	if c.Debug {
 		c.Logger.Debug(fmt.Sprintf("GET %s", requestEndpoint))
@@ -45,7 +45,7 @@ func (c *RestClient) GetSelfUser() (*discord.User, error) {
 	return user, err
 }
 
-// GetCurrentUser is an alias of GetSelfUser and returns the current discord.User
-func (c *RestClient) GetCurrentUser() (*discord.User, error) {
-	return c.GetSelfUser()
+// GetSelfUser is an alias of GetCurrentUser and returns the current discord.User
+func (c *RestClient) GetSelfUser() (*discord.User, error) {
+	return c.GetCurrentUser()
 }

@@ -8,7 +8,7 @@ import (
 func main() {
 	userClient := centauri.NewRestClient("USER_TOKEN", false)
 	userClient.Debug = true
-	user, err := userClient.GetSelfUser()
+	user, err := userClient.GetCurrentUser()
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -17,7 +17,7 @@ func main() {
 
 	botClient := centauri.NewRestClient("BOT_TOKEN", true)
 	botClient.Debug = true
-	bot, err := botClient.GetSelfUser()
+	bot, err := botClient.GetCurrentUser()
 	if err != nil {
 		fmt.Println(err)
 	} else {
