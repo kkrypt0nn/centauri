@@ -84,7 +84,8 @@ const (
 	EarlyNitroSupporter
 	// TeamPseudoUser represents that the User is a team (https://discord.com/developers/docs/topics/teams)
 	TeamPseudoUser
-	_
+	// InternalApplication is an internal flag only that represents a User that has requested partnership and/or verification for a server before [Undocumented]
+	InternalApplication
 	// System represents a Discord system account [Undocumented]
 	System
 	// HasUnreadUrgentMessages represents a User that has unreal messages from Discord [Undocumented]

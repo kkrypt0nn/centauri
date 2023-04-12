@@ -1,4 +1,4 @@
-package api
+package rest
 
 import (
 	"encoding/json"
@@ -9,9 +9,13 @@ import (
 	"net/http"
 )
 
+const (
+	UsersEndpoint = Endpoint + "users"
+)
+
 // GetCurrentUser returns the current discord.User
-func (c *RestClient) GetCurrentUser() (*discord.User, error) {
-	requestEndpoint := RestEndpoint + "users/@me"
+func (c *Client) GetCurrentUser() (*discord.User, error) {
+	requestEndpoint := UsersEndpoint + "/@me"
 	if c.Debug {
 		c.Logger.Debug(fmt.Sprintf("GET %s", requestEndpoint))
 	}
@@ -46,6 +50,6 @@ func (c *RestClient) GetCurrentUser() (*discord.User, error) {
 }
 
 // GetSelfUser is an alias of GetCurrentUser and returns the current discord.User
-func (c *RestClient) GetSelfUser() (*discord.User, error) {
+func (c *Client) GetSelfUser() (*discord.User, error) {
 	return c.GetCurrentUser()
 }

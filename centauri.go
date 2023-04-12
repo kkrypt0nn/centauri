@@ -1,7 +1,7 @@
 package centauri
 
 import (
-	"github.com/kkrypt0nn/centauri/api"
+	"github.com/kkrypt0nn/centauri/rest"
 	"github.com/kkrypt0nn/logger.go"
 	"net/http"
 	"time"
@@ -9,13 +9,13 @@ import (
 
 const VERSION = "0.0.1"
 
-// NewRestClient returns a new api.RestClient to make REST API calls only, may be a bot or a user token
-func NewRestClient(token string, isBot bool) *api.RestClient {
+// NewRestClient returns a new rest.Client to make REST API calls only, may be a bot or a user token
+func NewRestClient(token string, isBot bool) *rest.Client {
 	header := token
 	if isBot {
 		header = "Bot " + header
 	}
-	restClient := &api.RestClient{
+	restClient := &rest.Client{
 		HttpClient: &http.Client{
 			Timeout: 20 * time.Second,
 		},
