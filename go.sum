@@ -1,2 +1,4 @@
 github.com/kkrypt0nn/logger.go v1.3.0 h1:bQI7HRhCGnte+fBlV+9NdBzBiB5JkfFfDZZJxFChdCw=
 github.com/kkrypt0nn/logger.go v1.3.0/go.mod h1:xEbLJ+x3wGLIUTXv2TjxaY9wUdynVk4Nse9uuM/hqf0=
+github.com/kkrypt0nn/logger.go v1.4.0 h1:qUOu7HaEV1Fw9uVjr4CshAHnV1oQ0nuLkNyiBcOKmBA=
+github.com/kkrypt0nn/logger.go v1.4.0/go.mod h1:xEbLJ+x3wGLIUTXv2TjxaY9wUdynVk4Nse9uuM/hqf0=
