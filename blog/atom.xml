@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://centauri.krypton.ninja/blog</id>
+    <title>Centauri Blog</title>
+    <updated>2023-04-13T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://centauri.krypton.ninja/blog"/>
+    <subtitle>Centauri Blog</subtitle>
+    <icon>https://centauri.krypton.ninja/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Example]]></title>
+        <id>https://centauri.krypton.ninja/blog/example</id>
+        <link href="https://centauri.krypton.ninja/blog/example"/>
+        <updated>2023-04-13T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[This is an example blog post that has no content.]]></summary>
+        <content type="html"><![CDATA[<p>This is an example blog post that has no content.</p>]]></content>
+        <author>
+            <name>Krypton</name>
+            <uri>https://github.com/kkrypt0nn</uri>
+        </author>
+        <category label="example" term="example"/>
+    </entry>
+</feed>
