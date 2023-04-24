@@ -42,4 +42,4 @@ Start contributing by first [opening a new issue](https://github.com/kkrypt0nn/c
 
 ## License
 
-Your submissions are understood to be under the same [GPL v3 License](https://github.com/kkrypt0nn/centauri/blob/main/LICENSE.md) that covers the project.
+Your submissions are understood to be under the same [MIT License](https://github.com/kkrypt0nn/centauri/blob/main/LICENSE.md) that covers the project.

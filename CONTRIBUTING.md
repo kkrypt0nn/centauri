@@ -42,4 +42,4 @@ Start contributing by first [opening a new issue](https://github.com/kkrypt0nn/c
 
 ## License
 
-Your submissions are understood to be under the same [GPL v3](LICENSE.md) that covers the project.
+Your submissions are understood to be under the same [MIT License](LICENSE.md) that covers the project.

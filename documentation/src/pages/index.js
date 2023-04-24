@@ -100,9 +100,9 @@ export default function Home() {
             <p>
               This library was made with 💜 by Krypton and is under the{" "}
               <a href="https://github.com/kkrypt0nn/centauri/blob/main/LICENSE.md">
-                GPL v3
-              </a>{" "}
-              license.
+                MIT License
+              </a>
+              .
             </p>
           </div>
         </div>

@@ -41,4 +41,4 @@ the [Contributing Guidelines](CONTRIBUTING.md).
 
 ## License
 
-This library was made with 💜 by Krypton and is under the [GPL v3](LICENSE.md) license.
+This library was made with 💜 by Krypton and is under the [MIT License](LICENSE.md).
