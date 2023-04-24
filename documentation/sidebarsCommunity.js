@@ -7,7 +7,7 @@ module.exports = {
       {
         type: 'link',
         label: 'Chat with us on Discord',
-        href: 'https://discord.gg/fww2A3uH',
+        href: 'https://discord.gg/feA6ZGRgpw',
       },
     ],
   };
