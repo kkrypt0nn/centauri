@@ -1,4 +1,5 @@
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import Admonition from "@theme/Admonition";
 import Layout from "@theme/Layout";
 import React from "react";
 
@@ -45,48 +46,21 @@ export default function Home() {
                 />
               </a>
             </p>
-            <div class="theme-admonition theme-admonition-note alert alert--secondary admonition_node_modules-@docusaurus-theme-classic-lib-theme-Admonition-styles-module">
-              <div class="admonitionHeading_node_modules-@docusaurus-theme-classic-lib-theme-Admonition-styles-module">
-                <span class="admonitionIcon_node_modules-@docusaurus-theme-classic-lib-theme-Admonition-styles-module">
-                  <svg viewBox="0 0 14 16">
-                    <path
-                      fill-rule="evenodd"
-                      d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"
-                    ></path>
-                  </svg>
-                </span>
-                Note
-              </div>
-              <div class="admonitionContent_node_modules-@docusaurus-theme-classic-lib-theme-Admonition-styles-module">
-                <p>
-                  Due to my military service from <strong>July 2023</strong>{" "}
-                  until <strong>April 2024</strong> I will not be able to work
-                  on this project a lot, most likely only during weekends if I
-                  have time and motivation ^-^
-                </p>
-              </div>
-            </div>
-            <div class="theme-admonition theme-admonition-caution alert alert--warning admonition_node_modules-@docusaurus-theme-classic-lib-theme-Admonition-styles-module">
-              <div class="admonitionHeading_node_modules-@docusaurus-theme-classic-lib-theme-Admonition-styles-module">
-                <span class="admonitionIcon_node_modules-@docusaurus-theme-classic-lib-theme-Admonition-styles-module">
-                  <svg viewBox="0 0 16 16">
-                    <path
-                      fill-rule="evenodd"
-                      d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"
-                    ></path>
-                  </svg>
-                </span>
-                Warning
-              </div>
-              <div class="admonitionContent_node_modules-@docusaurus-theme-classic-lib-theme-Admonition-styles-module">
-                <p>
-                  This is a WIP library that may be{" "}
-                  <strong>very unstable</strong> and eventually{" "}
-                  <strong>not fully optimised</strong>, use at your own care!
-                  This page will also be reworked.
-                </p>
-              </div>
-            </div>
+            <Admonition type="note" title="Note">
+              <p>
+                Due to my military service from <strong>July 2023</strong> until{" "}
+                <strong>April 2024</strong> I will not be able to work on this
+                project a lot, most likely only during weekends if I have time
+                and motivation ^-^
+              </p>
+            </Admonition>
+            <Admonition type="caution" title="Warning">
+              <p>
+                This is a WIP library that may be <strong>very unstable</strong>{" "}
+                and eventually <strong>not fully optimised</strong>, use at your
+                own care! This page will also be reworked.
+              </p>
+            </Admonition>
             <p>
               Centauri is a basic and simple Discord API wrapper written in Go.
             </p>

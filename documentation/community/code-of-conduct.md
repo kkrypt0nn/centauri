@@ -1,18 +1,5 @@
 # Code of Conduct
 
-
-:::caution
-
-Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
-
-:::
-
-:::note
-
-Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
-
-:::
-
 ## Our Pledge
 
 We as members, contributors, and leaders pledge to make participation in our
