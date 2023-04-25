@@ -7,8 +7,6 @@ import (
 	"time"
 )
 
-const VERSION = "0.0.1"
-
 // NewRestClient returns a new rest.Client to make REST API calls only, may be a bot or a user token
 func NewRestClient(token string, isBot bool) *rest.Client {
 	header := token
@@ -19,7 +17,8 @@ func NewRestClient(token string, isBot bool) *rest.Client {
 		HttpClient: &http.Client{
 			Timeout: 20 * time.Second,
 		},
-		Logger: logger.NewLogger(),
+		Logger:      logger.NewLogger(),
+		RateLimiter: rest.NewRateLimiter(),
 	}
 	restClient.SetAuthorizationHeader(header)
 	return restClient

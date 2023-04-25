@@ -1,10 +1,8 @@
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Admonition from "@theme/Admonition";
 import Layout from "@theme/Layout";
 import React from "react";
 
 export default function Home() {
-  const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
       title={`Hello from Centauri`}
@@ -67,17 +65,21 @@ export default function Home() {
             <h2 id="features">Features</h2>
             <p>
               The plan for Centauri would be for it to cover Discord's APIs in
-              their entirety. A small list of features that will be in Centauri
-              are:
+              their entirety. A small list of features that will be, or are
+              already, in Centauri are:
             </p>
             <ul>
-              <li>REST API</li>
+              <li>ANSI Colors</li>
+              <li>Caching</li>
               <li>Gateway API</li>
               <li>Interactions (Buttons, Modals, etc.)</li>
+              <li>OAuth 2.0</li>
               <li>Rate Limiter</li>
-              <li>Cache</li>
+              <li>REST API</li>
+              <li>RPC</li>
+              <li>Sharding</li>
               <li>Tasks</li>
-              <li>ANSI Colors</li>
+              <li>Webhooks</li>
             </ul>
             <h2 id="examples">Examples</h2>
             <p>

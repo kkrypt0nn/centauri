@@ -9,23 +9,28 @@
 > **Note** Due to my military service from **July 2023** until **April 2024** I will not be able to work on this
 > project a lot, most likely only during weekends if I have time and motivation ^-^
 
-> **Warning** This is a WIP library that may be **very unstable** and eventually **not fully optimised**, use at your own
+> **Warning** This is a WIP library that may be **very unstable** and eventually **not fully optimised**, use at your
+> own
 > care! This README will also be reworked.
 
 A basic and simple Discord API wrapper written in Go.
 
 ## Features
 
-The plan for Centauri would be for it to cover Discord's APIs in their entirety. A small list of features that will be
-in Centauri are:
+The plan for Centauri would be for it to cover Discord's APIs in their entirety. A small list of features that will be,
+or are already in Centauri are:
 
-- [ ] REST API
-- [ ] Gateway API
-- [ ] Interactions (Buttons, Modals, etc.)
-- [ ] Rate Limiter
-- [ ] Cache
-- [ ] Tasks
-- [ ] ANSI Colors
+- ANSI Colors
+- Caching
+- Gateway API
+- Interactions (Buttons, Modals, etc.)
+- OAuth 2.0
+- Rate Limiter
+- REST API
+- RPC
+- Sharding
+- Tasks
+- Webhooks
 
 ## Documentation
 
