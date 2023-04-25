@@ -21,6 +21,7 @@ jobs:
           version: latest
   test:
     name: test
+    needs: lint
     runs-on: ${{matrix.os.fullName}}
     strategy:
       matrix:

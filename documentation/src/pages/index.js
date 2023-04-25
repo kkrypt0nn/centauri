@@ -74,6 +74,8 @@ export default function Home() {
               <li>REST API</li>
               <li>Gateway API</li>
               <li>Interactions (Buttons, Modals, etc.)</li>
+              <li>Rate Limiter</li>
+              <li>Cache</li>
               <li>Tasks</li>
               <li>ANSI Colors</li>
             </ul>

@@ -22,6 +22,8 @@ in Centauri are:
 - [ ] REST API
 - [ ] Gateway API
 - [ ] Interactions (Buttons, Modals, etc.)
+- [ ] Rate Limiter
+- [ ] Cache
 - [ ] Tasks
 - [ ] ANSI Colors
 
