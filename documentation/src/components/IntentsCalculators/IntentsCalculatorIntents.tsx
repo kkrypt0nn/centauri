@@ -40,7 +40,7 @@ export default function IntentsCalculatorIntents() {
           <ul>
             {defaultEvents.map((event: string) => {
               return (
-                <li>
+                <li key={event}>
                   <code className="event-default__label">{event}</code>
                 </li>
               );
@@ -53,7 +53,7 @@ export default function IntentsCalculatorIntents() {
               }
               return intent.events.map((event: string) => {
                 return (
-                  <li>
+                  <li key={event}>
                     <code
                       className={
                         intent.privileged ? "intent-privileged__label" : ""

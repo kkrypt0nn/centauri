@@ -44,7 +44,10 @@ export default function IntentsCalculatorEvents() {
     }
 
     const totalEventsNeeded = intents.get(intent.name);
-    if (totalEventsNeeded === 0 || totalEventsNeeded === 1) {
+    if (
+      (totalEventsNeeded === 0 && checked) ||
+      (totalEventsNeeded === 1 && !checked)
+    ) {
       setIntentValue(intentValue ^ (1 << intent.shift));
     }
     intents.set(
@@ -114,7 +117,7 @@ export default function IntentsCalculatorEvents() {
                   return;
                 }
                 return (
-                  <li>
+                  <li key={key}>
                     <code
                       className={
                         intent.privileged ? "intent-privileged__label" : ""
