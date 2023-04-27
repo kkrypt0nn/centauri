@@ -1,6 +1,6 @@
 ---
 title: Donations
-desription: Centauri is a free and open-source project therefore any donations will help the support of the project.
+description: Centauri is a free and open-source project therefore any donations will help the support of the project.
 ---
 
 # Donations
@@ -8,6 +8,7 @@ desription: Centauri is a free and open-source project therefore any donations w
 Centauri is a free and open-source project therefore any donations will help the support of the project.
 
 Here are the different ways to donate:
+
 <ul>
     <li><strong>Bitcoin</strong>: 31mGvXAhWJbhSwdgx9F2mVPguPRFCYYFwL</li>
     <li><strong>Ethereum</strong>: 0x20257228C9e94A13E4BB9578635c84403cAb6E60</li>

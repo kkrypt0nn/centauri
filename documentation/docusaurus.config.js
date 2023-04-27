@@ -32,7 +32,8 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/kkrypt0nn/centauri/tree/main/documentation/",
+          editUrl:
+            "https://github.com/kkrypt0nn/centauri/tree/main/documentation/",
         },
         blog: {
           showReadingTime: true,
@@ -118,6 +119,11 @@ const config = {
             position: "left",
           },
           {
+            to: "/intents-calculator",
+            label: "Intents Calculator",
+            position: "left",
+          },
+          {
             href: "https://github.com/kkrypt0nn/centauri",
             label: "GitHub",
             position: "right",
@@ -140,8 +146,16 @@ const config = {
                 to: "/docs/installation/",
               },
               {
+                label: "Blog",
+                to: "/blog/",
+              },
+              {
                 label: "Community",
                 to: "/community/code-of-conduct",
+              },
+              {
+                label: "Intents Calculator",
+                to: "/intents-calculator",
               },
             ],
           },

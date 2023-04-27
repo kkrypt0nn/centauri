@@ -1,0 +1,21 @@
+---
+title: Intents Calculator
+description: A calculator that gives the intents value to pass for the gateway client based on the events you wish to receive.
+---
+
+# Intents Calculator
+
+To get gateway events you will need to provide a value to the `GatewayClient` so that it can subscribe to the set of events. You may get more information about these in our guide and the [Discord documentation](https://discord.com/developers/docs/topics/gateway#gateway-intents).
+
+Below you can choose the intents you will need, and it will give the intent value to pass.
+
+<small>
+  <i>
+    Intents marked in <span class="intent-privileged__label">red and bold</span>{" "}
+    are privileged intents that need to be enabled in the developer portal.
+  </i>
+</small>
+
+import IntentsCalculator from "../components/IntentsCalculator";
+
+<IntentsCalculator />

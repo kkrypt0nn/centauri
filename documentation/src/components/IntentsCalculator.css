@@ -1,0 +1,33 @@
+.intent-value__badge {
+  background-color: rgb(190, 190, 254);
+  color: rgb(17, 17, 21);
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 500;
+  margin-right: 0.5rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgb(162, 162, 250);
+}
+
+.intents__table {
+  display: table;
+}
+
+.intents__column {
+  float: left;
+}
+
+.intents__list {
+  padding-bottom: 1.5rem;
+  width: 28.125rem;
+}
+
+.intent__label {
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.intent-privileged__label {
+  font-weight: 900;
+  color: rgb(243, 139, 168);
+}
