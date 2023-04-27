@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	userClient := centauri.NewRestClient("USER_TOKEN", false)
+	userClient := centauri.NewRestClient("USER_TOKEN")
 	userClient.Debug = true
 	user, err := userClient.GetCurrentUser()
 	if err != nil {
@@ -15,7 +15,7 @@ func main() {
 		fmt.Println("Got User:", user.Username+"#"+user.Discriminator)
 	}
 
-	botClient := centauri.NewRestClient("BOT_TOKEN", true)
+	botClient := centauri.NewRestClient("Bot BOT_TOKEN")
 	botClient.Debug = true
 	bot, err := botClient.GetCurrentUser()
 	if err != nil {

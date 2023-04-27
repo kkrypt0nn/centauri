@@ -27,12 +27,19 @@ type Client struct {
 	Debug       bool
 	RateLimiter *RateLimiter
 
+	// Extras is a field you can use freely that will **never** be touched by the library itself
+	Extras interface{}
+
+	isBot               bool
 	authorizationHeader string
 }
 
 // SetAuthorizationHeader sets the authorization header of the RestClient
 func (c *Client) SetAuthorizationHeader(authorizationHeader string) {
 	c.authorizationHeader = authorizationHeader
+	if strings.HasPrefix(c.authorizationHeader, "Bot ") {
+		c.isBot = true
+	}
 }
 
 // DoRequest performs a request to the given URL with the given method, it will make sure to follow rate limits, and returns the body and the response individually
@@ -77,7 +84,7 @@ func (c *Client) DoRequest(method, url string, attempt int) ([]byte, *http.Respo
 	case http.StatusUnauthorized:
 		return nil, nil, errors.Unauthorized
 	case http.StatusTooManyRequests:
-		rateLimitExceeded := discord.RateLimitExceeded{}
+		var rateLimitExceeded discord.RateLimitExceeded
 		err = json.Unmarshal(body, &rateLimitExceeded)
 		if err != nil {
 			return nil, nil, err

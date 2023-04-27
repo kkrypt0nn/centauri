@@ -1,4 +1,5 @@
 import Admonition from "@theme/Admonition";
+import CodeBlock from "@theme/CodeBlock";
 import Layout from "@theme/Layout";
 import React from "react";
 
@@ -9,8 +10,8 @@ export default function Home() {
       description="Centauri is a basic and simple Discord API wrapper written in Go."
     >
       <main>
-        <div class="container padding-top--md padding-bottom--lg">
-          <div class="markdown">
+        <div className="container padding-top--md padding-bottom--lg">
+          <div className="markdown">
             <h1>Centauri</h1>
             <p className="spaced">
               <a href="https://pkg.go.dev/github.com/kkrypt0nn/centauri">
@@ -60,7 +61,8 @@ export default function Home() {
               </p>
             </Admonition>
             <p>
-              Centauri is a basic and simple Discord API wrapper written in Go.
+              Centauri is a Discord API wrapper written in Go with the goal of
+              being easily understandable and simple to use, even for newcomers.
             </p>
             <h2 id="features">Features</h2>
             <p>
@@ -70,7 +72,9 @@ export default function Home() {
             </p>
             <ul>
               <li>ANSI Colors</li>
+              <li>Background Tasks</li>
               <li>Caching</li>
+              <li>Easy Commands Creation</li>
               <li>Gateway API</li>
               <li>Interactions (Buttons, Modals, etc.)</li>
               <li>OAuth 2.0</li>
@@ -78,16 +82,59 @@ export default function Home() {
               <li>REST API</li>
               <li>RPC</li>
               <li>Sharding</li>
-              <li>Tasks</li>
               <li>Webhooks</li>
             </ul>
-            <h2 id="examples">Examples</h2>
+            <h2 id="getting-started">Getting Started</h2>
+            <h3 id="installation">Installation</h3>
             <p>
-              Examples are available{" "}
+              To get started you will simply need to install the library in your
+              project by executing the following command.
+            </p>
+            <CodeBlock language="bash">{`go get github.com/kkrypt0nn/centauri`}</CodeBlock>
+            <h3 id="example-usage">Example Usage</h3>
+            <h4 id="rest-client">REST Client</h4>
+            <p>
+              If you just want to interact with the REST API, you may use the
+              following code.
+            </p>
+            <CodeBlock language="go" showLineNumbers>{`package main
+
+import (
+	"fmt"
+	"github.com/kkrypt0nn/centauri"
+)
+
+func main() {
+	botClient := centauri.NewRestClient("Bot BOT_TOKEN")
+	bot, err := botClient.GetCurrentUser()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("Got Bot:", bot.Username+"#"+bot.Discriminator)
+	}
+}`}</CodeBlock>
+            <p>
+              More examples are available{" "}
               <a href="https://github.com/kkrypt0nn/centauri/tree/main/_examples">
                 here
               </a>
               .
+            </p>
+            <h2 id="documentation">Documentation</h2>
+            <p>
+              Other than this documentation, there is also the Go reference page
+              available{" "}
+              <a
+                target="_blank"
+                href="https://pkg.go.dev/github.com/kkrypt0nn/centauri"
+              >
+                here
+              </a>
+            </p>
+            <h2 id="troubleshooting">Troubleshooting</h2>
+            <p>
+              Some troubleshooting articles and guides may be found{" "}
+              <a href="/docs/troubleshooting/">here</a>.
             </p>
             <h2 id="contributing">Contributing</h2>
             <p>

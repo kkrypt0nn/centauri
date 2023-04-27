@@ -13,7 +13,7 @@
 > own
 > care! This README will also be reworked.
 
-A basic and simple Discord API wrapper written in Go.
+A Discord API wrapper written in Go with the goal of being easily understandable and simple to use, even for newcomers.
 
 ## Features
 
@@ -21,7 +21,9 @@ The plan for Centauri would be for it to cover Discord's APIs in their entirety.
 or are already in Centauri are:
 
 - ANSI Colors
+- Background Tasks
 - Caching
+- Easy Commands Creation
 - Gateway API
 - Interactions (Buttons, Modals, etc.)
 - OAuth 2.0
@@ -29,16 +31,52 @@ or are already in Centauri are:
 - REST API
 - RPC
 - Sharding
-- Tasks
 - Webhooks
+
+## Getting Started
+
+### Installation
+
+To get started you will simply need to install the library in your project by executing the following command.
+
+```bash
+go get github.com/kkrypt0nn/centauri
+```
+
+### Example Usage
+
+#### REST Client
+
+If you just want to interact with the REST API, you may use the following code.
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/kkrypt0nn/centauri"
+)
+
+func main() {
+	botClient := centauri.NewRestClient("Bot BOT_TOKEN")
+	bot, err := botClient.GetCurrentUser()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("Got Bot:", bot.Username+"#"+bot.Discriminator)
+	}
+}
+```
+
+More examples are available [here](_examples)
 
 ## Documentation
 
-The [documentation](documentation) is available for reading [here](https://centauri.krypton.ninja).
+The [documentation](documentation) is available for reading [here](https://centauri.krypton.ninja). There is also the Go reference page available [here](https://pkg.go.dev/github.com/kkrypt0nn/centauri)
 
-## Examples
+## Troubleshooting
 
-Examples are available [here](_examples).
+Some troubleshooting articles and guides may be found in the [documentation](https://centauri.krypton.ninja/docs/troubleshooting/) mentioned above.
 
 ## Contributing
 
