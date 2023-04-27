@@ -11,11 +11,26 @@ Below you can choose the intents you will need, and it will give the intent valu
 
 <small>
   <i>
-    Intents marked in <span class="intent-privileged__label">red and bold</span>{" "}
-    are privileged intents that need to be enabled in the developer portal.
+    Intents marked in{" "}
+    <span className="intent-privileged__label">red and bold</span> are
+    privileged intents, or events related to these intents, that need to be
+    enabled in the developer portal. Events in{" "}
+    <span className="event-default__label">blue and bold</span> are default
+    events that do not require any intents and will always be dispatched.
   </i>
 </small>
 
-import IntentsCalculator from "../components/IntentsCalculator";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
-<IntentsCalculator />
+import IntentsCalculatorIntents from "../components/IntentsCalculators/IntentsCalculatorIntents";
+import IntentsCalculatorEvents from "../components/IntentsCalculators/IntentsCalculatorEvents";
+
+<Tabs>
+  <TabItem value="intents" label="I know my intents" default>
+    <IntentsCalculatorIntents />
+  </TabItem>
+  <TabItem value="events" label="I know my events">
+    <IntentsCalculatorEvents />
+  </TabItem>
+</Tabs>

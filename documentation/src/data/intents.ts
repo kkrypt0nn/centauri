@@ -5,6 +5,14 @@ export type Intent = {
   events: string[];
 };
 
+export const defaultEvents = [
+  "INTERACTION_CREATE",
+  "READY",
+  "RESUMED",
+  "USER_UPDATE",
+  "VOICE_SERVER_UPDATE",
+];
+
 export const intentsMap = new Map<string, Intent>([
   [
     "GUILDS",
@@ -65,7 +73,7 @@ export const intentsMap = new Map<string, Intent>([
   [
     "GUILD_EMOJIS_AND_STICKERS",
     {
-      name: "GUILD_MEMBERS",
+      name: "GUILD_EMOJIS_AND_STICKERS",
       privileged: false,
       shift: 3,
       events: ["GUILD_EMOJIS_UPDATE", "GUILD_STICKERS_UPDATE"],
@@ -165,10 +173,10 @@ export const intentsMap = new Map<string, Intent>([
       privileged: false,
       shift: 12,
       events: [
-        "MESSAGE_CREATE",
-        "MESSAGE_UPDATE",
-        "MESSAGE_DELETE",
-        "CHANNEL_PINS_UPDATE",
+        "MESSAGE_CREATE [DMS]",
+        "MESSAGE_UPDATE [DMS]",
+        "MESSAGE_DELETE [DMS]",
+        "CHANNEL_PINS_UPDATE [DMS]",
       ],
     },
   ],
@@ -179,10 +187,10 @@ export const intentsMap = new Map<string, Intent>([
       privileged: false,
       shift: 13,
       events: [
-        "MESSAGE_REACTION_ADD",
-        "MESSAGE_REACTION_REMOVE",
-        "MESSAGE_REACTION_REMOVE_ALL",
-        "MESSAGE_REACTION_REMOVE_EMOJI",
+        "MESSAGE_REACTION_ADD [DMS]",
+        "MESSAGE_REACTION_REMOVE [DMS]",
+        "MESSAGE_REACTION_REMOVE_ALL [DMS]",
+        "MESSAGE_REACTION_REMOVE_EMOJI [DMS]",
       ],
     },
   ],
@@ -192,7 +200,7 @@ export const intentsMap = new Map<string, Intent>([
       name: "DIRECT_MESSAGE_TYPING",
       privileged: false,
       shift: 14,
-      events: ["TYPING_START"],
+      events: ["TYPING_START [DMS]"],
     },
   ],
   [
@@ -201,7 +209,7 @@ export const intentsMap = new Map<string, Intent>([
       name: "MESSAGE_CONTENT",
       privileged: true,
       shift: 15,
-      events: [],
+      events: ["ACCESS MESSAGE CONTENT [NOT AN EVENT]"],
     },
   ],
   [

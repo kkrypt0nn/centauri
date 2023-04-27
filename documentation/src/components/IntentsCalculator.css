@@ -30,3 +30,8 @@
   font-weight: 900;
   color: rgb(243, 139, 168);
 }
+
+.event-default__label {
+  font-weight: 900;
+  color: rgb(137, 180, 250);
+}
