@@ -90,35 +90,46 @@ func (r *RateLimiter) UnlockBucket(bucket *Bucket, headers http.Header) error {
 	}
 
 	// Set how many remaining requests we can make
-	remaining := headers.Get("X-RateLimit-Remaining")
-	if remaining != "" {
-		parsed, err := strconv.ParseInt(remaining, 10, 64)
+	remainingHeader := headers.Get("X-RateLimit-Remaining")
+	if remainingHeader != "" {
+		remaining, err := strconv.ParseInt(remainingHeader, 10, 64)
 		if err != nil {
 			return err
 		}
-		bucket.Remaining = int(parsed)
+		bucket.Remaining = int(remaining)
+	}
+
+	// Set the limit of the bucket
+	limitHeader := headers.Get("X-RateLimit-Limit")
+	if limitHeader != "" {
+		limit, err := strconv.ParseInt(limitHeader, 10, 64)
+		if err != nil {
+			return err
+		}
+		bucket.Limit = int(limit)
 	}
 
 	// Set the new reset and global reset times
-	reset := headers.Get("X-RateLimit-Reset")
-	resetAfter := headers.Get("X-RateLimit-Reset-After")
-	global := headers.Get("X-RateLimit-Global")
+	resetHeader := headers.Get("X-RateLimit-Reset")
+	resetAfterHeader := headers.Get("X-RateLimit-Reset-After")
+	globalHeader := headers.Get("X-RateLimit-Global")
 
-	if resetAfter != "" {
-		parsed, err := strconv.ParseFloat(resetAfter, 64)
+	// Reset after has priority
+	if resetAfterHeader != "" {
+		parsed, err := strconv.ParseFloat(resetAfterHeader, 64)
 		if err != nil {
 			return err
 		}
 		integer, frac := math.Modf(parsed)
 
 		resetAt := time.Now().Add(time.Duration(integer)*time.Second + time.Duration(frac*1000)*time.Millisecond)
-		if global != "" {
+		if globalHeader != "" {
 			r.GlobalResetAt = resetAt
 		} else {
 			bucket.ResetAt = resetAt
 		}
-	} else if reset != "" {
-		parsed, err := strconv.ParseFloat(reset, 64)
+	} else if resetHeader != "" {
+		parsed, err := strconv.ParseFloat(resetHeader, 64)
 		if err != nil {
 			return err
 		}
