@@ -11,7 +11,7 @@ type RateLimitExceeded struct {
 }
 
 func (r *RateLimitExceeded) Error() string {
-	return fmt.Sprintf("Rate limit exceeded, retry after %g", r.RetryAfter)
+	return fmt.Sprintf("rate limit exceeded, retry after %g", r.RetryAfter)
 }
 
 var (
