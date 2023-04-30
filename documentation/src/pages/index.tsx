@@ -134,7 +134,7 @@ func main() {
             <h2 id="troubleshooting">Troubleshooting</h2>
             <p>
               Some troubleshooting articles and guides may be found{" "}
-              <a href="/docs/troubleshooting/">here</a>.
+              <a href="/docs/category/troubleshooting/">here</a>.
             </p>
             <h2 id="contributing">Contributing</h2>
             <p>
