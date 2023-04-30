@@ -76,7 +76,7 @@ The [documentation](documentation) is available for reading [here](https://centa
 
 ## Troubleshooting
 
-Some troubleshooting articles and guides may be found in the [documentation](https://centauri.krypton.ninja/docs/troubleshooting/) mentioned above.
+Some troubleshooting articles and guides may be found in the [documentation](https://centauri.krypton.ninja/docs/category/troubleshooting/) mentioned above.
 
 ## Contributing
 
