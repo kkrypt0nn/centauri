@@ -1,3 +1,4 @@
+// Package constants holds the constants used across the library
 package constants
 
 const (

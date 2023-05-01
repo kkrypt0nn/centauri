@@ -1,3 +1,4 @@
+// Package rest handles the REST API of Discord
 package rest
 
 import (
@@ -6,6 +7,7 @@ import (
 	"github.com/kkrypt0nn/centauri/constants"
 	"github.com/kkrypt0nn/centauri/discord"
 	"github.com/kkrypt0nn/centauri/errors"
+	"github.com/kkrypt0nn/centauri/ext/tasks"
 	"github.com/kkrypt0nn/logger.go"
 	"io"
 	"math"
@@ -26,6 +28,7 @@ type Client struct {
 	Logger      *logger.Logger
 	Debug       bool
 	RateLimiter *RateLimiter
+	TaskManager *tasks.TaskManager
 
 	// Extras is a field you can use freely that will **never** be touched by the library itself
 	Extras interface{}
