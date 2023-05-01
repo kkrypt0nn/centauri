@@ -1,6 +1,7 @@
 package centauri
 
 import (
+	"github.com/kkrypt0nn/centauri/ext/tasks"
 	"github.com/kkrypt0nn/centauri/rest"
 	"github.com/kkrypt0nn/logger.go"
 	"net/http"
@@ -15,6 +16,7 @@ func NewRestClient(token string) *rest.Client {
 		},
 		Logger:      logger.NewLogger(),
 		RateLimiter: rest.NewRateLimiter(),
+		TaskManager: tasks.NewTaskManager(),
 	}
 	restClient.SetAuthorizationHeader(token)
 	return restClient
