@@ -24,7 +24,7 @@ const (
 
 // Client is a client made to send REST API requests only
 type Client struct {
-	HttpClient  *http.Client
+	HttpClient  *HttpClient
 	Logger      *logger.Logger
 	Debug       bool
 	RateLimiter *RateLimiter
@@ -64,10 +64,20 @@ func (c *Client) DoRequest(method, url string, attempt int) ([]byte, *http.Respo
 	request.Header.Set("Authorization", c.authorizationHeader)
 	request.Header.Set("User-Agent", fmt.Sprintf("DiscordBot (%s, %s)", constants.GitHubURL, constants.Version))
 
+	// Modify the request if an interceptor is set
+	if c.HttpClient.Interceptor != nil {
+		c.HttpClient.Interceptor.ModifyRequest(request)
+	}
+
 	response, err := c.HttpClient.Do(request)
 	if err != nil {
 		_ = c.RateLimiter.UnlockBucket(bucket, nil)
 		return nil, nil, err
+	}
+
+	// Modify the response if an interceptor is set
+	if c.HttpClient.Interceptor != nil {
+		c.HttpClient.Interceptor.ModifyResponse(response)
 	}
 
 	err = c.RateLimiter.UnlockBucket(bucket, response.Header)
