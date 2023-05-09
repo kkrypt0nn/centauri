@@ -37,6 +37,8 @@ type Client struct {
 	authorizationHeader string
 }
 
+type QueryParameters map[string]string
+
 // SetAuthorizationHeader sets the authorization header of the RestClient
 func (c *Client) SetAuthorizationHeader(authorizationHeader string) {
 	c.authorizationHeader = authorizationHeader
@@ -46,11 +48,7 @@ func (c *Client) SetAuthorizationHeader(authorizationHeader string) {
 }
 
 // DoRequest performs a request to the given URL with the given method, it will make sure to follow rate limits, and returns the body and the response individually
-func (c *Client) DoRequest(method, url string, attempt int) ([]byte, *http.Response, error) {
-	if c.Debug {
-		c.Logger.Debug(fmt.Sprintf("%s %s", method, url))
-	}
-
+func (c *Client) DoRequest(method, url string, queryParams QueryParameters, attempt int) ([]byte, *http.Response, error) {
 	// Get the bucket for the URL
 	key := strings.Split(url, "?")[0]
 	bucket := c.RateLimiter.LockBucket(key)
@@ -69,6 +67,19 @@ func (c *Client) DoRequest(method, url string, attempt int) ([]byte, *http.Respo
 		c.HttpClient.Interceptor.ModifyRequest(request)
 	}
 
+	// Set the query parameters
+	if queryParams != nil {
+		query := request.URL.Query()
+		for key, value := range queryParams {
+			query.Add(key, value)
+		}
+		request.URL.RawQuery = query.Encode()
+	}
+
+	// Perform the request
+	if c.Debug {
+		c.Logger.Debug(fmt.Sprintf("%s %s", method, request.URL.String()))
+	}
 	response, err := c.HttpClient.Do(request)
 	if err != nil {
 		_ = c.RateLimiter.UnlockBucket(bucket, nil)
@@ -110,19 +121,33 @@ func (c *Client) DoRequest(method, url string, attempt int) ([]byte, *http.Respo
 
 		integer, frac := math.Modf(rateLimitExceeded.RetryAfter)
 		time.Sleep(time.Duration(integer)*time.Second + time.Duration(frac*1000)*time.Millisecond)
-		return c.DoRequest(method, url, attempt+1)
+		return c.DoRequest(method, url, queryParams, attempt+1)
 	default:
 		return body, response, discord.NewError(body, request, response)
 	}
 }
 
-func DoRequestAs[T any](client *Client, method, url string, attempt int) (*T, error) {
-	responseBody, _, err := client.DoRequest(method, url, attempt)
+func DoRequestAs[T any](client *Client, method, url string, queryParams QueryParameters, attempt int) (*T, error) {
+	responseBody, _, err := client.DoRequest(method, url, queryParams, attempt)
 	if err != nil {
 		return nil, err
 	}
 
 	var user *T
+	err = json.Unmarshal(responseBody, &user)
+	if err != nil {
+		return nil, err
+	}
+	return user, err
+}
+
+func DoRequestAsList[T any](client *Client, method, url string, queryParams QueryParameters, attempt int) ([]T, error) {
+	responseBody, _, err := client.DoRequest(method, url, queryParams, attempt)
+	if err != nil {
+		return nil, err
+	}
+
+	var user []T
 	err = json.Unmarshal(responseBody, &user)
 	if err != nil {
 		return nil, err
