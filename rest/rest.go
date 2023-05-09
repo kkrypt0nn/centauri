@@ -94,8 +94,8 @@ func (c *Client) DoRequest(method, url string, attempt int) ([]byte, *http.Respo
 	}
 
 	switch response.StatusCode {
-	case http.StatusUnauthorized:
-		return nil, nil, errors.Unauthorized
+	case http.StatusOK, http.StatusCreated:
+		return body, response, nil
 	case http.StatusTooManyRequests:
 		var rateLimitExceeded discord.RateLimitExceeded
 		err = json.Unmarshal(body, &rateLimitExceeded)
@@ -111,7 +111,21 @@ func (c *Client) DoRequest(method, url string, attempt int) ([]byte, *http.Respo
 		integer, frac := math.Modf(rateLimitExceeded.RetryAfter)
 		time.Sleep(time.Duration(integer)*time.Second + time.Duration(frac*1000)*time.Millisecond)
 		return c.DoRequest(method, url, attempt+1)
+	default:
+		return body, response, discord.NewError(body, request, response)
+	}
+}
+
+func DoRequestAs[T any](client *Client, method, url string, attempt int) (*T, error) {
+	responseBody, _, err := client.DoRequest(method, url, attempt)
+	if err != nil {
+		return nil, err
 	}
 
-	return body, response, nil
+	var user *T
+	err = json.Unmarshal(responseBody, &user)
+	if err != nil {
+		return nil, err
+	}
+	return user, err
 }
