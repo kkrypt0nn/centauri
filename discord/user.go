@@ -3,9 +3,11 @@ package discord
 // User represents a Discord user or a Discord bot
 // https://discord.com/developers/docs/resources/user#user-object
 type User struct {
-	ID            string      `json:"id"`
-	Username      string      `json:"username"`
-	Avatar        string      `json:"avatar"`
+	ID         string `json:"id"`
+	Username   string `json:"username"`
+	GlobalName string `json:"global_name,omitempty"`
+	Avatar     string `json:"avatar"`
+	// Deprecated: Will return "0" once a user has migrated to the new usernames
 	Discriminator string      `json:"discriminator"`
 	PublicFlags   UserFlags   `json:"public_flags,omitempty"`
 	Flags         UserFlags   `json:"flags,omitempty"`
@@ -20,7 +22,6 @@ type User struct {
 
 	// These are undocumented fields, subject to change
 	BannerColor       string            `json:"banner_color,omitempty"`
-	GlobalName        string            `json:"global_name,omitempty"`
 	DisplayName       string            `json:"display_name,omitempty"`
 	AvatarDecoration  string            `json:"avatar_decoration,omitempty"`
 	PurchasedFlags    PurchasedFlags    `json:"purchased_flags,omitempty"`

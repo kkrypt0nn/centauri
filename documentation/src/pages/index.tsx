@@ -110,7 +110,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println("Got Bot:", bot.Username+"#"+bot.Discriminator)
+		fmt.Println(fmt.Sprintf("Got bot %s with ID %s", bot.Username, bot.ID))
 	}
 }`}</CodeBlock>
             <p>
