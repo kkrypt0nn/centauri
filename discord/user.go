@@ -14,7 +14,7 @@ type User struct {
 	Bot           bool        `json:"bot,omitempty"`
 	Banner        string      `json:"banner,omitempty"`
 	AccentColor   int         `json:"accent_color,omitempty"`
-	Locale        string      `json:"locale,omitempty"`
+	Locale        Locale      `json:"locale,omitempty"`
 	MFAEnabled    bool        `json:"mfa_enabled,omitempty"`
 	PremiumType   PremiumType `json:"premium_type,omitempty"`
 	Email         string      `json:"email,omitempty"`
@@ -36,57 +36,57 @@ type User struct {
 // https://discord.com/developers/docs/resources/user#user-object-user-flags
 type UserFlags uint64
 
-const NoFlags UserFlags = 0
+const UserFlagNone UserFlags = 0
 const (
-	Staff UserFlags = 1 << iota
-	Partner
-	HypeSquadEvents
-	BugHunterLevel1
-	MfaSms                // Undocumented
-	PremiumPromoDismissed // Undocumented
-	HypeSquadBravery
-	HypeSquadBrilliance
-	HypeSquadBalance
-	EarlyNitroSupporter
-	TeamPseudoUser
-	InternalApplication     // Undocumented
-	System                  // Undocumented
-	HasUnreadUrgentMessages // Undocumented
-	BugHunterLevel2
-	UnderageDeleted // Undocumented
-	VerifiedBot
-	VerifiedBotDeveloper
-	CertifiedModerator
-	BotHttpInteractions
-	LikelySpammer  // Undocumented
-	DisablePremium // Undocumented
-	ActiveDeveloper
+	UserFlagStaff UserFlags = 1 << iota
+	UserFlagPartner
+	UserFlagHypeSquadEvents
+	UserFlagBugHunterLevel1
+	UserFlagMfaSms                // Undocumented
+	UserFlagPremiumPromoDismissed // Undocumented
+	UserFlagHypeSquadBravery
+	UserFlagHypeSquadBrilliance
+	UserFlagHypeSquadBalance
+	UserFlagEarlyNitroSupporter
+	UserFlagTeamPseudoUser
+	UserFlagInternalApplication     // Undocumented
+	UserFlagSystem                  // Undocumented
+	UserFlagHasUnreadUrgentMessages // Undocumented
+	UserFlagBugHunterLevel2
+	UserFlagUnderageDeleted // Undocumented
+	UserFlagVerifiedBot
+	UserFlagVerifiedBotDeveloper
+	UserFlagCertifiedModerator
+	UserFlagBotHttpInteractions
+	UserFlagLikelySpammer  // Undocumented
+	UserFlagDisablePremium // Undocumented
+	UserFlagActiveDeveloper
 )
 
 // PremiumType represents the premium type a User has
 type PremiumType int
 
 const (
-	NoPremium PremiumType = iota
-	NitroClassic
-	Nitro
-	NitroBasic
+	PremiumTypeNone PremiumType = iota
+	PremiumTypeNitroClassic
+	PremiumTypeNitro
+	PremiumTypeNitroBasic
 )
 
 // PremiumUsageFlags represents a user's usage flags of premium features
 type PremiumUsageFlags int
 
 const (
-	PremiumDiscriminator PremiumUsageFlags = 1 << iota
-	AnimatedAvatar
-	ProfileBanner
+	PremiumUsageFlagPremiumDiscriminator PremiumUsageFlags = 1 << iota
+	PremiumUsageFlagAnimatedAvatar
+	PremiumUsageFlagProfileBanner
 )
 
 // PurchasedFlags represents a user's purchased state
 type PurchasedFlags int
 
 const (
-	NitroClassicPurchased PurchasedFlags = 1 << iota
-	NitroPurchased
-	GuildBoostPurchased
+	PurchasedFlagNitroClassic PurchasedFlags = 1 << iota
+	PurchasedFlagNitro
+	PurchasedFlagGuildBoost
 )

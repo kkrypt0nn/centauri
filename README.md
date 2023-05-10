@@ -61,9 +61,9 @@ func main() {
 	botClient := centauri.NewRestClient("Bot BOT_TOKEN")
 	bot, err := botClient.GetCurrentUser()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("err:", err)
 	} else {
-		fmt.Println("Got Bot:", bot.Username+"#"+bot.Discriminator)
+		fmt.Println(fmt.Sprintf("Got bot %s with ID %s", bot.Username, bot.ID))
 	}
 }
 ```

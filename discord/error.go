@@ -26,6 +26,11 @@ func NewError(body []byte, request *http.Request, response *http.Response) Error
 	return err
 }
 
+// Error returns the error code and message of a discord.Error
 func (e Error) Error() string {
-	return fmt.Sprintf("%d: %s", e.Code, e.Message)
+	// Errors such as Unauthorized have a code `0` and contain the error code in the message :D
+	if e.Code != 0 {
+		return fmt.Sprintf("%d: %s", e.Code, e.Message)
+	}
+	return e.Message
 }
