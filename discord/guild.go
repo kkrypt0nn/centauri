@@ -1,6 +1,9 @@
 package discord
 
-import "time"
+import (
+	"github.com/kkrypt0nn/centauri/oauth2"
+	"time"
+)
 
 // PartialGuild represents a discord.Guild with only a few fields
 // https://discord.com/developers/docs/resources/user#get-current-user-guilds-example-partial-guild
@@ -62,7 +65,7 @@ type Integration struct {
 	SubscriberCount   int                       `json:"subscriber_count,omitempty"`
 	Revoked           bool                      `json:"revoked,omitempty"`
 	Application       IntegrationApplication    `json:"application,omitempty"`
-	Scopes            []OAuthScopes             `json:"scopes,omitempty"`
+	Scopes            []oauth2.Scope            `json:"scopes,omitempty"`
 }
 
 type IntegrationExpireBehavior int
