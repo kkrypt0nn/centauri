@@ -4,15 +4,15 @@ type ApplicationRoleConnectionMetadata struct {
 	Type                     ApplicationRoleConnectionMetadataType `json:"type"`
 	Key                      string                                `json:"key"`
 	Name                     string                                `json:"name"`
-	NameLocalizations        map[Locale]string                     `json:"name_localizations,omitempty"` // Don't know how that looks like
+	NameLocalizations        map[Locale]string                     `json:"name_localizations,omitempty"`
 	Description              string                                `json:"description"`
-	DescriptionLocalizations map[Locale]string                     `json:"description_localizations,omitempty"` // Don't know how that looks like
+	DescriptionLocalizations map[Locale]string                     `json:"description_localizations,omitempty"`
 }
 
 type ApplicationRoleConnectionMetadataType int
 
 const (
-	ApplicationRoleConnectionMetadataTypeIntegerLessThanOrEqual ApplicationRoleConnectionMetadataType = iota + 1
+	ApplicationRoleConnectionMetadataTypeIntegerLessThanOrEqual ApplicationRoleConnectionMetadataType = 1 + iota
 	ApplicationRoleConnectionMetadataTypeIntegerGreaterThanOrEqual
 	ApplicationRoleConnectionMetadataTypeIntegerEqual
 	ApplicationRoleConnectionMetadataTypeIntegerNotEqual

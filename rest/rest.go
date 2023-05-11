@@ -133,12 +133,12 @@ func DoRequestAs[T any](client *Client, method, url string, queryParams QueryPar
 		return nil, err
 	}
 
-	var user *T
-	err = json.Unmarshal(responseBody, &user)
+	var entity *T
+	err = json.Unmarshal(responseBody, &entity)
 	if err != nil {
 		return nil, err
 	}
-	return user, err
+	return entity, err
 }
 
 func DoRequestAsList[T any](client *Client, method, url string, queryParams QueryParameters, attempt int) ([]T, error) {
@@ -147,10 +147,10 @@ func DoRequestAsList[T any](client *Client, method, url string, queryParams Quer
 		return nil, err
 	}
 
-	var user []T
-	err = json.Unmarshal(responseBody, &user)
+	var entity []T
+	err = json.Unmarshal(responseBody, &entity)
 	if err != nil {
 		return nil, err
 	}
-	return user, err
+	return entity, err
 }
