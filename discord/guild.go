@@ -10,7 +10,7 @@ import (
 type PartialGuild struct {
 	ID          string         `json:"id"`
 	Name        string         `json:"name"`
-	Icon        string         `json:"icon"`
+	Icon        string         `json:"icon,omitempty"`
 	Owner       bool           `json:"owner"`
 	Permissions uint64         `json:"permissions,string"`
 	Features    []GuildFeature `json:"features"`
@@ -83,7 +83,7 @@ type IntegrationAccount struct {
 type IntegrationApplication struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
-	Icon        string `json:"icon,omitempty"`
+	Icon        string `json:"icon"`
 	Description string `json:"description"`
 	Bot         *User  `json:"bot,omitempty"`
 }
@@ -112,3 +112,26 @@ const (
 	MemberFlagBypassesVerification
 	MemberFlagStartedOnboarding
 )
+
+type Role struct {
+	ID           string    `json:"id"`
+	Name         string    `json:"name"`
+	Color        int       `json:"color"`
+	Hoist        bool      `json:"hoist"`
+	Icon         string    `json:"icon,omitempty"`
+	UnicodeEmoji string    `json:"unicode_emoji"`
+	Position     int       `json:"position"`
+	Permissions  uint64    `json:"permissions,string"`
+	Managed      bool      `json:"managed"`
+	Mentionable  bool      `json:"mentionable"`
+	Tags         *RoleTags `json:"tags,omitempty"`
+}
+
+type RoleTags struct {
+	BotID                 string `json:"bot_id"`
+	IntegrationID         string `json:"integration_id"`
+	PremiumSubscriber     bool   `json:"premium_subscriber"`
+	SubscriptionListingID string `json:"subscription_listing_id"`
+	AvailableForPurchase  bool   `json:"available_for_purchase"`
+	GuildConnections      bool   `json:"guild_connections"`
+}

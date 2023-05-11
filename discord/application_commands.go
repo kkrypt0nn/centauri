@@ -38,18 +38,17 @@ type ApplicationCommandOption interface {
 	Type() ApplicationCommandOptionType
 }
 
-type EmptyApplicationCommandOption struct {
-	Name string                       `json:"name"`
+type UnidentifiedApplicationCommandOption struct {
 	Type ApplicationCommandOptionType `json:"type"`
 
 	data ApplicationCommandOption
 }
 
-func (o *EmptyApplicationCommandOption) UnmarshalJSON(b []byte) error {
-	type emptyOption EmptyApplicationCommandOption
+func (o *UnidentifiedApplicationCommandOption) UnmarshalJSON(b []byte) error {
+	type unidentifiedOption UnidentifiedApplicationCommandOption
 
-	if err := json.Unmarshal(b, (*emptyOption)(o)); err != nil {
-		return fmt.Errorf("failed to unmarshal")
+	if err := json.Unmarshal(b, (*unidentifiedOption)(o)); err != nil {
+		return fmt.Errorf("failed to unmarshal: %s", err)
 	}
 
 	switch o.Type {
@@ -76,7 +75,7 @@ func (o *EmptyApplicationCommandOption) UnmarshalJSON(b []byte) error {
 	case ApplicationCommandOptionTypeAttachment:
 		o.data = &AttachmentCommandOption{}
 	default:
-		return fmt.Errorf("unknown type: %#v", b)
+		return fmt.Errorf("unknown type: %d", o.Type)
 	}
 
 	if err := json.Unmarshal(b, o.data); err != nil {
@@ -89,18 +88,18 @@ func (o *EmptyApplicationCommandOption) UnmarshalJSON(b []byte) error {
 type ApplicationCommandOptions []ApplicationCommandOption
 
 func (o *ApplicationCommandOptions) UnmarshalJSON(b []byte) error {
-	var emptyOptions []EmptyApplicationCommandOption
-	if err := json.Unmarshal(b, &emptyOptions); err != nil {
+	var unidentifiedOptions []UnidentifiedApplicationCommandOption
+	if err := json.Unmarshal(b, &unidentifiedOptions); err != nil {
 		return err
 	}
 
-	if len(emptyOptions) == 0 {
+	if len(unidentifiedOptions) == 0 {
 		*o = nil
 		return nil
 	}
 
-	*o = make([]ApplicationCommandOption, len(emptyOptions))
-	for i, option := range emptyOptions {
+	*o = make([]ApplicationCommandOption, len(unidentifiedOptions))
+	for i, option := range unidentifiedOptions {
 		(*o)[i] = option.data
 	}
 
