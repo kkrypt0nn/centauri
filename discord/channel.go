@@ -384,3 +384,9 @@ type RoleSubscriptionData struct {
 	TotalMonthsSubscribed     int    `json:"total_months_subscribed"`
 	IsRenewal                 bool   `json:"is_renewal"`
 }
+
+type ArchivedThreads struct {
+	Threads []Channel `json:"threads"`
+	Members []Member  `json:"members"`
+	HasMore bool      `json:"has_more"`
+}

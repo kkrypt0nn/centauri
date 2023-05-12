@@ -3,6 +3,7 @@ package rest
 import (
 	"github.com/kkrypt0nn/centauri/discord"
 	"strconv"
+	"time"
 )
 
 const (
@@ -49,4 +50,55 @@ func (c *Client) GetPinnedMessages(channelID string) ([]discord.Message, error) 
 // GetThreadMember returns the discord.ThreadMember if they are a member of the thread
 func (c *Client) GetThreadMember(threadID, userID string) (*discord.ThreadMember, error) {
 	return DoRequestAs[discord.ThreadMember](c, "GET", ChannelsEndpoint+"/"+threadID+"/thread-members/"+userID, nil, 1)
+}
+
+// ListThreadMembers returns a list of discord.ThreadMember that are members of the thread
+func (c *Client) ListThreadMembers(threadID, after string, withMember bool, limit int) ([]discord.ThreadMember, error) {
+	queryParams := make(QueryParameters)
+	if after != "" {
+		queryParams["after"] = after
+	}
+	if withMember {
+		queryParams["with_member"] = "true"
+	}
+	if limit >= 1 && limit <= 100 {
+		queryParams["limit"] = strconv.Itoa(limit)
+	}
+	return DoRequestAsList[discord.ThreadMember](c, "GET", ChannelsEndpoint+"/"+threadID+"/thread-members", queryParams, 1)
+}
+
+// ListPublicArchivedThreads returns discord.ArchivedThreads which represent public archived threads in the given channel
+func (c *Client) ListPublicArchivedThreads(channelID string, before *time.Time, limit int) (*discord.ArchivedThreads, error) {
+	queryParams := make(QueryParameters)
+	if before != nil {
+		queryParams["before"] = before.Format(time.RFC3339)
+	}
+	if limit >= 1 && limit <= 100 {
+		queryParams["limit"] = strconv.Itoa(limit)
+	}
+	return DoRequestAs[discord.ArchivedThreads](c, "GET", ChannelsEndpoint+"/"+channelID+"/threads/archived/public", queryParams, 1)
+}
+
+// ListPrivateArchivedThreads returns discord.ArchivedThreads which represent private archived threads in the given channel
+func (c *Client) ListPrivateArchivedThreads(channelID string, before *time.Time, limit int) (*discord.ArchivedThreads, error) {
+	queryParams := make(QueryParameters)
+	if before != nil {
+		queryParams["before"] = before.Format(time.RFC3339)
+	}
+	if limit >= 1 && limit <= 100 {
+		queryParams["limit"] = strconv.Itoa(limit)
+	}
+	return DoRequestAs[discord.ArchivedThreads](c, "GET", ChannelsEndpoint+"/"+channelID+"/threads/archived/private", queryParams, 1)
+}
+
+// ListJoinedPrivateArchivedThreads returns discord.ArchivedThreads which represent private archived threads in the given channel that the user has joined
+func (c *Client) ListJoinedPrivateArchivedThreads(channelID, before string, limit int) (*discord.ArchivedThreads, error) {
+	queryParams := make(QueryParameters)
+	if before != "" {
+		queryParams["before"] = before
+	}
+	if limit >= 1 && limit <= 100 {
+		queryParams["limit"] = strconv.Itoa(limit)
+	}
+	return DoRequestAs[discord.ArchivedThreads](c, "GET", ChannelsEndpoint+"/"+channelID+"/users/@me/threads/archived/private", queryParams, 1)
 }
