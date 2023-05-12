@@ -10,7 +10,7 @@ type GuildScheduledEvent struct {
 	Name               string                             `json:"name"`
 	Description        string                             `json:"description"`
 	ScheduledStartTime time.Time                          `json:"scheduled_start_time"`
-	ScheduledEndTime   time.Time                          `json:"scheduled_end_time"`
+	ScheduledEndTime   *time.Time                         `json:"scheduled_end_time"`
 	PrivacyLevel       GuildScheduledEventPrivacyLevel    `json:"privacy_level"`
 	Status             GuildScheduledEventStatus          `json:"status"`
 	EntityType         GuildScheduledEventEntityType      `json:"entity_type"`

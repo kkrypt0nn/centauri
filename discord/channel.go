@@ -25,7 +25,7 @@ type Channel struct {
 	ApplicationID                 string                 `json:"application_id,omitempty"`
 	Managed                       bool                   `json:"managed,omitempty"`
 	ParentID                      string                 `json:"parent_id,omitempty"`
-	LastPinTimestamp              time.Time              `json:"last_pin_timestamp,omitempty"`
+	LastPinTimestamp              *time.Time             `json:"last_pin_timestamp,omitempty"`
 	RTCRegion                     string                 `json:"rtc_region,omitempty"`
 	VideoQualityMode              VideoQualityMode       `json:"video_quality_mode,omitempty"`
 	MessageCount                  int                    `json:"message_count,omitempty"`
@@ -87,20 +87,20 @@ const (
 )
 
 type ThreadMetadata struct {
-	Archived            bool      `json:"archived"`
-	AutoArchiveDuration int       `json:"auto_archive_duration"`
-	ArchiveTimestamp    time.Time `json:"archive_timestamp"`
-	Locked              bool      `json:"locked"`
-	Invitable           bool      `json:"invitable,omitempty"`
-	CreateTimestamp     time.Time `json:"create_timestamp,omitempty"`
+	Archived            bool       `json:"archived"`
+	AutoArchiveDuration int        `json:"auto_archive_duration"`
+	ArchiveTimestamp    *time.Time `json:"archive_timestamp"`
+	Locked              bool       `json:"locked"`
+	Invitable           bool       `json:"invitable,omitempty"`
+	CreateTimestamp     time.Time  `json:"create_timestamp,omitempty"`
 }
 
 type ThreadMember struct {
-	ID            string    `json:"id,omitempty"`
-	UserID        string    `json:"user_id,omitempty"`
-	JoinTimestamp time.Time `json:"join_timestamp"`
-	Flags         uint64    `json:"flags"`
-	Member        *Member   `json:"member,omitempty"`
+	ID            string     `json:"id,omitempty"`
+	UserID        string     `json:"user_id,omitempty"`
+	JoinTimestamp *time.Time `json:"join_timestamp"`
+	Flags         uint64     `json:"flags"`
+	Member        *Member    `json:"member,omitempty"`
 }
 
 type ChannelFlags uint64
@@ -148,7 +148,7 @@ type Message struct {
 	Author               *User                 `json:"author"`
 	Content              string                `json:"content"`
 	Timestamp            time.Time             `json:"timestamp"`
-	EditedTimestamp      time.Time             `json:"edited_timestamp,omitempty"`
+	EditedTimestamp      *time.Time            `json:"edited_timestamp,omitempty"`
 	TTS                  bool                  `json:"tts"`
 	MentionEveryone      bool                  `json:"mention_everyone"`
 	Mentions             []User                `json:"mentions"`
@@ -386,7 +386,12 @@ type RoleSubscriptionData struct {
 }
 
 type ArchivedThreads struct {
-	Threads []Channel `json:"threads"`
-	Members []Member  `json:"members"`
-	HasMore bool      `json:"has_more"`
+	Threads []Channel      `json:"threads"`
+	Members []ThreadMember `json:"members"`
+	HasMore bool           `json:"has_more"`
+}
+
+type ActiveThreads struct {
+	Threads []Channel      `json:"threads"`
+	Members []ThreadMember `json:"members"`
 }

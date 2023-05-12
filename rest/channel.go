@@ -37,9 +37,9 @@ func (c *Client) GetReactions(channelID, messageID, emoji, after string, limit i
 	return DoRequestAsList[discord.User](c, "GET", ChannelsEndpoint+"/"+channelID+"/messages/"+messageID+"/reactions/"+emoji, queryParams, 1)
 }
 
-// GetChannelInvites returns a list of discord.Invite with discord.InviteMetadata that are available in the specific channel
-func (c *Client) GetChannelInvites(channelID string) ([]discord.Invite, error) {
-	return DoRequestAsList[discord.Invite](c, "GET", ChannelsEndpoint+"/"+channelID+"/invites", nil, 1)
+// GetChannelInvites returns a list of discord.InviteWithMetadata with discord.InviteMetadata that are available in the specific channel
+func (c *Client) GetChannelInvites(channelID string) ([]discord.InviteWithMetadata, error) {
+	return DoRequestAsList[discord.InviteWithMetadata](c, "GET", ChannelsEndpoint+"/"+channelID+"/invites", nil, 1)
 }
 
 // GetPinnedMessages returns a list of discord.Message that are pinned in the given channel
