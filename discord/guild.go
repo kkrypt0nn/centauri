@@ -1,10 +1,7 @@
 package discord
 
-import (
-	"github.com/kkrypt0nn/centauri/oauth2"
-	"time"
-)
-
+// Guild represents an isolated collection of users and channels, and are often referred to as "servers" in the UI
+// https://discord.com/developers/docs/resources/guild#guild-object-guild-structure
 type Guild struct {
 	ID                          string                   `json:"id"`
 	Name                        string                   `json:"name"`
@@ -50,6 +47,8 @@ type Guild struct {
 	PremiumProgressBarEnabled   bool                     `json:"premium_progress_bar_enabled"`
 }
 
+// GuildVerificationLevel represents the verification level used in a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#guild-object-verification-level
 type GuildVerificationLevel int
 
 const (
@@ -60,6 +59,8 @@ const (
 	GuildVerificationLevelVeryHigh
 )
 
+// MessageNotificationLevel represents the default message notification level in a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level
 type MessageNotificationLevel int
 
 const (
@@ -67,6 +68,8 @@ const (
 	MessageNotificationLevelOnlyMentions
 )
 
+// ExplicitContentFilter represents the explicit content filter in a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level
 type ExplicitContentFilter int
 
 const (
@@ -75,6 +78,8 @@ const (
 	ExplicitContentFilterAllMembers
 )
 
+// MFALevel represents the required MFA level in a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#guild-object-mfa-level
 type MFALevel int
 
 const (
@@ -82,6 +87,8 @@ const (
 	MFALevelElevated
 )
 
+// SystemChannelFlags represents the channel flags in a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags
 type SystemChannelFlags uint64
 
 const SystemChannelFlagsNone SystemChannelFlags = 0
@@ -94,6 +101,8 @@ const (
 	SystemChannelFlagsSuppressRoleSubscriptionPurchaseNotificationsReplies
 )
 
+// PremiumTier represents the premium tier, also known as server boost, in a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#guild-object-premium-tier
 type PremiumTier int
 
 const (
@@ -103,11 +112,15 @@ const (
 	PremiumTier3
 )
 
+// WelcomeScreen represents the welcome screen of a community guild (discord.GuildFeatureCommunity), that is shown to new members
+// https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure
 type WelcomeScreen struct {
 	Description     string                 `json:"description"`
 	WelcomeChannels []WelcomeScreenChannel `json:"welcome_channels"`
 }
 
+// WelcomeScreenChannel represents a channel shown in the welcome screen
+// https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure
 type WelcomeScreenChannel struct {
 	ChannelID   string `json:"channel_id"`
 	Description string `json:"description"`
@@ -115,6 +128,8 @@ type WelcomeScreenChannel struct {
 	EmojiName   string `json:"emoji_name"`
 }
 
+// NSFWLevel represents the NSFW level of a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#guild-object-guild-nsfw-level
 type NSFWLevel int
 
 const (
@@ -124,6 +139,8 @@ const (
 	NSFWLevelAgeRestricted
 )
 
+// GuildPreview represents a small preview of a guild (discord.Guild) with partial information
+// https://discord.com/developers/docs/resources/guild#guild-preview-object-guild-preview-structure
 type GuildPreview struct {
 	ID                       string         `json:"id"`
 	Name                     string         `json:"name"`
@@ -138,20 +155,28 @@ type GuildPreview struct {
 	Stickers                 []Sticker      `json:"stickers"`
 }
 
+// GuildBan represents a banned user (discord.User) in a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#ban-object-ban-structure
 type GuildBan struct {
 	Reason string `json:"reason"`
 	User   *User  `json:"user"`
 }
 
+// GuildPrune represents how many members (discord.Member) will get pruned when performing a prune
+// https://discord.com/developers/docs/resources/guild#get-guild-prune-count
 type GuildPrune struct {
 	Pruned int `json:"pruned"`
 }
 
+// WidgetSetting represents the channel (discord.Channel) used and whether the widget (discord.Widget) of the guild (discord.Guild) is enabled
+// https://discord.com/developers/docs/resources/guild#guild-widget-settings-object-guild-widget-settings-structure
 type WidgetSetting struct {
 	Enabled  bool   `json:"enabled"`
 	ChanelID string `json:"chanel_id"`
 }
 
+// Widget represents the guild's (discord.Guild) widget
+// https://discord.com/developers/docs/resources/guild#guild-widget-object-guild-widget-structure
 type Widget struct {
 	ID            string    `json:"id"`
 	Name          string    `json:"name"`
@@ -161,6 +186,8 @@ type Widget struct {
 	PresenceCount int       `json:"presence_count"`
 }
 
+// Onboarding represents the onboarding flow for a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#guild-onboarding-object-guild-onboarding-structure
 type Onboarding struct {
 	GuildID           string             `json:"guild_id"`
 	Prompts           []OnboardingPrompt `json:"prompts"`
@@ -168,6 +195,8 @@ type Onboarding struct {
 	Enabled           bool               `json:"enabled"`
 }
 
+// OnboardingPrompt represents a prompt shown during onboarding (discord.Onboarding) and in customize community
+// https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-prompt-structure
 type OnboardingPrompt struct {
 	ID           string                   `json:"id"`
 	Type         OnboardingPromptType     `json:"type"`
@@ -178,6 +207,8 @@ type OnboardingPrompt struct {
 	InOnboarding bool                     `json:"in_onboarding"`
 }
 
+// OnboardingPromptType represents the type of prompt for the onboarding prompt (discord.OnboardingPrompt)
+// https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-types
 type OnboardingPromptType int
 
 const (
@@ -185,6 +216,8 @@ const (
 	OnboardingPromptTypeDropdown
 )
 
+// OnboardingPromptOption represents the options available within the prompt (discord.OnboardingPrompt)
+// https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-option-structure
 type OnboardingPromptOption struct {
 	ID          string   `json:"id"`
 	ChannelIDs  []string `json:"channel_ids"`
@@ -237,90 +270,3 @@ const (
 	GuildFeatureVIPRegions                            GuildFeature = "VIP_REGIONS"
 	GuildFeatureWelcomeScreenEnabled                  GuildFeature = "WELCOME_SCREEN_ENABLED"
 )
-
-type Integration struct {
-	ID                string                    `json:"id"`
-	Name              string                    `json:"name"`
-	Type              string                    `json:"type"`
-	Enabled           bool                      `json:"enabled"`
-	Syncing           bool                      `json:"syncing,omitempty"`
-	RoleID            string                    `json:"role_id,omitempty"`
-	EnableEmoticons   bool                      `json:"enable_emoticons,omitempty"`
-	ExpireBehavior    IntegrationExpireBehavior `json:"expire_behavior,omitempty"`
-	ExpireGracePeriod int                       `json:"expire_grace_period,omitempty"`
-	User              *User                     `json:"user,omitempty"`
-	Account           IntegrationAccount        `json:"account"`
-	SyncedAt          *time.Time                `json:"synced_at,omitempty"`
-	SubscriberCount   int                       `json:"subscriber_count,omitempty"`
-	Revoked           bool                      `json:"revoked,omitempty"`
-	Application       IntegrationApplication    `json:"application,omitempty"`
-	Scopes            []oauth2.Scope            `json:"scopes,omitempty"`
-}
-
-type IntegrationExpireBehavior int
-
-const (
-	IntegrationExpireBehaviorRemoveRole IntegrationExpireBehavior = iota
-	IntegrationExpireBehaviorKick
-)
-
-type IntegrationAccount struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
-type IntegrationApplication struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Icon        string `json:"icon"`
-	Description string `json:"description"`
-	Bot         *User  `json:"bot,omitempty"`
-}
-
-type Member struct {
-	User                       *User       `json:"user,omitempty"`
-	Nick                       string      `json:"nick,omitempty"`
-	Avatar                     string      `json:"avatar,omitempty"`
-	Roles                      []string    `json:"roles"`
-	JoinedAt                   time.Time   `json:"joined_at"`
-	PremiumSince               *time.Time  `json:"premium_since,omitempty"`
-	Deaf                       bool        `json:"deaf"`
-	Mute                       bool        `json:"mute"`
-	Flags                      MemberFlags `json:"flags"`
-	Pending                    bool        `json:"pending,omitempty"`
-	Permissions                uint64      `json:"permissions,string,omitempty"`
-	CommunicationDisabledUntil *time.Time  `json:"communication_disabled_until,omitempty"`
-}
-
-type MemberFlags uint64
-
-const MemberFlagsNone MemberFlags = 0
-const (
-	MemberFlagDidRejoin MemberFlags = 1 << iota
-	MemberFlagCompletedOnboarding
-	MemberFlagBypassesVerification
-	MemberFlagStartedOnboarding
-)
-
-type Role struct {
-	ID           string    `json:"id"`
-	Name         string    `json:"name"`
-	Color        int       `json:"color"`
-	Hoist        bool      `json:"hoist"`
-	Icon         string    `json:"icon,omitempty"`
-	UnicodeEmoji string    `json:"unicode_emoji"`
-	Position     int       `json:"position"`
-	Permissions  uint64    `json:"permissions,string"`
-	Managed      bool      `json:"managed"`
-	Mentionable  bool      `json:"mentionable"`
-	Tags         *RoleTags `json:"tags,omitempty"`
-}
-
-type RoleTags struct {
-	BotID                 string `json:"bot_id"`
-	IntegrationID         string `json:"integration_id"`
-	PremiumSubscriber     bool   `json:"premium_subscriber"`
-	SubscriptionListingID string `json:"subscription_listing_id"`
-	AvailableForPurchase  bool   `json:"available_for_purchase"`
-	GuildConnections      bool   `json:"guild_connections"`
-}

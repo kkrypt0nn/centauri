@@ -2,6 +2,8 @@ package discord
 
 import "github.com/kkrypt0nn/centauri/oauth2"
 
+// ApplicationRoleConnectionMetadata represents a role connection metadata for an application (discord.Application)
+// https://discord.com/developers/docs/resources/application-role-connection-metadata#application-role-connection-metadata-object-application-role-connection-metadata-structure
 type ApplicationRoleConnectionMetadata struct {
 	Type                     ApplicationRoleConnectionMetadataType `json:"type"`
 	Key                      string                                `json:"key"`
@@ -11,6 +13,8 @@ type ApplicationRoleConnectionMetadata struct {
 	DescriptionLocalizations map[Locale]string                     `json:"description_localizations,omitempty"`
 }
 
+// ApplicationRoleConnectionMetadataType represents the type of metadata value
+// https://discord.com/developers/docs/resources/application-role-connection-metadata#application-role-connection-metadata-object-application-role-connection-metadata-type
 type ApplicationRoleConnectionMetadataType int
 
 const (
@@ -24,6 +28,8 @@ const (
 	ApplicationRoleConnectionMetadataTypeBooleanNotEqual
 )
 
+// Application represents a Discord application
+// https://discord.com/developers/docs/resources/application#application-object-application-structure
 type Application struct {
 	ID                             string           `json:"id"`
 	Name                           string           `json:"name"`
@@ -48,6 +54,8 @@ type Application struct {
 	RoleConnectionsVerificationURL string           `json:"role_connections_verification_url,omitempty"`
 }
 
+// Team represents a group of developers on Discord who want to collaborate on applications
+// https://discord.com/developers/docs/topics/teams#data-models-team-object
 type Team struct {
 	Icon        string       `json:"icon,omitempty"`
 	ID          string       `json:"id"`
@@ -56,6 +64,8 @@ type Team struct {
 	OwnerUserID string       `json:"owner_user_id"`
 }
 
+// TeamMember represents a member of a Discord team (discord.Team)
+// https://discord.com/developers/docs/topics/teams#data-models-team-member-object
 type TeamMember struct {
 	MembershipState MembershipState `json:"membership_state"`
 	Permissions     []string        `json:"permissions"`
@@ -63,6 +73,8 @@ type TeamMember struct {
 	User            *User           `json:"user"`
 }
 
+// MembershipState represents the membership state of a team member (discord.TeamMember)
+// https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum
 type MembershipState int
 
 const (
@@ -70,6 +82,8 @@ const (
 	MembershipStateAccepted
 )
 
+// ApplicationFlags represents the list of public flags of an application (discord.Application)
+// https://discord.com/developers/docs/resources/application#application-object-application-flags
 type ApplicationFlags uint64
 
 const ApplicationFlagsNone ApplicationFlags = 0
@@ -100,6 +114,8 @@ const (
 	ApplicationFlagApplicationCommandBadge
 )
 
+// InstallParams represents the application's default in-app authorization link
+// https://discord.com/developers/docs/resources/application#install-params-object-install-params-structure
 type InstallParams struct {
 	Scopes      []oauth2.Scope `json:"scopes"`
 	Permissions string         `json:"permissions"`

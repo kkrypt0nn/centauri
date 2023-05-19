@@ -1,5 +1,7 @@
 package discord
 
+// Webhook represents a low-effort way to post messages to channels (discord.Channel). A bot authentication is not required for using them
+// https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure
 type Webhook struct {
 	ID            string        `json:"id"`
 	Type          WebhookType   `json:"type"`
@@ -15,6 +17,8 @@ type Webhook struct {
 	URL           string        `json:"url,omitempty"`
 }
 
+// WebhookType represents the type of webhook (discord.Webhook)
+// https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types
 type WebhookType int
 
 const (

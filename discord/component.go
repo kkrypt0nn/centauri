@@ -5,10 +5,14 @@ import (
 	"fmt"
 )
 
+// Component represents an interface that is implemented by all message components below
+// https://discord.com/developers/docs/interactions/message-components#message-components
 type Component interface {
 	Type() ComponentType
 }
 
+// ComponentType represents the type of component (discord.Component)
+// https://discord.com/developers/docs/interactions/message-components#component-object-component-types
 type ComponentType int
 
 const (
@@ -22,6 +26,7 @@ const (
 	ComponentTypeChannelSelect
 )
 
+// UnidentifiedComponent represents a component (discord.Component) that hasn't had its type identified yet
 type UnidentifiedComponent struct {
 	Type ComponentType `json:"type"`
 	data Component
@@ -54,6 +59,8 @@ func (c *UnidentifiedComponent) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+// ActionRow represents a non-interactive container component for other types of components
+// https://discord.com/developers/docs/interactions/message-components#action-rows
 type ActionRow struct {
 	Components []Component `json:"components"`
 }
@@ -88,6 +95,8 @@ func (c *ActionRow) Type() ComponentType {
 	return ComponentTypeActionRow
 }
 
+// Button represents an interactive components that render in messages which can be clicked by users
+// https://discord.com/developers/docs/interactions/message-components#button-object-button-structure
 type Button struct {
 	Style    ButtonStyle `json:"style"`
 	Label    string      `json:"label"`
@@ -112,6 +121,8 @@ func (c *Button) Type() ComponentType {
 	return ComponentTypeButton
 }
 
+// ButtonStyle represents the style of the button (discord.Button)
+// https://discord.com/developers/docs/interactions/message-components#button-object-button-styles
 type ButtonStyle int
 
 const (
@@ -122,6 +133,8 @@ const (
 	ButtonStyleLink
 )
 
+// SelectMenu represents an interactive components that allow users to select one or more options from a dropdown list in messages
+// https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-menu-structure
 type SelectMenu struct {
 	MenuType     SelectMenuType `json:"type"`
 	CustomID     string         `json:"custom_id,omitempty"`
@@ -140,6 +153,8 @@ func (c *SelectMenu) Type() ComponentType {
 	return ComponentTypeSelectMenu
 }
 
+// SelectMenuType represents the type of select menu (discord.SelectMenu)
+// https://discord.com/developers/docs/interactions/message-components#component-object-component-types
 type SelectMenuType int
 
 const (
@@ -153,6 +168,8 @@ const (
 	SelectMenuTypeChannels
 )
 
+// SelectOption represents the choices a user can choose from
+// https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-option-structure
 type SelectOption struct {
 	Label       string `json:"label"`
 	Value       string `json:"value"`
@@ -161,6 +178,8 @@ type SelectOption struct {
 	Default     bool   `json:"default"`
 }
 
+// TextInput represents an interactive component that render on modals
+// https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-structure
 type TextInput struct {
 	CustomID    string         `json:"custom_id,omitempty"`
 	Style       TextInputStyle `json:"style"`
@@ -187,6 +206,8 @@ func (c *TextInput) Type() ComponentType {
 	return ComponentTypeTextInput
 }
 
+// TextInputStyle represents the style to use for the text input (discord.TextInput)
+// https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-styles
 type TextInputStyle int
 
 const (

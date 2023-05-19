@@ -2,6 +2,8 @@ package discord
 
 import "time"
 
+// GuildTemplate represents a template that can be used to creates a guild (discord.Guild) based on a snapshot of an existing guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild-template#guild-template-object-guild-template-structure
 type GuildTemplate struct {
 	Code                  string        `json:"code"`
 	Name                  string        `json:"name"`

@@ -10,22 +10,22 @@ const (
 	ChannelsEndpoint = Endpoint + "channels"
 )
 
-// GetChannel returns a discord.Channel given its ID
+// GetChannel returns a channel structure (discord.Channel) for the given channel ID
 func (c *Client) GetChannel(channelID string) (*discord.Channel, error) {
 	return DoRequestAs[discord.Channel](c, "GET", ChannelsEndpoint+"/"+channelID, nil, 1)
 }
 
-// GetChannelMessages returns a list of discord.Message from a channel
+// GetChannelMessages returns a list of message structures (discord.Message) for the given channel ID
 func (c *Client) GetChannelMessages(channelID string) ([]discord.Message, error) {
 	return DoRequestAsList[discord.Message](c, "GET", ChannelsEndpoint+"/"+channelID+"/messages", nil, 1)
 }
 
-// GetChannelMessage returns a discord.Message given its ID
+// GetChannelMessage returns a message (discord.Message) for the given channel and message IDs
 func (c *Client) GetChannelMessage(channelID, messageID string) (*discord.Message, error) {
 	return DoRequestAs[discord.Message](c, "GET", ChannelsEndpoint+"/"+channelID+"/messages/"+messageID, nil, 1)
 }
 
-// GetReactions returns a list of discord.User that reacted to the message with the given emoji
+// GetReactions returns a list of user structures (discord.User) that reacted to the given message ID in the given channel ID with the given emoji
 func (c *Client) GetReactions(channelID, messageID, emoji, after string, limit int) ([]discord.User, error) {
 	queryParams := make(QueryParameters)
 	if after != "" {
@@ -37,22 +37,22 @@ func (c *Client) GetReactions(channelID, messageID, emoji, after string, limit i
 	return DoRequestAsList[discord.User](c, "GET", ChannelsEndpoint+"/"+channelID+"/messages/"+messageID+"/reactions/"+emoji, queryParams, 1)
 }
 
-// GetChannelInvites returns a list of discord.InviteWithMetadata with discord.InviteMetadata that are available in the specific channel
+// GetChannelInvites returns a list of invite with metadata structures (discord.InviteWithMetadata) for a given channel ID
 func (c *Client) GetChannelInvites(channelID string) ([]discord.InviteWithMetadata, error) {
 	return DoRequestAsList[discord.InviteWithMetadata](c, "GET", ChannelsEndpoint+"/"+channelID+"/invites", nil, 1)
 }
 
-// GetPinnedMessages returns a list of discord.Message that are pinned in the given channel
+// GetPinnedMessages returns a list of message structures (discord.Message) that are pinned in the given channel ID
 func (c *Client) GetPinnedMessages(channelID string) ([]discord.Message, error) {
 	return DoRequestAsList[discord.Message](c, "GET", ChannelsEndpoint+"/"+channelID+"/pins", nil, 1)
 }
 
-// GetThreadMember returns the discord.ThreadMember if they are a member of the thread
+// GetThreadMember returns a thread member structure (discord.ThreadMember) for a given thread and user ID if they are a member of said thread
 func (c *Client) GetThreadMember(threadID, userID string) (*discord.ThreadMember, error) {
 	return DoRequestAs[discord.ThreadMember](c, "GET", ChannelsEndpoint+"/"+threadID+"/thread-members/"+userID, nil, 1)
 }
 
-// ListThreadMembers returns a list of discord.ThreadMember that are members of the thread
+// ListThreadMembers returns a list of thread member structures (discord.ThreadMember) that are members of the given thread ID
 func (c *Client) ListThreadMembers(threadID, after string, withMember bool, limit int) ([]discord.ThreadMember, error) {
 	queryParams := make(QueryParameters)
 	if after != "" {
@@ -67,7 +67,7 @@ func (c *Client) ListThreadMembers(threadID, after string, withMember bool, limi
 	return DoRequestAsList[discord.ThreadMember](c, "GET", ChannelsEndpoint+"/"+threadID+"/thread-members", queryParams, 1)
 }
 
-// ListPublicArchivedThreads returns discord.ArchivedThreads which represent public archived threads in the given channel
+// ListPublicArchivedThreads returns an archived threads structure (discord.ArchivedThreads) which contains the public archived threads in the given channel ID
 func (c *Client) ListPublicArchivedThreads(channelID string, before *time.Time, limit int) (*discord.ArchivedThreads, error) {
 	queryParams := make(QueryParameters)
 	if before != nil {
@@ -79,7 +79,7 @@ func (c *Client) ListPublicArchivedThreads(channelID string, before *time.Time, 
 	return DoRequestAs[discord.ArchivedThreads](c, "GET", ChannelsEndpoint+"/"+channelID+"/threads/archived/public", queryParams, 1)
 }
 
-// ListPrivateArchivedThreads returns discord.ArchivedThreads which represent private archived threads in the given channel
+// ListPrivateArchivedThreads returns an archived threads structure (discord.ArchivedThreads) which contains the private archived threads in the given channel ID
 func (c *Client) ListPrivateArchivedThreads(channelID string, before *time.Time, limit int) (*discord.ArchivedThreads, error) {
 	queryParams := make(QueryParameters)
 	if before != nil {
@@ -91,7 +91,7 @@ func (c *Client) ListPrivateArchivedThreads(channelID string, before *time.Time,
 	return DoRequestAs[discord.ArchivedThreads](c, "GET", ChannelsEndpoint+"/"+channelID+"/threads/archived/private", queryParams, 1)
 }
 
-// ListJoinedPrivateArchivedThreads returns discord.ArchivedThreads which represent private archived threads in the given channel that the user has joined
+// ListJoinedPrivateArchivedThreads returns an archived threads structure (discord.ArchivedThreads) which contains the private archived threads in the given channel ID that the user has joined
 func (c *Client) ListJoinedPrivateArchivedThreads(channelID, before string, limit int) (*discord.ArchivedThreads, error) {
 	queryParams := make(QueryParameters)
 	if before != "" {

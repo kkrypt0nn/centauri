@@ -6,7 +6,7 @@ import (
 )
 
 // ApplicationCommand represents an application command that is natively implemented within Discord
-// https://discord.com/developers/docs/interactions/application-commands#application-command-object
+// https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure
 type ApplicationCommand struct {
 	ID                       string                    `json:"id"`
 	Type                     ApplicationCommandType    `json:"type,omitempty"`
@@ -34,10 +34,12 @@ const (
 	ApplicationCommandTypeMessage
 )
 
+// ApplicationCommandOption is an interface that will be implemented by all application command options
 type ApplicationCommandOption interface {
 	Type() ApplicationCommandOptionType
 }
 
+// UnidentifiedApplicationCommandOption represents an application command option (discord.ApplicationCommandOption) that hasn't had its type identified yet
 type UnidentifiedApplicationCommandOption struct {
 	Type ApplicationCommandOptionType `json:"type"`
 
@@ -85,6 +87,7 @@ func (o *UnidentifiedApplicationCommandOption) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+// ApplicationCommandOptions is a list of application command options (discord.ApplicationCommandOption)
 type ApplicationCommandOptions []ApplicationCommandOption
 
 func (o *ApplicationCommandOptions) UnmarshalJSON(b []byte) error {
@@ -106,6 +109,8 @@ func (o *ApplicationCommandOptions) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+// SubCommandOption represents a sub-command option to an application command (discord.ApplicationCommand)
+// https://discord.com/developers/docs/interactions/application-commands#subcommands-and-subcommand-groups
 type SubCommandOption struct {
 	Name                     string                     `json:"name"`
 	NameLocalizations        map[Locale]string          `json:"name_localizations,omitempty"`
@@ -130,6 +135,8 @@ func (o *SubCommandOption) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// SubCommandGroupOption represents a sub-command group option to an application command (discord.ApplicationCommand)
+// https://discord.com/developers/docs/interactions/application-commands#subcommands-and-subcommand-groups
 type SubCommandGroupOption struct {
 	Name                     string             `json:"name"`
 	NameLocalizations        map[Locale]string  `json:"name_localizations,omitempty"`
@@ -154,6 +161,7 @@ func (o *SubCommandGroupOption) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// StringCommandOption represents an application command option (discord.ApplicationCommandOption) to pass a string
 type StringCommandOption struct {
 	Name                     string            `json:"name"`
 	NameLocalizations        map[Locale]string `json:"name_localizations,omitempty"`
@@ -181,12 +189,14 @@ func (o *StringCommandOption) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// StringChoice is a choice which can be given in a string command option (discord.StringCommandOption)
 type StringChoice struct {
 	Name              string            `json:"name"`
 	NameLocalizations map[Locale]string `json:"name_localizations,omitempty"`
 	Value             string            `json:"value"`
 }
 
+// IntegerCommandOption represents an application command option (discord.ApplicationCommandOption) to pass an integer
 type IntegerCommandOption struct {
 	Name                     string            `json:"name"`
 	NameLocalizations        map[Locale]string `json:"name_localizations,omitempty"`
@@ -214,12 +224,14 @@ func (o *IntegerCommandOption) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// IntegerChoice is a choice which can be given in an integer command option (discord.IntegerCommandOption)
 type IntegerChoice struct {
 	Name              string            `json:"name"`
 	NameLocalizations map[Locale]string `json:"name_localizations,omitempty"`
 	Value             int               `json:"value"`
 }
 
+// BooleanCommandOption represents an application command option (discord.ApplicationCommandOption) to pass an integer
 type BooleanCommandOption struct {
 	Name                     string            `json:"name"`
 	NameLocalizations        map[Locale]string `json:"name_localizations,omitempty"`
@@ -243,6 +255,7 @@ func (o *BooleanCommandOption) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// UserCommandOption represents an application command option (discord.ApplicationCommandOption) to pass a user (discord.User)
 type UserCommandOption struct {
 	Name                     string            `json:"name"`
 	NameLocalizations        map[Locale]string `json:"name_localizations,omitempty"`
@@ -266,6 +279,7 @@ func (o *UserCommandOption) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// ChannelCommandOption represents an application command option (discord.ApplicationCommandOption) to pass a channel (discord.Channel)
 type ChannelCommandOption struct {
 	Name                     string            `json:"name"`
 	NameLocalizations        map[Locale]string `json:"name_localizations,omitempty"`
@@ -290,6 +304,7 @@ func (o *ChannelCommandOption) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// RoleCommandOption represents an application command option (discord.ApplicationCommandOption) to pass a role (discord.Role)
 type RoleCommandOption struct {
 	Name                     string            `json:"name"`
 	NameLocalizations        map[Locale]string `json:"name_localizations,omitempty"`
@@ -313,6 +328,7 @@ func (o *RoleCommandOption) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// MentionableCommandOption represents an application command option (discord.ApplicationCommandOption) to pass a mentionable (discord.User & discord.Role)
 type MentionableCommandOption struct {
 	Name                     string            `json:"name"`
 	NameLocalizations        map[Locale]string `json:"name_localizations,omitempty"`
@@ -336,6 +352,7 @@ func (o *MentionableCommandOption) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// NumberCommandOption represents an application command option (discord.ApplicationCommandOption) to pass a number
 type NumberCommandOption struct {
 	Name                     string            `json:"name"`
 	NameLocalizations        map[Locale]string `json:"name_localizations,omitempty"`
@@ -363,12 +380,14 @@ func (o *NumberCommandOption) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// NumberChoice is a choice which can be given in a number command option (discord.NumberCommandOption)
 type NumberChoice struct {
 	Name              string            `json:"name"`
 	NameLocalizations map[Locale]string `json:"name_localizations,omitempty"`
 	Value             float64           `json:"value"`
 }
 
+// AttachmentCommandOption represents an application command option (discord.ApplicationCommandOption) to pass an attachment (discord.Attachment)
 type AttachmentCommandOption struct {
 	Name                     string            `json:"name"`
 	NameLocalizations        map[Locale]string `json:"name_localizations,omitempty"`
@@ -410,19 +429,25 @@ const (
 	ApplicationCommandOptionTypeAttachment
 )
 
+// GuildApplicationCommandPermissions represents the permissions for an app's command in a guild
+// https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-guild-application-command-permissions-structure
 type GuildApplicationCommandPermissions struct {
-	ID            string                          `json:"id"`
-	ApplicationID string                          `json:"application_id"`
-	GuildID       string                          `json:"guild_id"`
-	Permissions   []ApplicationCommandPermissions `json:"permissions"`
+	ID            string                         `json:"id"`
+	ApplicationID string                         `json:"application_id"`
+	GuildID       string                         `json:"guild_id"`
+	Permissions   []ApplicationCommandPermission `json:"permissions"`
 }
 
-type ApplicationCommandPermissions struct {
+// ApplicationCommandPermission represents the permissions for an application command (discord.ApplicationCommand)
+// https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-application-command-permissions-structure
+type ApplicationCommandPermission struct {
 	ID         string                           `json:"id"`
 	Type       ApplicationCommandPermissionType `json:"type"`
 	Permission bool                             `json:"permission"`
 }
 
+// ApplicationCommandPermissionType represents the type of application command permission (discord.ApplicationCommandPermission) it is
+// https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-application-command-permission-type
 type ApplicationCommandPermissionType int
 
 const (

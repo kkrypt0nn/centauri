@@ -2,6 +2,8 @@ package discord
 
 import "time"
 
+// Invite represents a code that when used, adds a user to a guild or group DM channel
+// https://discord.com/developers/docs/resources/invite#invite-object-invite-structure
 type Invite struct {
 	Code                     string               `json:"code"`
 	Guild                    *PartialGuild        `json:"guild,omitempty"`
@@ -13,10 +15,11 @@ type Invite struct {
 	ApproximatePresenceCount int                  `json:"approximate_presence_count"`
 	ApproximateMemberCount   int                  `json:"approximate_member_count"`
 	ExpiresAt                *time.Time           `json:"expires_at"`
-	StageInstance            *InviteStageInstance `json:"stage_instance,omitempty"`
 	GuildScheduledEvent      *GuildScheduledEvent `json:"guild_scheduled_event,omitempty"`
 }
 
+// InviteWithMetadata represents an invite (discord.Invite) with additional metadata
+// https://discord.com/developers/docs/resources/invite#invite-metadata-object-invite-metadata-structure
 type InviteWithMetadata struct {
 	Invite
 	Uses      int       `json:"uses"`
@@ -26,21 +29,18 @@ type InviteWithMetadata struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+// PartialInvite represents a partial invite (discord.Invite) - for so-called vanity invites
+// https://discord.com/developers/docs/resources/guild#get-guild-vanity-url-example-partial-invite-object
 type PartialInvite struct {
 	Code string `json:"code"`
 	Uses int    `json:"uses"`
 }
 
+// InviteTargetType represents the target type of the invite (discord.Invite)
+// https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types
 type InviteTargetType int
 
 const (
 	InviteTargetTypeStream InviteTargetType = 1 + iota
 	InviteTargetTypeEmbeddedApplication
 )
-
-type InviteStageInstance struct {
-	Members          []Member `json:"members"`
-	ParticipantCount int      `json:"participant_count"`
-	SpeakerCount     int      `json:"speaker_count"`
-	Topic            string   `json:"topic"`
-}

@@ -1,7 +1,7 @@
 package discord
 
 // User represents a Discord user or a Discord bot
-// https://discord.com/developers/docs/resources/user#user-object
+// https://discord.com/developers/docs/resources/user#user-object-user-structure
 type User struct {
 	ID         string `json:"id"`
 	Username   string `json:"username"`
