@@ -48,3 +48,9 @@ const (
 type GuildScheduledEventEntityMetadata struct {
 	Location string `json:"location,omitempty"`
 }
+
+type GuildScheduledEventUser struct {
+	GuildScheduledEventID string  `json:"guild_scheduled_event_id"`
+	User                  *User   `json:"user"`
+	Member                *Member `json:"member,omitempty"`
+}
