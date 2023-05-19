@@ -7,7 +7,7 @@ description: The library may throw errors when giving a wrong token, on this pag
 
 ## Discord Tokens 101
 
-In order for your application to work, you will need to use a so called **token**. Such a token is composed as a mix of letters, numbers and symbols, which is essential for your application. It acts as a key to send REST API request and connect to Discord's Gateway. That way it will be possible for you to control a Discord bot and act based on certain events.
+In order for your application to work, you will need to use a so-called **token**. Such a token is composed as a mix of letters, numbers and symbols, which is essential for your application. It acts as a key to send REST API request and connect to Discord's Gateway. That way it will be possible for you to control a Discord bot and act based on certain events.
 
 Every user account also works with the same token system with some small differences.
 
@@ -17,13 +17,13 @@ A token is unique, and **nobody** else should have access to it. If it is the ca
 
 :::
 
-Here is an example of a, now invalidated, Discord token:
+Here is an example of a (now invalidated) Discord token:
 
 ```
 OTA5Nzc0MTgyMzM5MDA2NzIu.OXIME5.5MbvcVgSQHiuwRGPX0mlECrNO4-Tgd4RFG5DbE
 ```
 
-When using Centauri, if you use an **invalid/wrong token**, you might encounter an `errors.Unauthorized` error while performing requests.
+When using Centauri, if you use an **invalid/wrong token**, you might encounter a `discord.Error` with the message being `401: Unauthorized` error while performing requests.
 
 ## Get a token
 
@@ -33,7 +33,7 @@ When using Centauri, if you use an **invalid/wrong token**, you might encounter 
 3. You can then click on the **_"Bot"_** tab to the left, and click **_"Add Bot"_** if not already done. Then, click **_"Copy"_** under the token section!
    ![Copy bot's token](bot_token.png)
 
-Your bot's token should now be copied into your clipboard and you may use that token in Centauri.
+Your bot's token should now be copied into your clipboard, and you may use that token in Centauri.
 
 ## Use the token in Centauri
 
@@ -72,12 +72,12 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println("Got Bot:", bot.Username+"#"+bot.Discriminator)
+       fmt.Println(fmt.Sprintf("Got bot %s with ID %s", bot.Username, bot.ID))
 	}
 }
 ```
 
-You should now see in the console your bot's username and discriminator.
+You should now see in the console your bot's username and ID.
 
 ## More issues
 
