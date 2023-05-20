@@ -94,7 +94,11 @@ func (c *Client) DoRequest(method, url string, requestBody any, queryParams Quer
 
 	// Perform the request
 	if c.Debug {
-		c.Logger.Debug(fmt.Sprintf("%s %s, body: %s", method, request.URL.String(), string(bytesBody)))
+		if requestBody != nil {
+			c.Logger.Debug(fmt.Sprintf("%s %s, body: %s", method, request.URL.String(), string(bytesBody)))
+		} else {
+			c.Logger.Debug(fmt.Sprintf("%s %s", method, request.URL.String()))
+		}
 	}
 	response, err := c.HttpClient.Do(request)
 	if err != nil {
