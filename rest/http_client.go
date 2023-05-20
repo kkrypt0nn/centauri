@@ -2,8 +2,6 @@ package rest
 
 import (
 	"net/http"
-	"net/url"
-	"strings"
 )
 
 // HttpClient is a http.Client extended with a custom interceptor
@@ -46,6 +44,5 @@ func WithHeader(key, value string) RequestOption {
 
 // WithReason returns a request option (RequestOption) that will set the 'X-Audit-Log-Reason' header
 func WithReason(reason string) RequestOption {
-	reason = strings.ReplaceAll(url.QueryEscape(reason), "+", " ")
 	return WithHeader("X-Audit-Log-Reason", reason)
 }
