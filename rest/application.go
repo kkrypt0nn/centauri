@@ -8,5 +8,5 @@ const (
 
 // GetApplicationRoleConnectionMetadata returns a list of application role connection metadata structures (discord.ApplicationRoleConnectionMetadata) for the given application ID
 func (c *Client) GetApplicationRoleConnectionMetadata(applicationID string) (*discord.ApplicationRoleConnectionMetadata, error) {
-	return DoRequestAs[discord.ApplicationRoleConnectionMetadata](c, "GET", ApplicationsEndpoint+"/"+applicationID+"/role-connections/metadata", nil, 1)
+	return DoRequestAsStructure[discord.ApplicationRoleConnectionMetadata](c, "GET", ApplicationsEndpoint+"/"+applicationID+"/role-connections/metadata", nil, nil, 1)
 }

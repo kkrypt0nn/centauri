@@ -20,5 +20,5 @@ func (c *Client) GetInvite(inviteCode string, withCounts, withExpiration bool, g
 	if guildScheduledEventID != "" {
 		queryParams["guild_scheduled_event_id"] = guildScheduledEventID
 	}
-	return DoRequestAs[discord.Invite](c, "GET", InvitesEndpoint+"/"+inviteCode, queryParams, 1)
+	return DoRequestAsStructure[discord.Invite](c, "GET", InvitesEndpoint+"/"+inviteCode, nil, queryParams, 1)
 }

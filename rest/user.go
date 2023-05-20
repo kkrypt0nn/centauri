@@ -11,7 +11,7 @@ const (
 
 // GetCurrentUser returns the current user structure (discord.User)
 func (c *Client) GetCurrentUser() (*discord.User, error) {
-	return DoRequestAs[discord.User](c, "GET", UsersEndpoint+"/@me", nil, 1)
+	return DoRequestAsStructure[discord.User](c, "GET", UsersEndpoint+"/@me", nil, nil, 1)
 }
 
 // GetSelfUser is an alias of GetCurrentUser
@@ -21,7 +21,7 @@ func (c *Client) GetSelfUser() (*discord.User, error) {
 
 // GetUser returns a user structure (discord.User) for the given user ID
 func (c *Client) GetUser(userID string) (*discord.User, error) {
-	return DoRequestAs[discord.User](c, "GET", UsersEndpoint+"/"+userID, nil, 1)
+	return DoRequestAsStructure[discord.User](c, "GET", UsersEndpoint+"/"+userID, nil, nil, 1)
 }
 
 // GetUserGuilds returns a list of partial guild structures (discord.PartialGuild)
@@ -36,5 +36,5 @@ func (c *Client) GetUserGuilds(before, after string, limit int) ([]discord.Parti
 	if limit >= 1 && limit <= 200 {
 		queryParams["limit"] = strconv.Itoa(limit)
 	}
-	return DoRequestAsList[discord.PartialGuild](c, "GET", UsersEndpoint+"/@me/guilds", queryParams, 1)
+	return DoRequestAsList[discord.PartialGuild](c, "GET", UsersEndpoint+"/@me/guilds", nil, queryParams, 1)
 }

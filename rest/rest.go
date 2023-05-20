@@ -2,6 +2,7 @@
 package rest
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/kkrypt0nn/centauri/constants"
@@ -48,24 +49,29 @@ func (c *Client) SetAuthorizationHeader(authorizationHeader string) {
 }
 
 // DoRequest performs a request to the given URL with the given method, it will make sure to follow rate limits, and returns the body and the response individually
-func (c *Client) DoRequest(method, url string, queryParams QueryParameters, attempt int) ([]byte, *http.Response, error) {
+func (c *Client) DoRequest(method, url string, requestBody any, queryParams QueryParameters, attempt int, requestOptions ...RequestOption) ([]byte, *http.Response, error) {
 	// Get the bucket for the URL
 	key := strings.Split(url, "?")[0]
 	bucket := c.RateLimiter.LockBucket(key)
 
+	// Marshal the request body
+	var bytesBody []byte
+	if requestBody != nil {
+		var err error
+		if bytesBody, err = json.Marshal(requestBody); err != nil {
+			return nil, nil, err
+		}
+	}
+
 	// Prepare the request and set the relevant headers
-	request, err := http.NewRequest(method, url, nil)
+	request, err := http.NewRequest(method, url, bytes.NewReader(bytesBody))
 	if err != nil {
 		_ = c.RateLimiter.UnlockBucket(bucket, nil)
 		return nil, nil, err
 	}
 	request.Header.Set("Authorization", c.authorizationHeader)
+	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("User-Agent", fmt.Sprintf("DiscordBot (%s, %s)", constants.GitHubURL, constants.Version))
-
-	// Modify the request if an interceptor is set
-	if c.HttpClient.Interceptor != nil {
-		c.HttpClient.Interceptor.ModifyRequest(request)
-	}
 
 	// Set the query parameters
 	if queryParams != nil {
@@ -76,9 +82,19 @@ func (c *Client) DoRequest(method, url string, queryParams QueryParameters, atte
 		request.URL.RawQuery = query.Encode()
 	}
 
+	// Apply the request options by calling them
+	for _, option := range requestOptions {
+		option(request)
+	}
+
+	// Modify the request if an interceptor is set
+	if c.HttpClient.Interceptor != nil {
+		c.HttpClient.Interceptor.ModifyRequest(request)
+	}
+
 	// Perform the request
 	if c.Debug {
-		c.Logger.Debug(fmt.Sprintf("%s %s", method, request.URL.String()))
+		c.Logger.Debug(fmt.Sprintf("%s %s, body: %s", method, request.URL.String(), string(bytesBody)))
 	}
 	response, err := c.HttpClient.Do(request)
 	if err != nil {
@@ -86,14 +102,14 @@ func (c *Client) DoRequest(method, url string, queryParams QueryParameters, atte
 		return nil, nil, err
 	}
 
-	// Modify the response if an interceptor is set
-	if c.HttpClient.Interceptor != nil {
-		c.HttpClient.Interceptor.ModifyResponse(response)
-	}
-
 	err = c.RateLimiter.UnlockBucket(bucket, response.Header)
 	if err != nil {
 		return nil, nil, err
+	}
+
+	// Modify the response if an interceptor is set
+	if c.HttpClient.Interceptor != nil {
+		c.HttpClient.Interceptor.ModifyResponse(response)
 	}
 
 	defer func() {
@@ -121,14 +137,14 @@ func (c *Client) DoRequest(method, url string, queryParams QueryParameters, atte
 
 		integer, frac := math.Modf(rateLimitExceeded.RetryAfter)
 		time.Sleep(time.Duration(integer)*time.Second + time.Duration(frac*1000)*time.Millisecond)
-		return c.DoRequest(method, url, queryParams, attempt+1)
+		return c.DoRequest(method, url, requestBody, queryParams, attempt+1, requestOptions...)
 	default:
 		return body, response, discord.NewError(body, request, response)
 	}
 }
 
-func DoRequestAs[T any](client *Client, method, url string, queryParams QueryParameters, attempt int) (*T, error) {
-	responseBody, _, err := client.DoRequest(method, url, queryParams, attempt)
+func DoRequestAsStructure[T any](client *Client, method, url string, requestBody any, queryParams QueryParameters, attempt int, requestOptions ...RequestOption) (*T, error) {
+	responseBody, _, err := client.DoRequest(method, url, requestBody, queryParams, attempt, requestOptions...)
 	if err != nil {
 		return nil, err
 	}
@@ -141,8 +157,8 @@ func DoRequestAs[T any](client *Client, method, url string, queryParams QueryPar
 	return entity, err
 }
 
-func DoRequestAsList[T any](client *Client, method, url string, queryParams QueryParameters, attempt int) ([]T, error) {
-	responseBody, _, err := client.DoRequest(method, url, queryParams, attempt)
+func DoRequestAsList[T any](client *Client, method, url string, requestBody any, queryParams QueryParameters, attempt int, requestOptions ...RequestOption) ([]T, error) {
+	responseBody, _, err := client.DoRequest(method, url, requestBody, queryParams, attempt, requestOptions...)
 	if err != nil {
 		return nil, err
 	}

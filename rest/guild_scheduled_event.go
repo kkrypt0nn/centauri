@@ -11,7 +11,7 @@ func (c *Client) ListGuildScheduledEvents(guildID string, withUserCount bool) ([
 	if withUserCount {
 		queryParams["with_user_count"] = "true"
 	}
-	return DoRequestAsList[discord.GuildScheduledEvent](c, "GET", GuildsEndpoint+"/"+guildID+"/scheduled-events", queryParams, 1)
+	return DoRequestAsList[discord.GuildScheduledEvent](c, "GET", GuildsEndpoint+"/"+guildID+"/scheduled-events", nil, queryParams, 1)
 }
 
 // GetGuildScheduledEvent returns a guild scheduled event structure (discord.GuildScheduledEvent) for the given guild ID and scheduled event ID
@@ -20,7 +20,7 @@ func (c *Client) GetGuildScheduledEvent(guildID, scheduledEventID string, withUs
 	if withUserCount {
 		queryParams["with_user_count"] = "true"
 	}
-	return DoRequestAs[discord.GuildScheduledEvent](c, "GET", GuildsEndpoint+"/"+guildID+"/scheduled-events/"+scheduledEventID, nil, 1)
+	return DoRequestAsStructure[discord.GuildScheduledEvent](c, "GET", GuildsEndpoint+"/"+guildID+"/scheduled-events/"+scheduledEventID, nil, nil, 1)
 }
 
 // GetGuildScheduledEventUsers returns a list of guild scheduled event user structures (discord.GuildScheduledEventUser)
@@ -38,5 +38,5 @@ func (c *Client) GetGuildScheduledEventUsers(guildID, scheduledEventID, before, 
 	if withMember {
 		queryParams["with_member"] = "true"
 	}
-	return DoRequestAsList[discord.GuildScheduledEventUser](c, "GET", GuildsEndpoint+"/"+guildID+"/scheduled-events/"+scheduledEventID+"/users", queryParams, 1)
+	return DoRequestAsList[discord.GuildScheduledEventUser](c, "GET", GuildsEndpoint+"/"+guildID+"/scheduled-events/"+scheduledEventID+"/users", nil, queryParams, 1)
 }
