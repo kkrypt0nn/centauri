@@ -95,3 +95,17 @@ type CreateAutoModerationRule struct {
 
 	AuditLogReason string `json:"-"`
 }
+
+// ModifyAutoModerationRule represents the payload to send to Discord to modify an existing auto moderation rule (discord.AutoModerationRule)
+// https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule-json-params
+type ModifyAutoModerationRule struct {
+	Name            string                         `json:"name,omitempty"`
+	EventType       AutoModerationEventType        `json:"event_type,omitempty"`
+	TriggerMetadata *AutoModerationTriggerMetadata `json:"trigger_metadata,omitempty"`
+	Actions         []AutoModerationAction         `json:"actions,omitempty"`
+	Enabled         *bool                          `json:"enabled,omitempty"`
+	ExemptRoles     []string                       `json:"exempt_roles,omitempty"`
+	ExemptChannels  []string                       `json:"exempt_channels,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}

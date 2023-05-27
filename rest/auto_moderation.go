@@ -18,3 +18,14 @@ func (c *Client) GetAutoModerationRule(guildID, ruleID string) (*discord.AutoMod
 func (c *Client) CreateAutoModerationRule(guildID string, autoModerationRule discord.CreateAutoModerationRule) (*discord.AutoModerationRule, error) {
 	return DoRequestAsStructure[discord.AutoModerationRule](c, "POST", GuildsEndpoint+"/"+guildID+"/auto-moderation/rules", autoModerationRule, nil, 1, WithReason(autoModerationRule.AuditLogReason))
 }
+
+// ModifyAutoModerationRule modifies an existing auto moderation rule (discord.AutoModerationRule) and returns its structure
+func (c *Client) ModifyAutoModerationRule(guildID, ruleID string, autoModerationRule discord.ModifyAutoModerationRule) (*discord.AutoModerationRule, error) {
+	return DoRequestAsStructure[discord.AutoModerationRule](c, "PATCH", GuildsEndpoint+"/"+guildID+"/auto-moderation/rules/"+ruleID, autoModerationRule, nil, 1, WithReason(autoModerationRule.AuditLogReason))
+}
+
+// DeleteAutoModerationRule deletes an existing auto moderation rule (discord.AutoModerationRule)
+func (c *Client) DeleteAutoModerationRule(guildID, ruleID string) error {
+	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/auto-moderation/rules/"+ruleID, nil, nil, 1)
+	return err
+}

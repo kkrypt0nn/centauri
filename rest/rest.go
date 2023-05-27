@@ -125,7 +125,7 @@ func (c *Client) DoRequest(method, url string, requestBody any, queryParams Quer
 	}
 
 	switch response.StatusCode {
-	case http.StatusOK, http.StatusCreated:
+	case http.StatusOK, http.StatusCreated, http.StatusNoContent:
 		return body, response, nil
 	case http.StatusTooManyRequests:
 		var rateLimitExceeded discord.RateLimitExceeded
