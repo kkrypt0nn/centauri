@@ -17,7 +17,7 @@ type ApplicationCommand struct {
 	Description              string                    `json:"description"`
 	DescriptionLocalizations map[Locale]string         `json:"description_localizations,omitempty"`
 	Options                  ApplicationCommandOptions `json:"options,omitempty"`
-	DefaultMemberPermissions uint64                    `json:"default_member_permissions,string,omitempty"`
+	DefaultMemberPermissions Permissions               `json:"default_member_permissions,string,omitempty"`
 	DMPermission             bool                      `json:"dm_permission,omitempty"`
 	DefaultPermission        bool                      `json:"default_permission,omitempty"`
 	NSFW                     bool                      `json:"nsfw,omitempty"`

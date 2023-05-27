@@ -118,5 +118,5 @@ const (
 // https://discord.com/developers/docs/resources/application#install-params-object-install-params-structure
 type InstallParams struct {
 	Scopes      []oauth2.Scope `json:"scopes"`
-	Permissions string         `json:"permissions"`
+	Permissions Permissions    `json:"permissions,string"`
 }

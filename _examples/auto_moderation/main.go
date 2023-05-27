@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/kkrypt0nn/centauri"
 	"github.com/kkrypt0nn/centauri/discord"
+	"github.com/kkrypt0nn/centauri/ptr"
 	"time"
 )
 
@@ -34,7 +35,7 @@ func main() {
 	time.Sleep(5 * time.Second)
 
 	rule, err = botClient.ModifyAutoModerationRule(rule.GuildID, rule.ID, discord.ModifyAutoModerationRule{
-		Name:           "Java Not Allowed",
+		Name:           ptr.New("Java Not Allowed"),
 		AuditLogReason: "Wrong name given",
 	})
 	if err != nil {
@@ -45,7 +46,7 @@ func main() {
 
 	time.Sleep(5 * time.Second)
 
-	err = botClient.DeleteAutoModerationRule(rule.GuildID, rule.ID)
+	err = botClient.DeleteAutoModerationRule(rule.GuildID, rule.ID, "Rule no longer needed")
 	if err != nil {
 		fmt.Println("err:", err)
 	} else {

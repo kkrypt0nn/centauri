@@ -18,6 +18,19 @@ type Invite struct {
 	GuildScheduledEvent      *GuildScheduledEvent `json:"guild_scheduled_event,omitempty"`
 }
 
+// CreateChannelInvite represents the payload to send to Discord to create an invite (discord.Invite) for a channel (discord.Channel)
+type CreateChannelInvite struct {
+	MaxAge              *int              `json:"max_age,omitempty"`
+	MaxUses             *int              `json:"max_uses,omitempty"`
+	Temporary           *bool             `json:"temporary,omitempty"`
+	Unique              *bool             `json:"unique,omitempty"`
+	TargetType          *InviteTargetType `json:"target_type,omitempty"`
+	TargetUserID        string            `json:"target_user_id,omitempty"`
+	TargetApplicationID string            `json:"target_application_id,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
 // InviteWithMetadata represents an invite (discord.Invite) with additional metadata
 // https://discord.com/developers/docs/resources/invite#invite-metadata-object-invite-metadata-structure
 type InviteWithMetadata struct {

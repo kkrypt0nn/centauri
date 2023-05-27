@@ -3,17 +3,17 @@ package discord
 // Role represents a set of permissions attached to a group of users
 // https://discord.com/developers/docs/topics/permissions#role-object-role-structure
 type Role struct {
-	ID           string    `json:"id"`
-	Name         string    `json:"name"`
-	Color        int       `json:"color"`
-	Hoist        bool      `json:"hoist"`
-	Icon         string    `json:"icon,omitempty"`
-	UnicodeEmoji string    `json:"unicode_emoji"`
-	Position     int       `json:"position"`
-	Permissions  uint64    `json:"permissions,string"`
-	Managed      bool      `json:"managed"`
-	Mentionable  bool      `json:"mentionable"`
-	Tags         *RoleTags `json:"tags,omitempty"`
+	ID           string      `json:"id"`
+	Name         string      `json:"name"`
+	Color        int         `json:"color"`
+	Hoist        bool        `json:"hoist"`
+	Icon         string      `json:"icon,omitempty"`
+	UnicodeEmoji string      `json:"unicode_emoji"`
+	Position     int         `json:"position"`
+	Permissions  Permissions `json:"permissions,string"`
+	Managed      bool        `json:"managed"`
+	Mentionable  bool        `json:"mentionable"`
+	Tags         *RoleTags   `json:"tags,omitempty"`
 }
 
 // RoleTags represents the tags the role (discord.Role) has

@@ -33,7 +33,7 @@ type Channel struct {
 	ThreadMetadata                ThreadMetadata         `json:"thread_metadata,omitempty"`
 	Member                        ThreadMember           `json:"member,omitempty"`
 	DefaultAutoArchiveDuration    int                    `json:"default_auto_archive_duration,omitempty"`
-	Permissions                   uint64                 `json:"permissions,string,omitempty"`
+	Permissions                   Permissions            `json:"permissions,string,omitempty"`
 	Flags                         ChannelFlags           `json:"flags,omitempty"`
 	TotalMessageSent              int                    `json:"total_message_sent,omitempty"`
 	AvailableTags                 []Tag                  `json:"available_tags,omitempty"`
@@ -44,7 +44,118 @@ type Channel struct {
 	DefaultForumLayout            DefaultForumLayoutView `json:"default_forum_layout,omitempty"`
 }
 
+// ModifyChannel represents the payload to send to Discord to modify an existing channel (discord.Channel)
+// https://discord.com/developers/docs/resources/channel#modify-channel-json-params-group-dm
+// https://discord.com/developers/docs/resources/channel#modify-channel-json-params-guild-channel
+// https://discord.com/developers/docs/resources/channel#modify-channel-json-params-thread
+type ModifyChannel struct {
+	Name                          *string                 `json:"name,omitempty"`
+	Type                          *ChannelType            `json:"type,omitempty"`
+	Position                      *int                    `json:"position,omitempty"`
+	Topic                         *string                 `json:"topic,omitempty"`
+	NSFW                          *bool                   `json:"nsfw,omitempty"`
+	RateLimitPerUser              *int                    `json:"rate_limit_per_user,omitempty"`
+	Bitrate                       *int                    `json:"bitrate,omitempty"`
+	UserLimit                     *int                    `json:"user_limit,omitempty"`
+	PermissionOverwrites          []Overwrite             `json:"permission_overwrites,omitempty"`
+	ParentID                      *string                 `json:"parent_id,omitempty"`
+	RTCRegion                     *string                 `json:"rtc_region,omitempty"`
+	VideoQualityMode              *VideoQualityMode       `json:"video_quality_mode,omitempty"`
+	DefaultAutoArchiveDuration    *int                    `json:"default_auto_archive_duration,omitempty"`
+	Flags                         *ChannelFlags           `json:"flags,omitempty"`
+	AvailableTags                 []Tag                   `json:"available_tags,omitempty"`
+	DefaultReaction               *DefaultReaction        `json:"default_reaction,omitempty"`
+	DefaultThreadRateLimitPerUser *int                    `json:"default_thread_rate_limit_per_user,omitempty"`
+	DefaultSortOrder              *DefaultSortOrderType   `json:"default_sort_order,omitempty"`
+	DefaultForumLayoutView        *DefaultForumLayoutView `json:"default_forum_layout_view,omitempty"`
+
+	// Group DMS only
+	Icon *string `json:"icon,omitempty"`
+
+	// Thread only
+	Archived            *bool    `json:"archived,omitempty"`
+	AutoArchiveDuration *int     `json:"auto_archive_duration,omitempty"`
+	Locked              *bool    `json:"locked,omitempty"`
+	Invitable           *bool    `json:"invitable,omitempty"`
+	AppliedTags         []string `json:"applied_tags,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
+// EditChannelPermissions represents the payload to send to Discord to edit the channel permission overwrites
+// https://discord.com/developers/docs/resources/channel#edit-channel-permissions-json-params
+type EditChannelPermissions struct {
+	Type  OverwriteType `json:"type"`
+	Allow *string       `json:"allow,omitempty"`
+	Deny  *string       `json:"deny,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
+// StartThreadFromMessage represents the payload to send to Discord to start a thread from an existing message (discord.Message)
+// https://discord.com/developers/docs/resources/channel#start-thread-from-message-json-params
+type StartThreadFromMessage struct {
+	Name                string `json:"name"`
+	AutoArchiveDuration *int   `json:"auto_archive_duration,omitempty"`
+	RateLimitPerUser    *int   `json:"rate_limit_per_user,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
+// StartThreadWithoutMessage represents the payload to send to Discord to start a thread
+// https://discord.com/developers/docs/resources/channel#start-thread-without-message-json-params
+type StartThreadWithoutMessage struct {
+	Name                string      `json:"name"`
+	AutoArchiveDuration *int        `json:"auto_archive_duration,omitempty"`
+	Type                *ThreadType `json:"thread_type,omitempty"`
+	Invitable           *bool       `json:"invitable,omitempty"`
+	RateLimitPerUser    *int        `json:"rate_limit_per_user,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
+// StartThreadInForumChannel represents the payload to send to Discord to start a thread in a forum channel (discord.Channel)
+// https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel-jsonform-params
+type StartThreadInForumChannel struct {
+	Name                string             `json:"name"`
+	AutoArchiveDuration *int               `json:"auto_archive_duration,omitempty"`
+	RateLimitPerUser    *int               `json:"rate_limit_per_user,omitempty"`
+	Message             ForumThreadMessage `json:"message"`
+	AppliedTags         []Tag              `json:"applied_tags,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
+// ForumThreadMessage represents a forum thread message when creating a new thread
+// https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel-forum-thread-message-params-object
+type ForumThreadMessage struct {
+	Content         *string          `json:"content,omitempty"`
+	Embeds          []Embed          `json:"embeds,omitempty"`
+	AllowedMentions *AllowedMentions `json:"allowed_mentions,omitempty"`
+	Components      []Component      `json:"components,omitempty"`
+	StickerIDs      []string         `json:"sticker_ids,omitempty"`
+	Flags           *MessageFlags    `json:"flags,omitempty"`
+	// TODO: Support files and attachments
+}
+
+// ThreadType represents the type of thread
+// https://discord.com/developers/docs/resources/channel#channel-object-channel-types
+type ThreadType int
+
+const (
+	ThreadTypePublic ThreadType = 11 + iota
+	ThreadTypePrivate
+)
+
+// FollowedChannel represents a channel that is being followed in a target channel
+// https://discord.com/developers/docs/resources/channel#followed-channel-object-followed-channel-structure
+type FollowedChannel struct {
+	ChannelID string `json:"channel_id"`
+	WebhookID string `json:"webhook_id"`
+}
+
 // ChannelType represents the type of channel (discord.Channel)
+// https://discord.com/developers/docs/resources/channel#channel-object-channel-types
 type ChannelType int
 
 const (
