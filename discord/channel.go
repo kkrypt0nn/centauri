@@ -44,6 +44,38 @@ type Channel struct {
 	DefaultForumLayout            DefaultForumLayoutView `json:"default_forum_layout,omitempty"`
 }
 
+// CreateGuildChannel represents the payload to send to Discord to create a new channel (discord.Channel) in a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#create-guild-channel-json-params
+type CreateGuildChannel struct {
+	Name                       string                `json:"name"`
+	Type                       *ChannelType          `json:"type,omitempty"`
+	Topic                      *string               `json:"topic,omitempty"`
+	Bitrate                    *int                  `json:"bitrate,omitempty"`
+	UserLimit                  *int                  `json:"user_limit,omitempty"`
+	RateLimitPerUser           *int                  `json:"rate_limit_per_user,omitempty"`
+	Position                   *int                  `json:"position,omitempty"`
+	PermissionOverwrites       []Overwrite           `json:"permission_overwrites"`
+	ParentID                   *string               `json:"parent_id,omitempty"`
+	NSFW                       *bool                 `json:"nsfw,omitempty"`
+	RTCRegion                  *string               `json:"rtc_region,omitempty"`
+	VideoQualityMode           *VideoQualityMode     `json:"video_quality_mode,omitempty"`
+	DefaultAutoArchiveDuration *int                  `json:"default_auto_archive_duration,omitempty"`
+	DefaultReaction            *DefaultReaction      `json:"default_reaction,omitempty"`
+	AvailableTags              []Tag                 `json:"available_tags,omitempty"`
+	DefaultSortOrder           *DefaultSortOrderType `json:"default_sort_order,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
+// ModifyGuildChannelPosition represents the payload to send to Discord to modify the position of an existing channel (discord.Channel) in a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions-json-params
+type ModifyGuildChannelPosition struct {
+	ID              string  `json:"id"`
+	Position        *int    `json:"position,omitempty"`
+	LockPermissions *bool   `json:"lock_permissions,omitempty"`
+	ParentID        *string `json:"parent_id,omitempty"`
+}
+
 // ModifyChannel represents the payload to send to Discord to modify an existing channel (discord.Channel)
 // https://discord.com/developers/docs/resources/channel#modify-channel-json-params-group-dm
 // https://discord.com/developers/docs/resources/channel#modify-channel-json-params-guild-channel

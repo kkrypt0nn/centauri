@@ -10,6 +10,11 @@ const (
 	GuildsEndpoint = Endpoint + "guilds"
 )
 
+// CreateGuild creates a guild (discord.Guild) and returns its structure
+func (c *Client) CreateGuild(guild discord.CreateGuild) (*discord.Guild, error) {
+	return DoRequestAsStructure[discord.Guild](c, "POST", GuildsEndpoint, guild, nil, 1)
+}
+
 // GetGuild returns a guild structure (discord.Guild) for the given guild ID
 func (c *Client) GetGuild(guildID string, withCounts bool) (*discord.Guild, error) {
 	queryParams := make(QueryParameters)
@@ -24,9 +29,31 @@ func (c *Client) GetGuildPreview(guildID string) (*discord.GuildPreview, error) 
 	return DoRequestAsStructure[discord.GuildPreview](c, "GET", GuildsEndpoint+"/"+guildID+"/preview", nil, nil, 1)
 }
 
+// ModifyGuild modifies an existing guild (discord.Guild) from the given guild ID and returns its new structure
+func (c *Client) ModifyGuild(guildID string, guild discord.ModifyGuild) (*discord.Guild, error) {
+	return DoRequestAsStructure[discord.Guild](c, "PATCH", GuildsEndpoint+"/"+guildID, guild, nil, 1, WithReason(guild.AuditLogReason))
+}
+
+// DeleteGuild deletes an existing guild (discord.Guild) from the given guild ID
+func (c *Client) DeleteGuild(guildID string) error {
+	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID, nil, nil, 1)
+	return err
+}
+
 // GetGuildChannels returns a list of channel structures (discord.Channel) for the given guild ID
 func (c *Client) GetGuildChannels(guildID string) ([]discord.Channel, error) {
 	return DoRequestAsList[discord.Channel](c, "GET", GuildsEndpoint+"/"+guildID+"/channels", nil, nil, 1)
+}
+
+// CreateGuildChannel creates a channel (discord.Channel) for the given guild ID and returns its structure
+func (c *Client) CreateGuildChannel(guildID string, channel discord.CreateGuildChannel) (*discord.Channel, error) {
+	return DoRequestAsStructure[discord.Channel](c, "POST", GuildsEndpoint+"/"+guildID+"/channels", channel, nil, 1, WithReason(channel.AuditLogReason))
+}
+
+// ModifyGuildChannelPositions modifies the position of existing channels (discord.Channel) for the given guild ID
+func (c *Client) ModifyGuildChannelPositions(guildID string, channelPositions []discord.ModifyGuildChannelPosition) error {
+	_, _, err := c.DoRequest("PATCH", GuildsEndpoint+"/"+guildID+"/channels", channelPositions, nil, 1)
+	return err
 }
 
 // ListActiveThreads returns an active threads structure (discord.ActiveThreads) for the given guild ID
@@ -49,6 +76,29 @@ func (c *Client) SearchGuildMember(guildID, query string, limit int) ([]discord.
 	return DoRequestAsList[discord.Member](c, "GET", GuildsEndpoint+"/"+guildID+"/members/search", nil, queryParams, 1)
 }
 
+// ModifyGuildMember modifies a guild member (discord.Member) for the given guild and user IDs and returns the new structure
+func (c *Client) ModifyGuildMember(guildID, userID string, member discord.ModifyGuildMember) (*discord.Member, error) {
+	return DoRequestAsStructure[discord.Member](c, "PATCH", GuildsEndpoint+"/"+guildID+"/members/"+userID, member, nil, 1, WithReason(member.AuditLogReason))
+}
+
+// AddGuildMemberRole adds a role (discord.Role) for the given guild, user and role IDs
+func (c *Client) AddGuildMemberRole(guildID, userID, roleID, reason string) error {
+	_, _, err := c.DoRequest("PUT", GuildsEndpoint+"/"+guildID+"/members/"+userID+"/roles/"+roleID, nil, nil, 1, WithReason(reason))
+	return err
+}
+
+// RemoveGuildMemberRole removes a role (discord.Role) for the given guild, user and role IDs
+func (c *Client) RemoveGuildMemberRole(guildID, userID, roleID, reason string) error {
+	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/members/"+userID+"/roles/"+roleID, nil, nil, 1, WithReason(reason))
+	return err
+}
+
+// RemoveGuildMember removes a member (discord.Member) from a guild for the given guild and user IDs
+func (c *Client) RemoveGuildMember(guildID, userID, reason string) error {
+	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/members/"+userID, nil, nil, 1, WithReason(reason))
+	return err
+}
+
 // GetGuildBans returns a list of guild ban structures (discord.GuildBan) for the given guild ID
 func (c *Client) GetGuildBans(guildID, before, after string, limit int) ([]discord.GuildBan, error) {
 	queryParams := make(QueryParameters)
@@ -69,9 +119,47 @@ func (c *Client) GetGuildBan(guildID, banID string) (*discord.GuildBan, error) {
 	return DoRequestAsStructure[discord.GuildBan](c, "GET", GuildsEndpoint+"/"+guildID+"/bans/"+banID, nil, nil, 1)
 }
 
+// CreateGuildBan creates a guild ban (discord.GuildBan) for the given guild ID
+func (c *Client) CreateGuildBan(guildID string, ban discord.CreateGuildBan) error {
+	_, _, err := c.DoRequest("PUT", GuildsEndpoint+"/"+guildID+"/bans/"+ban.UserID, ban, nil, 1, WithReason(ban.AuditLogReason))
+	return err
+}
+
+// RemoveGuildBan removes an existing guild ban (discord.GuildBan) for the given guild and user IDs
+func (c *Client) RemoveGuildBan(guildID, userID, reason string) error {
+	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/bans/"+userID, nil, nil, 1, WithReason(reason))
+	return err
+}
+
 // GetGuildRoles returns a list role structures (discord.Role)
 func (c *Client) GetGuildRoles(guildID string) ([]discord.Role, error) {
 	return DoRequestAsList[discord.Role](c, "GET", GuildsEndpoint+"/"+guildID+"/roles", nil, nil, 1)
+}
+
+// CreateGuildRole creates a role (discord.Role) for the given guild ID and returns its structure
+func (c *Client) CreateGuildRole(guildID string, role discord.CreateGuildRole) (*discord.Role, error) {
+	return DoRequestAsStructure[discord.Role](c, "POST", GuildsEndpoint+"/"+guildID+"/roles", role, nil, 1, WithReason(role.AuditLogReason))
+}
+
+// ModifyGuildRolePositions modifies the position of existing roles (discord.Role) for the given guild ID and returns the list of role structures in the guild
+func (c *Client) ModifyGuildRolePositions(guildID string, rolePositions []discord.GuildRolePosition) ([]discord.Role, error) {
+	return DoRequestAsList[discord.Role](c, "PATCH", GuildsEndpoint+"/"+guildID+"/roles", rolePositions, nil, 1)
+}
+
+// ModifyGuildRole modifies an existing role (discord.Role) for the given guild and role IDs and returns its new structure
+func (c *Client) ModifyGuildRole(guildID, roleID string, role discord.ModifyGuildRole) (*discord.Role, error) {
+	return DoRequestAsStructure[discord.Role](c, "PATCH", GuildsEndpoint+"/"+guildID+"/roles/"+roleID, role, nil, 1, WithReason(role.AuditLogReason))
+}
+
+// ModifyGuildMFALevel modifies the MFA level (discord.MFALevel) for the given guild ID and returns its new structure
+func (c *Client) ModifyGuildMFALevel(guildID string, mfaLevel discord.ModifyGuildMFALevel) (*discord.MFALevel, error) {
+	return DoRequestAsStructure[discord.MFALevel](c, "POST", GuildsEndpoint+"/"+guildID+"/mfa", mfaLevel, nil, 1, WithReason(mfaLevel.AuditLogReason))
+}
+
+// DeleteGuildRole deletes an existing role (discord.Role) for the given guild and role IDs
+func (c *Client) DeleteGuildRole(guildID, roleID, reason string) error {
+	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/roles/"+roleID, nil, nil, 1, WithReason(reason))
+	return err
 }
 
 // GetGuildPruneCount returns a guild prune structure (discord.GuildPrune) for the given guild IDs
@@ -84,6 +172,11 @@ func (c *Client) GetGuildPruneCount(guildID string, days int, includeRoles []str
 		queryParams["include_roles"] = strings.Join(includeRoles, ",")
 	}
 	return DoRequestAsStructure[discord.GuildPrune](c, "GET", GuildsEndpoint+"/"+guildID+"/prune", nil, queryParams, 1)
+}
+
+// BeginGuildPrune begins a guild prune operation (discord.GuildPrune) for the given guild ID and returns the number of members that were removed
+func (c *Client) BeginGuildPrune(guildID string, prune discord.BeginGuildPrune) (*discord.GuildPrune, error) {
+	return DoRequestAsStructure[discord.GuildPrune](c, "POST", GuildsEndpoint+"/"+guildID+"/prune", prune, nil, 1, WithReason(prune.AuditLogReason))
 }
 
 // GetGuildVoiceRegions returns a list of voice region structures (discord.VoiceRegion) for the given guild ID
@@ -101,9 +194,20 @@ func (c *Client) GetGuildIntegrations(guildID string) ([]discord.Integration, er
 	return DoRequestAsList[discord.Integration](c, "GET", GuildsEndpoint+"/"+guildID+"/integrations", nil, nil, 1)
 }
 
+// DeleteGuildIntegration deletes an existing integration (discord.Integration) for the given guild and integration IDs
+func (c *Client) DeleteGuildIntegration(guildID, integrationID, reason string) error {
+	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/integrations/"+integrationID, nil, nil, 1, WithReason(reason))
+	return err
+}
+
 // GetGuildWidgetSetting returns a widget setting structure (discord.WidgetSetting) for the given guild ID
 func (c *Client) GetGuildWidgetSetting(guildID string) (*discord.WidgetSetting, error) {
 	return DoRequestAsStructure[discord.WidgetSetting](c, "GET", GuildsEndpoint+"/"+guildID+"/widget", nil, nil, 1)
+}
+
+// ModifyGuildWidget modifies an existing widget (discord.WidgetSetting) for the given guild ID and returns its new structure
+func (c *Client) ModifyGuildWidget(guildID string, widget discord.ModifyGuildWidget) (*discord.WidgetSetting, error) {
+	return DoRequestAsStructure[discord.WidgetSetting](c, "PATCH", GuildsEndpoint+"/"+guildID+"/widget", widget, nil, 1, WithReason(widget.AuditLogReason))
 }
 
 // GetGuildWidget returns a widget structure (discord.Widget) for the given guild ID
@@ -121,7 +225,24 @@ func (c *Client) GetGuildWelcomeScreen(guildID string) (*discord.WelcomeScreen, 
 	return DoRequestAsStructure[discord.WelcomeScreen](c, "GET", GuildsEndpoint+"/"+guildID+"/welcome-screen", nil, nil, 1)
 }
 
-// GetGuildOnboarding returns a onboarding structure (discord.Onboarding) for the given guild ID
+// ModifyGuildWelcomeScreen modifies an existing welcome screen (discord.WelcomeScreen) for the given guild ID and returns its new structure
+func (c *Client) ModifyGuildWelcomeScreen(guildID string, welcomeScreen discord.ModifyGuildWelcomeScreen) (*discord.WelcomeScreen, error) {
+	return DoRequestAsStructure[discord.WelcomeScreen](c, "PATCH", GuildsEndpoint+"/"+guildID+"/welcome-screen", welcomeScreen, nil, 1, WithReason(welcomeScreen.AuditLogReason))
+}
+
+// GetGuildOnboarding returns an onboarding structure (discord.Onboarding) for the given guild ID
 func (c *Client) GetGuildOnboarding(guildID string) (*discord.Onboarding, error) {
 	return DoRequestAsStructure[discord.Onboarding](c, "GET", GuildsEndpoint+"/"+guildID+"/onboarding", nil, nil, 1)
+}
+
+// ModifyCurrentUserVoiceState modifies the voice state of the current user for the given guild ID
+func (c *Client) ModifyCurrentUserVoiceState(guildID string, voiceState discord.ModifyCurrentUserVoiceState) error {
+	_, _, err := c.DoRequest("PATCH", GuildsEndpoint+"/"+guildID+"/voice-states/@me", voiceState, nil, 1)
+	return err
+}
+
+// ModifyUserVoiceState modifies the voice state of the current user for the given guild and user IDs
+func (c *Client) ModifyUserVoiceState(guildID, userID string, voiceState discord.ModifyUserVoiceState) error {
+	_, _, err := c.DoRequest("PATCH", GuildsEndpoint+"/"+guildID+"/voice-states/"+userID, voiceState, nil, 1)
+	return err
 }
