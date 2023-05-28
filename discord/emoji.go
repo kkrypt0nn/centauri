@@ -22,3 +22,12 @@ type CreateGuildEmoji struct {
 
 	AuditLogReason string `json:"-"`
 }
+
+// ModifyGuildEmoji represents the payload to send to Discord to modify an existing emoji (discord.Emoji) in a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/emoji#modify-guild-emoji-json-params
+type ModifyGuildEmoji struct {
+	Name  *string  `json:"name,omitempty"`
+	Roles []string `json:"roles,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}

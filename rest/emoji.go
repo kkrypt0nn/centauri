@@ -18,7 +18,7 @@ func (c *Client) CreateGuildEmoji(guildID string, emoji discord.CreateGuildEmoji
 }
 
 // ModifyGuildEmoji modifies an existing emoji (discord.Emoji) for the given guild and emoji IDs and returns the edited emoji structure
-func (c *Client) ModifyGuildEmoji(guildID, emojiID string, emoji discord.CreateGuildEmoji) (*discord.Emoji, error) {
+func (c *Client) ModifyGuildEmoji(guildID, emojiID string, emoji discord.ModifyGuildEmoji) (*discord.Emoji, error) {
 	return DoRequestAsStructure[discord.Emoji](c, "PATCH", GuildsEndpoint+"/"+guildID+"/emojis/"+emojiID, emoji, nil, 1, WithReason(emoji.AuditLogReason))
 }
 
