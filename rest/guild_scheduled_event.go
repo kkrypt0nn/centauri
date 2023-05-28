@@ -1,8 +1,9 @@
 package rest
 
 import (
-	"github.com/kkrypt0nn/centauri/discord"
 	"strconv"
+
+	"github.com/kkrypt0nn/centauri/discord"
 )
 
 // ListGuildScheduledEvents returns a list of guild scheduled event structures (discord.GuildScheduledEvent) for the given guild ID

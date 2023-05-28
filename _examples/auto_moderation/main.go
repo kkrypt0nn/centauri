@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/kkrypt0nn/centauri"
 	"github.com/kkrypt0nn/centauri/discord"
 	"github.com/kkrypt0nn/centauri/ptr"
-	"time"
 )
 
 func main() {

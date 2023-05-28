@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/kkrypt0nn/centauri"
 	"github.com/kkrypt0nn/centauri/rest"
-	"net/http"
 )
 
 type MyInterceptor struct {

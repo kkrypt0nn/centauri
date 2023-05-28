@@ -1,9 +1,10 @@
 package rest
 
 import (
-	"github.com/kkrypt0nn/centauri/discord"
 	"strconv"
 	"strings"
+
+	"github.com/kkrypt0nn/centauri/discord"
 )
 
 const (

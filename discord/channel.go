@@ -1,8 +1,6 @@
 package discord
 
-import (
-	"time"
-)
+import "time"
 
 // Channel represents a guild or DM channel within Discord
 // https://discord.com/developers/docs/resources/channel#channel-object-channel-structure

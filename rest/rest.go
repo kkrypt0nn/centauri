@@ -5,16 +5,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/kkrypt0nn/centauri/constants"
-	"github.com/kkrypt0nn/centauri/discord"
-	"github.com/kkrypt0nn/centauri/errors"
-	"github.com/kkrypt0nn/centauri/ext/tasks"
-	"github.com/kkrypt0nn/logger.go"
 	"io"
 	"math"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/kkrypt0nn/centauri/constants"
+	"github.com/kkrypt0nn/centauri/discord"
+	"github.com/kkrypt0nn/centauri/errors"
+	"github.com/kkrypt0nn/centauri/ext/tasks"
+	"github.com/kkrypt0nn/logger.go"
 )
 
 const (

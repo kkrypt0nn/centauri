@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/kkrypt0nn/centauri"
 	"time"
+
+	"github.com/kkrypt0nn/centauri"
 )
 
 func main() {

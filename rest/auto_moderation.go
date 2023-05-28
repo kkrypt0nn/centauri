@@ -1,8 +1,6 @@
 package rest
 
-import (
-	"github.com/kkrypt0nn/centauri/discord"
-)
+import "github.com/kkrypt0nn/centauri/discord"
 
 // GetAutoModerationRules returns a list of auto moderation rule structures (discord.AutoModerationRule) for the given guild ID
 func (c *Client) GetAutoModerationRules(guildID string) ([]discord.AutoModerationRule, error) {

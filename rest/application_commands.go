@@ -1,8 +1,6 @@
 package rest
 
-import (
-	"github.com/kkrypt0nn/centauri/discord"
-)
+import "github.com/kkrypt0nn/centauri/discord"
 
 // GetGlobalApplicationCommands returns a list of global application command structures (discord.ApplicationCommand) for the given application ID
 func (c *Client) GetGlobalApplicationCommands(applicationID string, withLocalizations bool) ([]discord.ApplicationCommand, error) {
