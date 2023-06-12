@@ -1,7 +1,5 @@
 package discord
 
-import "github.com/kkrypt0nn/centauri/rest"
-
 // Guild represents an isolated collection of users and channels, and are often referred to as "servers" in the UI
 // https://discord.com/developers/docs/resources/guild#guild-object-guild-structure
 type Guild struct {
@@ -362,8 +360,4 @@ type ModifyGuildMFALevel struct {
 	Level MFALevel `json:"level"`
 
 	AuditLogReason string `json:"-"`
-}
-
-func (g *Guild) Test() string {
-	return rest.GuildsEndpoint
 }
