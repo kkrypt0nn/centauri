@@ -119,6 +119,16 @@ type WelcomeScreen struct {
 	WelcomeChannels []WelcomeScreenChannel `json:"welcome_channels"`
 }
 
+// ModifyGuildWelcomeScreen represents the payload to send to Discord to modify and existing welcome screen (discord.WelcomeScreen)
+// https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen-json-params
+type ModifyGuildWelcomeScreen struct {
+	Enabled         *bool                  `json:"enabled,omitempty"`
+	WelcomeChannels []WelcomeScreenChannel `json:"welcome_channels,omitempty"`
+	Description     *string                `json:"description,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
 // WelcomeScreenChannel represents a channel shown in the welcome screen
 // https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure
 type WelcomeScreenChannel struct {
@@ -162,17 +172,36 @@ type GuildBan struct {
 	User   *User  `json:"user"`
 }
 
+// CreateGuildBan represents the payload to send to Discord to create a guild ban (discord.GuildBan)
+// https://discord.com/developers/docs/resources/guild#create-guild-ban-json-params
+type CreateGuildBan struct {
+	DeleteMessageSeconds *int `json:"delete_message_seconds,omitempty"`
+
+	UserID         string `json:"-"`
+	AuditLogReason string `json:"-"`
+}
+
 // GuildPrune represents how many members (discord.Member) will get pruned when performing a prune
 // https://discord.com/developers/docs/resources/guild#get-guild-prune-count
 type GuildPrune struct {
 	Pruned int `json:"pruned"`
 }
 
+// BeginGuildPrune represents the payload to send to Discord to begin a guild prune operation (discord.GuildPrune)
+// https://discord.com/developers/docs/resources/guild#begin-guild-prune-json-params
+type BeginGuildPrune struct {
+	Days              *int     `json:"days,omitempty"`
+	ComputePruneCount *bool    `json:"compute_prune_count,omitempty"`
+	IncludeRoles      []string `json:"include_roles,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
 // WidgetSetting represents the channel (discord.Channel) used and whether the widget (discord.Widget) of the guild (discord.Guild) is enabled
 // https://discord.com/developers/docs/resources/guild#guild-widget-settings-object-guild-widget-settings-structure
 type WidgetSetting struct {
-	Enabled  bool   `json:"enabled"`
-	ChanelID string `json:"chanel_id"`
+	Enabled   bool   `json:"enabled"`
+	ChannelID string `json:"channel_id"`
 }
 
 // Widget represents the guild's (discord.Guild) widget
@@ -184,6 +213,15 @@ type Widget struct {
 	Channels      []Channel `json:"channels"`
 	Members       []Member  `json:"members"`
 	PresenceCount int       `json:"presence_count"`
+}
+
+// ModifyGuildWidget represents the payload to send to Discord to modify the guild widget (discord.Widget)
+// https://discord.com/developers/docs/resources/guild#guild-widget-settings-object-guild-widget-settings-structure
+type ModifyGuildWidget struct {
+	Enabled   *bool   `json:"enabled,omitempty"`
+	ChannelID *string `json:"channel_id,omitempty"`
+
+	AuditLogReason string `json:"-"`
 }
 
 // Onboarding represents the onboarding flow for a guild (discord.Guild)
@@ -270,3 +308,56 @@ const (
 	GuildFeatureVIPRegions                            GuildFeature = "VIP_REGIONS"
 	GuildFeatureWelcomeScreenEnabled                  GuildFeature = "WELCOME_SCREEN_ENABLED"
 )
+
+// CreateGuild represents the payload to send to Discord to create a new guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#create-guild-json-params
+type CreateGuild struct {
+	Name                        string                    `json:"name"`
+	Region                      *string                   `json:"region,omitempty"`
+	Icon                        *string                   `json:"icon,omitempty"`
+	VerificationLevel           *GuildVerificationLevel   `json:"verification_level,omitempty"`
+	DefaultMessageNotifications *MessageNotificationLevel `json:"default_message_notifications,omitempty"`
+	ExplicitContentFilter       *ExplicitContentFilter    `json:"explicit_content_filter,omitempty"`
+	Roles                       []Role                    `json:"roles,omitempty"`
+	Channels                    []Channel                 `json:"channels,omitempty"`
+	AFKChannelID                *string                   `json:"afk_channel_id,omitempty"`
+	AFKTimeout                  *int                      `json:"afk_timeout,omitempty"`
+	SystemChannelID             *string                   `json:"system_channel_id,omitempty"`
+	SystemChannelFlags          *SystemChannelFlags       `json:"system_channel_flags,omitempty"`
+}
+
+// ModifyGuild represents the payload to send to Discord to modify an existing guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#modify-guild-json-params
+type ModifyGuild struct {
+	Name                        *string                   `json:"name,omitempty"`
+	Region                      *string                   `json:"region,omitempty"`
+	VerificationLevel           *GuildVerificationLevel   `json:"verification_level,omitempty"`
+	DefaultMessageNotifications *MessageNotificationLevel `json:"default_message_notifications,omitempty"`
+	ExplicitContentFilter       *ExplicitContentFilter    `json:"explicit_content_filter,omitempty"`
+	AFKChannelID                *string                   `json:"afk_channel_id,omitempty"`
+	AFKTimeout                  *int                      `json:"afk_timeout,omitempty"`
+	Icon                        *string                   `json:"icon,omitempty"`
+	OwnerID                     *string                   `json:"owner_id,omitempty"`
+	Splash                      *string                   `json:"splash,omitempty"`
+	DiscoverySplash             *string                   `json:"discovery_splash,omitempty"`
+	Banner                      *string                   `json:"banner,omitempty"`
+	SystemChannelID             *string                   `json:"system_channel_id,omitempty"`
+	SystemChannelFlags          *SystemChannelFlags       `json:"system_channel_flags,omitempty"`
+	RulesChannelID              *string                   `json:"rules_channel_id,omitempty"`
+	PublicUpdatesChannelID      *string                   `json:"public_updates_channel_id,omitempty"`
+	PreferredLocale             *Locale                   `json:"preferred_locale,omitempty"`
+	Features                    []GuildFeature            `json:"features,omitempty"`
+	Description                 *string                   `json:"description,omitempty"`
+	PremiumProgressBarEnabled   *bool                     `json:"premium_progress_bar_enabled,omitempty"`
+	SafetyAlertsChannelID       *string                   `json:"safety_alerts_channel_id,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
+// ModifyGuildMFALevel represents the payload to send to Discord to modify the MFA level for a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#modify-guild-mfa-level-json-params
+type ModifyGuildMFALevel struct {
+	Level MFALevel `json:"level"`
+
+	AuditLogReason string `json:"-"`
+}

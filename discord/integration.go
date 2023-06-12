@@ -1,8 +1,9 @@
 package discord
 
 import (
-	"github.com/kkrypt0nn/centauri/oauth2"
 	"time"
+
+	"github.com/kkrypt0nn/centauri/oauth2"
 )
 
 // Integration represents an integration that is contained within a guild (discord.Guild)

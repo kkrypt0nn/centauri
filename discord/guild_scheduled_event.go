@@ -66,3 +66,36 @@ type GuildScheduledEventUser struct {
 	User                  *User   `json:"user"`
 	Member                *Member `json:"member,omitempty"`
 }
+
+// CreateGuildScheduledEvent represents the payload to send to Discord to create a new scheduled event (discord.GuildScheduledEvent)
+// https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event-json-params
+type CreateGuildScheduledEvent struct {
+	Name               string                             `json:"name"`
+	EntityType         GuildScheduledEventEntityType      `json:"entity_type"`
+	ChannelID          *string                            `json:"channel_id,omitempty"`
+	EntityMetadata     *GuildScheduledEventEntityMetadata `json:"entity_metadata,omitempty"`
+	PrivacyLevel       GuildScheduledEventPrivacyLevel    `json:"privacy_level"`
+	ScheduledStartTime time.Time                          `json:"scheduled_start_time"`
+	ScheduledEndTime   *time.Time                         `json:"scheduled_end_time,omitempty"`
+	Description        *string                            `json:"description,omitempty"`
+	Image              *string                            `json:"image,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
+// ModifyGuildScheduledEvent represents the payload to send to Discord to modify an existing scheduled event (discord.GuildScheduledEvent)
+// https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event-json-params
+type ModifyGuildScheduledEvent struct {
+	ChannelID          *string                            `json:"channel_id,omitempty"`
+	EntityMetadata     *GuildScheduledEventEntityMetadata `json:"entity_metadata,omitempty"`
+	Name               *string                            `json:"name,omitempty"`
+	PrivacyLevel       *GuildScheduledEventPrivacyLevel   `json:"privacy_level,omitempty"`
+	ScheduledStartTime *time.Time                         `json:"scheduled_start_time,omitempty"`
+	ScheduledEndTime   *time.Time                         `json:"scheduled_end_time,omitempty"`
+	Description        *string                            `json:"description,omitempty"`
+	EntityType         *GuildScheduledEventEntityType     `json:"entity_type,omitempty"`
+	Status             *GuildScheduledEventStatus         `json:"status,omitempty"`
+	Image              *string                            `json:"image,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}

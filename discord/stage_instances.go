@@ -20,3 +20,23 @@ const (
 	StageInstancePrivacyLevelPublic StageInstancePrivacyLevel = 1 + iota
 	StageInstancePrivacyLevelGuildOnly
 )
+
+// CreateStageInstance represents the payload to send to Discord to create a new stage instance (discord.StageInstance)
+// https://discord.com/developers/docs/resources/stage-instance#create-stage-instance-json-params
+type CreateStageInstance struct {
+	ChannelID             string                     `json:"channel_id"`
+	Topic                 string                     `json:"topic"`
+	PrivacyLevel          *StageInstancePrivacyLevel `json:"privacy_level,omitempty"`
+	SendStartNotification *bool                      `json:"send_start_notification,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
+// ModifyStageInstance represents the payload to send to Discord to modify an existing stage instance (discord.StageInstance)
+// https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance-json-params
+type ModifyStageInstance struct {
+	Topic        *string                    `json:"topic,omitempty"`
+	PrivacyLevel *StageInstancePrivacyLevel `json:"privacy_level,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}

@@ -1,8 +1,6 @@
 package rest
 
-import (
-	"github.com/kkrypt0nn/centauri/discord"
-)
+import "github.com/kkrypt0nn/centauri/discord"
 
 const (
 	InvitesEndpoint = Endpoint + "invites"
@@ -20,5 +18,10 @@ func (c *Client) GetInvite(inviteCode string, withCounts, withExpiration bool, g
 	if guildScheduledEventID != "" {
 		queryParams["guild_scheduled_event_id"] = guildScheduledEventID
 	}
-	return DoRequestAs[discord.Invite](c, "GET", InvitesEndpoint+"/"+inviteCode, queryParams, 1)
+	return DoRequestAsStructure[discord.Invite](c, "GET", InvitesEndpoint+"/"+inviteCode, nil, queryParams, 1)
+}
+
+// DeleteInvite deletes an existing invitation (discord.Invite) for the given invite code
+func (c *Client) DeleteInvite(inviteCode string) (*discord.Invite, error) {
+	return DoRequestAsStructure[discord.Invite](c, "DELETE", InvitesEndpoint+"/"+inviteCode, nil, nil, 1)
 }

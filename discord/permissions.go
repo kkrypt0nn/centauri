@@ -1,0 +1,54 @@
+package discord
+
+type Permissions uint64
+
+const PermissionsNone Permissions = 0
+const (
+	PermissionsCreateInstantInvite Permissions = 1 << iota
+	PermissionsKickMembers
+	PermissionsBanMembers
+	PermissionsAdministrator
+	PermissionsManageChannels
+	PermissionsManageGuild
+	PermissionsAddReactions
+	PermissionsViewAuditLog
+	PermissionsPrioritySpeaker
+	PermissionsStream
+	PermissionsViewChannel
+	PermissionsSendMessages
+	PermissionsSendTTSMessages
+	PermissionsManageMessages
+	PermissionsEmbedLinks
+	PermissionsAttachFiles
+	PermissionsReadMessageHistory
+	PermissionsMentionEveryone
+	PermissionsUseExternalEmojis
+	PermissionsViewGuildInsights
+	PermissionsConnect
+	PermissionsSpeak
+	PermissionsMuteMembers
+	PermissionsDeafenMembers
+	PermissionsMoveMembers
+	PermissionsUseVoiceActivityDetection
+	PermissionsChangeNickname
+	PermissionsManageNicknames
+	PermissionsManageRoles
+	PermissionsManageWebhooks
+	PermissionsManageExpressions
+	PermissionsUseApplicationCommands
+	PermissionsRequestToSpeak
+	PermissionsManageEvents
+	PermissionsManageThreads
+	PermissionsCreatePublicThreads
+	PermissionsCreatePrivateThreads
+	PermissionsUseExternalStickers
+	PermissionsSendMessagesInThreads
+	PermissionsUseEmbeddedActivities
+	PermissionsModerateMembers
+	PermissionsViewCreatorMonetizationAnalytics
+	PermissionsUseSoundboard
+	PermissionsCreateExpressions
+	_
+	_
+	PermissionsSendVoiceMessages
+)

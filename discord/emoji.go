@@ -12,3 +12,22 @@ type Emoji struct {
 	Animated      bool     `json:"animated,omitempty"`
 	Available     bool     `json:"available,omitempty"`
 }
+
+// CreateGuildEmoji represents the payload to send to Discord to create a new emoji (discord.Emoji) in a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/emoji#create-guild-emoji-json-params
+type CreateGuildEmoji struct {
+	Name  string   `json:"name"`
+	Image string   `json:"image"`
+	Roles []string `json:"roles,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
+// ModifyGuildEmoji represents the payload to send to Discord to modify an existing emoji (discord.Emoji) in a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/emoji#modify-guild-emoji-json-params
+type ModifyGuildEmoji struct {
+	Name  *string  `json:"name,omitempty"`
+	Roles []string `json:"roles,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
