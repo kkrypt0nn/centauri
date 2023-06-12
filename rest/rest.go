@@ -244,11 +244,17 @@ func CreateMultipartBodyWithJSON[T discord.CreateMessage | discord.EditMessage |
 		if file.Reader == nil {
 			return "", nil, fmt.Errorf("the file reader cannot be nil")
 		}
-		// Create the form file and copy the content to the writer
+		// Create the form file
 		writer, err = bodyWriter.CreateFormFile(fmt.Sprintf("files[%d]", i), file.Name)
+		if err != nil {
+			return "", nil, err
+		}
+
+		// Copy the content to the writer
 		if _, err = io.Copy(writer, file.Reader); err != nil {
 			return "", nil, err
 		}
+
 	}
 
 	// Close the body writer and then return the relevant information
