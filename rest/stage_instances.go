@@ -23,6 +23,5 @@ func (c *Client) ModifyStageInstance(channelID string, stageInstance discord.Mod
 
 // DeleteStageInstance deletes an existing stage instance (discord.StageInstance) for the given channel ID
 func (c *Client) DeleteStageInstance(channelID string) error {
-	_, _, err := c.DoRequest("DELETE", StageInstancesEndpoint+"/"+channelID, nil, nil, 1)
-	return err
+	return DoEmptyRequest(c, "DELETE", StageInstancesEndpoint+"/"+channelID, nil, nil, 1)
 }

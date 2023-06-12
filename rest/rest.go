@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"mime/multipart"
 	"net/http"
 	"strings"
 	"time"
@@ -50,22 +51,13 @@ func (c *Client) SetAuthorizationHeader(authorizationHeader string) {
 }
 
 // DoRequest performs a request to the given URL with the given method, it will make sure to follow rate limits, and returns the body and the response individually
-func (c *Client) DoRequest(method, url string, requestBody any, queryParams QueryParameters, attempt int, requestOptions ...RequestOption) ([]byte, *http.Response, error) {
+func (c *Client) DoRequest(method, url string, requestBody []byte, queryParams QueryParameters, attempt int, requestOptions ...RequestOption) ([]byte, *http.Response, error) {
 	// Get the bucket for the URL
 	key := strings.Split(url, "?")[0]
 	bucket := c.RateLimiter.LockBucket(key)
 
-	// Marshal the request body
-	var bytesBody []byte
-	if requestBody != nil {
-		var err error
-		if bytesBody, err = json.Marshal(requestBody); err != nil {
-			return nil, nil, err
-		}
-	}
-
 	// Prepare the request and set the relevant headers
-	request, err := http.NewRequest(method, url, bytes.NewReader(bytesBody))
+	request, err := http.NewRequest(method, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		_ = c.RateLimiter.UnlockBucket(bucket, nil)
 		return nil, nil, err
@@ -95,8 +87,8 @@ func (c *Client) DoRequest(method, url string, requestBody any, queryParams Quer
 
 	// Perform the request
 	if c.Debug {
-		if requestBody != nil {
-			c.Logger.Debug(fmt.Sprintf("%s %s, body: %s", method, request.URL.String(), string(bytesBody)))
+		if requestBody != nil && request.Header.Get("Content-Type") == "application/json" {
+			c.Logger.Debug(fmt.Sprintf("%s %s, body: %s", method, request.URL.String(), string(requestBody)))
 		} else {
 			c.Logger.Debug(fmt.Sprintf("%s %s", method, request.URL.String()))
 		}
@@ -148,7 +140,21 @@ func (c *Client) DoRequest(method, url string, requestBody any, queryParams Quer
 	}
 }
 
-func DoRequestAsStructure[T any](client *Client, method, url string, requestBody any, queryParams QueryParameters, attempt int, requestOptions ...RequestOption) (*T, error) {
+func DoEmptyRequest(client *Client, method, url string, requestBody any, queryParams QueryParameters, attempt int, requestOptions ...RequestOption) error {
+	// Marshal the request body
+	var bytesBody []byte
+	if requestBody != nil {
+		var err error
+		if bytesBody, err = json.Marshal(requestBody); err != nil {
+			return err
+		}
+	}
+
+	_, _, err := client.DoRequest(method, url, bytesBody, queryParams, attempt, requestOptions...)
+	return err
+}
+
+func DoRequestWithFiles[T any](client *Client, method, url string, requestBody []byte, queryParams QueryParameters, attempt int, requestOptions ...RequestOption) (*T, error) {
 	responseBody, _, err := client.DoRequest(method, url, requestBody, queryParams, attempt, requestOptions...)
 	if err != nil {
 		return nil, err
@@ -162,8 +168,45 @@ func DoRequestAsStructure[T any](client *Client, method, url string, requestBody
 	return entity, err
 }
 
+func DoEmptyRequestWithFiles(client *Client, method, url string, requestBody []byte, queryParams QueryParameters, attempt int, requestOptions ...RequestOption) error {
+	_, _, err := client.DoRequest(method, url, requestBody, queryParams, attempt, requestOptions...)
+	return err
+}
+
+func DoRequestAsStructure[T any](client *Client, method, url string, requestBody any, queryParams QueryParameters, attempt int, requestOptions ...RequestOption) (*T, error) {
+	// Marshal the request body
+	var bytesBody []byte
+	if requestBody != nil {
+		var err error
+		if bytesBody, err = json.Marshal(requestBody); err != nil {
+			return nil, err
+		}
+	}
+
+	responseBody, _, err := client.DoRequest(method, url, bytesBody, queryParams, attempt, requestOptions...)
+	if err != nil {
+		return nil, err
+	}
+
+	var entity *T
+	err = json.Unmarshal(responseBody, &entity)
+	if err != nil {
+		return nil, err
+	}
+	return entity, err
+}
+
 func DoRequestAsList[T any](client *Client, method, url string, requestBody any, queryParams QueryParameters, attempt int, requestOptions ...RequestOption) ([]T, error) {
-	responseBody, _, err := client.DoRequest(method, url, requestBody, queryParams, attempt, requestOptions...)
+	// Marshal the request body
+	var bytesBody []byte
+	if requestBody != nil {
+		var err error
+		if bytesBody, err = json.Marshal(requestBody); err != nil {
+			return nil, err
+		}
+	}
+
+	responseBody, _, err := client.DoRequest(method, url, bytesBody, queryParams, attempt, requestOptions...)
 	if err != nil {
 		return nil, err
 	}
@@ -174,4 +217,45 @@ func DoRequestAsList[T any](client *Client, method, url string, requestBody any,
 		return nil, err
 	}
 	return entity, err
+}
+
+// CreateMultipartBodyWithJSON returns the new bytes for when uploading files to Discord
+// https://discord.com/developers/docs/reference#uploading-files
+func CreateMultipartBodyWithJSON[T discord.CreateMessage | discord.EditMessage | discord.ExecuteWebhook | discord.StartThreadInForumChannel | discord.CreateGuildSticker](data T, files []discord.File) (string, []byte, error) {
+	body := &bytes.Buffer{}
+	bodyWriter := multipart.NewWriter(body)
+
+	// Create the `payload_json` part
+	writer, err := bodyWriter.CreateFormField("payload_json")
+	if err != nil {
+		return "", nil, err
+	}
+	// Marshal the content and write to it
+	m, err := json.Marshal(data)
+	if err != nil {
+		return "", nil, err
+	}
+	if _, err = writer.Write(m); err != nil {
+		return "", nil, err
+	}
+
+	// Add the relevant files
+	for i, file := range files {
+		if file.Reader == nil {
+			return "", nil, fmt.Errorf("the file reader cannot be nil")
+		}
+		// Create the form file and copy the content to the writer
+		writer, err = bodyWriter.CreateFormFile(fmt.Sprintf("files[%d]", i), file.Name)
+		if _, err = io.Copy(writer, file.Reader); err != nil {
+			return "", nil, err
+		}
+	}
+
+	// Close the body writer and then return the relevant information
+	err = bodyWriter.Close()
+	if err != nil {
+		return "", nil, err
+	}
+
+	return bodyWriter.FormDataContentType(), body.Bytes(), nil
 }

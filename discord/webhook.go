@@ -67,5 +67,7 @@ type ExecuteWebhook struct {
 	Components      []Component      `json:"components,omitempty"`
 	Flags           *MessageFlags    `json:"flags,omitempty"`
 	ThreadName      *string          `json:"thread_name,omitempty"`
-	// TODO: Support files and attachments
+	Attachments     []Attachment     `json:"attachments,omitempty"`
+
+	Files []File `json:"-"`
 }

@@ -42,18 +42,6 @@ type Channel struct {
 	DefaultForumLayout            DefaultForumLayoutView `json:"default_forum_layout,omitempty"`
 }
 
-// ForumThreadMessage represents a forum thread message when creating a new thread
-// https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel-forum-thread-message-params-object
-type ForumThreadMessage struct {
-	Content         *string          `json:"content,omitempty"`
-	Embeds          []Embed          `json:"embeds,omitempty"`
-	AllowedMentions *AllowedMentions `json:"allowed_mentions,omitempty"`
-	Components      []Component      `json:"components,omitempty"`
-	StickerIDs      []string         `json:"sticker_ids,omitempty"`
-	Flags           *MessageFlags    `json:"flags,omitempty"`
-	// TODO: Support files and attachments
-}
-
 // ThreadType represents the type of thread
 // https://discord.com/developers/docs/resources/channel#channel-object-channel-types
 type ThreadType int
@@ -316,4 +304,18 @@ type StartThreadInForumChannel struct {
 	AppliedTags         []Tag              `json:"applied_tags,omitempty"`
 
 	AuditLogReason string `json:"-"`
+}
+
+// ForumThreadMessage represents a forum thread message when creating a new thread
+// https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel-forum-thread-message-params-object
+type ForumThreadMessage struct {
+	Content         *string          `json:"content,omitempty"`
+	Embeds          []Embed          `json:"embeds,omitempty"`
+	AllowedMentions *AllowedMentions `json:"allowed_mentions,omitempty"`
+	Components      []Component      `json:"components,omitempty"`
+	StickerIDs      []string         `json:"sticker_ids,omitempty"`
+	Flags           *MessageFlags    `json:"flags,omitempty"`
+	Attachments     []Attachment     `json:"attachments,omitempty"`
+
+	Files []File `json:"-"`
 }

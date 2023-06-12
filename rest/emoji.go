@@ -24,6 +24,5 @@ func (c *Client) ModifyGuildEmoji(guildID, emojiID string, emoji discord.ModifyG
 
 // DeleteGuildEmoji deletes an existing emoji (discord.Emoji) for the given guild and emoji IDs
 func (c *Client) DeleteGuildEmoji(guildID, emojiID, reason string) error {
-	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/emojis/"+emojiID, nil, nil, 1, WithReason(reason))
-	return err
+	return DoEmptyRequest(c, "DELETE", GuildsEndpoint+"/"+guildID+"/emojis/"+emojiID, nil, nil, 1, WithReason(reason))
 }

@@ -36,8 +36,7 @@ func (c *Client) ModifyGuildScheduledEvent(guildID, scheduledEventID string, sch
 
 // DeleteGuildScheduledEvent deletes an existing guild scheduled event (discord.GuildScheduledEvent) for the given guild and scheduled event IDs
 func (c *Client) DeleteGuildScheduledEvent(guildID, scheduledEventID string) error {
-	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/scheduled-events/"+scheduledEventID, nil, nil, 1)
-	return err
+	return DoEmptyRequest(c, "DELETE", GuildsEndpoint+"/"+guildID+"/scheduled-events/"+scheduledEventID, nil, nil, 1)
 }
 
 // GetGuildScheduledEventUsers returns a list of guild scheduled event user structures (discord.GuildScheduledEventUser)

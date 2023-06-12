@@ -1,6 +1,8 @@
 package rest
 
-import "github.com/kkrypt0nn/centauri/discord"
+import (
+	"github.com/kkrypt0nn/centauri/discord"
+)
 
 const (
 	StickersEndpoint     = Endpoint + "stickers"
@@ -27,7 +29,17 @@ func (c *Client) GetGuildSticker(guildID, stickerID string) (*discord.Sticker, e
 	return DoRequestAsStructure[discord.Sticker](c, "GET", GuildsEndpoint+"/"+guildID+"/stickers/"+stickerID, nil, nil, 1)
 }
 
-// TODO: Support 'Create Guild Sticker' endpoint
+// CreateGuildSticker creates a new sticker (discord.Sticker) for the given guild ID and returns its structure
+// **Warning**: Seems to not be working at the moment, always giving "Invalid Asset"
+func (c *Client) CreateGuildSticker(guildID string, sticker discord.CreateGuildSticker) (*discord.Sticker, error) {
+	contentType, body, err := CreateMultipartBodyWithJSON(sticker, []discord.File{
+		sticker.File,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return DoRequestWithFiles[discord.Sticker](c, "POST", GuildsEndpoint+"/"+guildID+"/stickers", body, nil, 1, WithReason(sticker.AuditLogReason), WithHeader("Content-Type", contentType))
+}
 
 // ModifyGuildSticker modifies an existing sticker (discord.Sticker) for the given guild and sticker IDs and returns its new structure
 func (c *Client) ModifyGuildSticker(guildID, stickerID string, sticker discord.ModifyGuildSticker) (*discord.Sticker, error) {
@@ -36,6 +48,5 @@ func (c *Client) ModifyGuildSticker(guildID, stickerID string, sticker discord.M
 
 // DeleteGuildSticker deletes an existing sticker (discord.Sticker) from the given guild and sticker ID
 func (c *Client) DeleteGuildSticker(guildID, stickerID, reason string) error {
-	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/stickers/"+stickerID, nil, nil, 1, WithReason(reason))
-	return err
+	return DoEmptyRequest(c, "DELETE", GuildsEndpoint+"/"+guildID+"/stickers/"+stickerID, nil, nil, 1, WithReason(reason))
 }

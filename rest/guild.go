@@ -37,8 +37,7 @@ func (c *Client) ModifyGuild(guildID string, guild discord.ModifyGuild) (*discor
 
 // DeleteGuild deletes an existing guild (discord.Guild) from the given guild ID
 func (c *Client) DeleteGuild(guildID string) error {
-	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID, nil, nil, 1)
-	return err
+	return DoEmptyRequest(c, "DELETE", GuildsEndpoint+"/"+guildID, nil, nil, 1)
 }
 
 // GetGuildChannels returns a list of channel structures (discord.Channel) for the given guild ID
@@ -53,8 +52,7 @@ func (c *Client) CreateGuildChannel(guildID string, channel discord.CreateGuildC
 
 // ModifyGuildChannelPositions modifies the position of existing channels (discord.Channel) for the given guild ID
 func (c *Client) ModifyGuildChannelPositions(guildID string, channelPositions []discord.ModifyGuildChannelPosition) error {
-	_, _, err := c.DoRequest("PATCH", GuildsEndpoint+"/"+guildID+"/channels", channelPositions, nil, 1)
-	return err
+	return DoEmptyRequest(c, "PATCH", GuildsEndpoint+"/"+guildID+"/channels", channelPositions, nil, 1)
 }
 
 // ListActiveThreads returns an active threads structure (discord.ActiveThreads) for the given guild ID
@@ -84,20 +82,17 @@ func (c *Client) ModifyGuildMember(guildID, userID string, member discord.Modify
 
 // AddGuildMemberRole adds a role (discord.Role) for the given guild, user and role IDs
 func (c *Client) AddGuildMemberRole(guildID, userID, roleID, reason string) error {
-	_, _, err := c.DoRequest("PUT", GuildsEndpoint+"/"+guildID+"/members/"+userID+"/roles/"+roleID, nil, nil, 1, WithReason(reason))
-	return err
+	return DoEmptyRequest(c, "PUT", GuildsEndpoint+"/"+guildID+"/members/"+userID+"/roles/"+roleID, nil, nil, 1, WithReason(reason))
 }
 
 // RemoveGuildMemberRole removes a role (discord.Role) for the given guild, user and role IDs
 func (c *Client) RemoveGuildMemberRole(guildID, userID, roleID, reason string) error {
-	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/members/"+userID+"/roles/"+roleID, nil, nil, 1, WithReason(reason))
-	return err
+	return DoEmptyRequest(c, "DELETE", GuildsEndpoint+"/"+guildID+"/members/"+userID+"/roles/"+roleID, nil, nil, 1, WithReason(reason))
 }
 
 // RemoveGuildMember removes a member (discord.Member) from a guild for the given guild and user IDs
 func (c *Client) RemoveGuildMember(guildID, userID, reason string) error {
-	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/members/"+userID, nil, nil, 1, WithReason(reason))
-	return err
+	return DoEmptyRequest(c, "DELETE", GuildsEndpoint+"/"+guildID+"/members/"+userID, nil, nil, 1, WithReason(reason))
 }
 
 // GetGuildBans returns a list of guild ban structures (discord.GuildBan) for the given guild ID
@@ -122,14 +117,12 @@ func (c *Client) GetGuildBan(guildID, banID string) (*discord.GuildBan, error) {
 
 // CreateGuildBan creates a guild ban (discord.GuildBan) for the given guild ID
 func (c *Client) CreateGuildBan(guildID string, ban discord.CreateGuildBan) error {
-	_, _, err := c.DoRequest("PUT", GuildsEndpoint+"/"+guildID+"/bans/"+ban.UserID, ban, nil, 1, WithReason(ban.AuditLogReason))
-	return err
+	return DoEmptyRequest(c, "PUT", GuildsEndpoint+"/"+guildID+"/bans/"+ban.UserID, ban, nil, 1, WithReason(ban.AuditLogReason))
 }
 
 // RemoveGuildBan removes an existing guild ban (discord.GuildBan) for the given guild and user IDs
 func (c *Client) RemoveGuildBan(guildID, userID, reason string) error {
-	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/bans/"+userID, nil, nil, 1, WithReason(reason))
-	return err
+	return DoEmptyRequest(c, "DELETE", GuildsEndpoint+"/"+guildID+"/bans/"+userID, nil, nil, 1, WithReason(reason))
 }
 
 // GetGuildRoles returns a list role structures (discord.Role)
@@ -159,8 +152,7 @@ func (c *Client) ModifyGuildMFALevel(guildID string, mfaLevel discord.ModifyGuil
 
 // DeleteGuildRole deletes an existing role (discord.Role) for the given guild and role IDs
 func (c *Client) DeleteGuildRole(guildID, roleID, reason string) error {
-	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/roles/"+roleID, nil, nil, 1, WithReason(reason))
-	return err
+	return DoEmptyRequest(c, "DELETE", GuildsEndpoint+"/"+guildID+"/roles/"+roleID, nil, nil, 1, WithReason(reason))
 }
 
 // GetGuildPruneCount returns a guild prune structure (discord.GuildPrune) for the given guild IDs
@@ -197,8 +189,7 @@ func (c *Client) GetGuildIntegrations(guildID string) ([]discord.Integration, er
 
 // DeleteGuildIntegration deletes an existing integration (discord.Integration) for the given guild and integration IDs
 func (c *Client) DeleteGuildIntegration(guildID, integrationID, reason string) error {
-	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/integrations/"+integrationID, nil, nil, 1, WithReason(reason))
-	return err
+	return DoEmptyRequest(c, "DELETE", GuildsEndpoint+"/"+guildID+"/integrations/"+integrationID, nil, nil, 1, WithReason(reason))
 }
 
 // GetGuildWidgetSetting returns a widget setting structure (discord.WidgetSetting) for the given guild ID
@@ -238,12 +229,10 @@ func (c *Client) GetGuildOnboarding(guildID string) (*discord.Onboarding, error)
 
 // ModifyCurrentUserVoiceState modifies the voice state of the current user for the given guild ID
 func (c *Client) ModifyCurrentUserVoiceState(guildID string, voiceState discord.ModifyCurrentUserVoiceState) error {
-	_, _, err := c.DoRequest("PATCH", GuildsEndpoint+"/"+guildID+"/voice-states/@me", voiceState, nil, 1)
-	return err
+	return DoEmptyRequest(c, "PATCH", GuildsEndpoint+"/"+guildID+"/voice-states/@me", voiceState, nil, 1)
 }
 
 // ModifyUserVoiceState modifies the voice state of the current user for the given guild and user IDs
 func (c *Client) ModifyUserVoiceState(guildID, userID string, voiceState discord.ModifyUserVoiceState) error {
-	_, _, err := c.DoRequest("PATCH", GuildsEndpoint+"/"+guildID+"/voice-states/"+userID, voiceState, nil, 1)
-	return err
+	return DoEmptyRequest(c, "PATCH", GuildsEndpoint+"/"+guildID+"/voice-states/"+userID, voiceState, nil, 1)
 }

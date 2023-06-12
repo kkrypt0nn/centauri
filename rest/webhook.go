@@ -43,24 +43,29 @@ func (c *Client) ModifyWebhookWithToken(webhookID, webhookToken string, webhook 
 
 // DeleteWebhook deletes an existing webhook (discord.Webhook) from the given webhook ID
 func (c *Client) DeleteWebhook(webhookID string) error {
-	_, _, err := c.DoRequest("DELETE", WebhooksEndpoint+"/"+webhookID, nil, nil, 1)
-	return err
+	return DoEmptyRequest(c, "DELETE", WebhooksEndpoint+"/"+webhookID, nil, nil, 1)
 }
 
 // DeleteWebhookWithToken deletes an existing webhook (discord.Webhook) from the given webhook ID and webhook token (does not require authentication)
 func (c *Client) DeleteWebhookWithToken(webhookID, webhookToken string) error {
-	_, _, err := c.DoRequest("DELETE", WebhooksEndpoint+"/"+webhookID+"/"+webhookToken, nil, nil, 1)
-	return err
+	return DoEmptyRequest(c, "DELETE", WebhooksEndpoint+"/"+webhookID+"/"+webhookToken, nil, nil, 1)
 }
 
 // ExecuteWebhook executes a webhook (discord.Webhook) to send some message with it for the given webhook ID and webhook token (can also be executed in a given thread ID)
-func (c *Client) ExecuteWebhook(webhookID, webhookToken, threadID string, content discord.ExecuteWebhook) error {
+func (c *Client) ExecuteWebhook(webhookID, webhookToken, threadID string, message discord.ExecuteWebhook) error {
 	queryParams := make(QueryParameters)
 	if threadID != "" {
 		queryParams["thread_id"] = threadID
 	}
-	_, _, err := c.DoRequest("POST", WebhooksEndpoint+"/"+webhookID+"/"+webhookToken, content, queryParams, 1)
-	return err
+	if len(message.Files) >= 1 {
+		contentType, body, err := CreateMultipartBodyWithJSON(message, message.Files)
+		if err != nil {
+			return err
+		}
+		return DoEmptyRequestWithFiles(c, "POST", WebhooksEndpoint+"/"+webhookID+"/"+webhookToken, body, queryParams, 1, WithHeader("Content-Type", contentType))
+	} else {
+		return DoEmptyRequest(c, "POST", WebhooksEndpoint+"/"+webhookID+"/"+webhookToken, message, queryParams, 1)
+	}
 }
 
 // GetWebhookMessage returns a previously-sent webhook message structure (discord.Message) from the same token given the message ID

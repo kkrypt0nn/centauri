@@ -24,6 +24,5 @@ func (c *Client) ModifyAutoModerationRule(guildID, ruleID string, autoModeration
 
 // DeleteAutoModerationRule deletes an existing auto moderation rule (discord.AutoModerationRule)
 func (c *Client) DeleteAutoModerationRule(guildID, ruleID, reason string) error {
-	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/auto-moderation/rules/"+ruleID, nil, nil, 1, WithReason(reason))
-	return err
+	return DoEmptyRequest(c, "DELETE", GuildsEndpoint+"/"+guildID+"/auto-moderation/rules/"+ruleID, nil, nil, 1, WithReason(reason))
 }

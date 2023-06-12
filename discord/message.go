@@ -3,6 +3,7 @@ package discord
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"time"
 )
 
@@ -275,6 +276,12 @@ type MessageInteraction struct {
 	Member *Member         `json:"member,omitempty"`
 }
 
+// File represents a file that can be used to send to Discord in a message
+type File struct {
+	Name   string
+	Reader io.Reader
+}
+
 // CreateMessage represents the payload to send to Discord to post a message (discord.Message) in a channel (discord.Channel)
 // https://discord.com/developers/docs/resources/channel#create-message-jsonform-params
 type CreateMessage struct {
@@ -287,7 +294,9 @@ type CreateMessage struct {
 	Components       []Component       `json:"components,omitempty"`
 	StickerIDs       []string          `json:"sticker_ids,omitempty"`
 	Flags            *MessageFlags     `json:"flags,omitempty"`
-	// TODO: Support files and attachments
+	Attachments      []Attachment      `json:"attachments,omitempty"`
+
+	Files []File `json:"-"`
 }
 
 // EditMessage represents the payload to send to Discord to edit an existing message (discord.Message) in a channel (discord.Channel)
@@ -297,7 +306,9 @@ type EditMessage struct {
 	Embeds          []Embed          `json:"embeds,omitempty"`
 	Flags           *MessageFlags    `json:"flags,omitempty"`
 	AllowedMentions *AllowedMentions `json:"allowed_mentions,omitempty"`
-	// TODO: Support files and attachments
+	Attachments     []Attachment     `json:"attachments,omitempty"`
+
+	Files []File `json:"-"`
 }
 
 // BulkDeleteMessages represents the payload to send to Discord to perform a bulk delete of multiple messages (discord.Message)

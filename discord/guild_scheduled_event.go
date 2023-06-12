@@ -95,7 +95,7 @@ type ModifyGuildScheduledEvent struct {
 	Description        *string                            `json:"description,omitempty"`
 	EntityType         *GuildScheduledEventEntityType     `json:"entity_type,omitempty"`
 	Status             *GuildScheduledEventStatus         `json:"status,omitempty"`
-	Image              *string                            `json:"image,omitempty,omitempty"`
+	Image              *string                            `json:"image,omitempty"`
 
 	AuditLogReason string `json:"-"`
 }

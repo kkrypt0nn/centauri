@@ -47,8 +47,7 @@ func (c *Client) GetUserGuilds(before, after string, limit int) ([]discord.Parti
 
 // LeaveGuild leaves a guild (discord.Guild) from the given guild ID
 func (c *Client) LeaveGuild(guildID string) error {
-	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID, nil, nil, 1)
-	return err
+	return DoEmptyRequest(c, "DELETE", GuildsEndpoint+"/"+guildID, nil, nil, 1)
 }
 
 // CreateDM creates a new DM channel (discord.Channel) for the given user ID and returns its structure

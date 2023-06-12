@@ -28,8 +28,7 @@ func (c *Client) EditGlobalApplicationCommand(applicationID, commandID string, a
 
 // DeleteGlobalApplicationCommand deletes an existing global application command (discord.Guild) from the given application and command IDs
 func (c *Client) DeleteGlobalApplicationCommand(applicationID, commandID string) error {
-	_, _, err := c.DoRequest("DELETE", ApplicationsEndpoint+"/"+applicationID+"/commands/"+commandID, nil, nil, 1)
-	return err
+	return DoEmptyRequest(c, "DELETE", ApplicationsEndpoint+"/"+applicationID+"/commands/"+commandID, nil, nil, 1)
 }
 
 // BulkOverwriteGlobalApplicationCommand overwrites all the existing global application commands (discord.ApplicationCommand) for the given application ID and returns a list of application command structures
@@ -63,8 +62,7 @@ func (c *Client) EditGuildApplicationCommand(applicationID, guildID, commandID s
 
 // DeleteGuildApplicationCommand deletes an existing guild application command (discord.Guild) from the given application, guild and command IDs
 func (c *Client) DeleteGuildApplicationCommand(applicationID, guildID, commandID string) error {
-	_, _, err := c.DoRequest("DELETE", ApplicationsEndpoint+"/"+applicationID+"/guilds/"+guildID+"/commands/"+commandID, nil, nil, 1)
-	return err
+	return DoEmptyRequest(c, "DELETE", ApplicationsEndpoint+"/"+applicationID+"/guilds/"+guildID+"/commands/"+commandID, nil, nil, 1)
 }
 
 // BulkOverwriteGuildApplicationCommand overwrites all the existing guild application commands (discord.ApplicationCommand) for the given application and guild IDs and returns a list of application command structures
