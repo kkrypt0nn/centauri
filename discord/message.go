@@ -67,39 +67,6 @@ func (m *Message) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// CreateMessage represents the payload to send to Discord to post a message (discord.Message) in a channel (discord.Channel)
-// https://discord.com/developers/docs/resources/channel#create-message-jsonform-params
-type CreateMessage struct {
-	Content          *string           `json:"content,omitempty"`
-	Nonce            *string           `json:"nonce,omitempty"`
-	TTS              *bool             `json:"tts,omitempty"`
-	Embeds           []Embed           `json:"embeds,omitempty"`
-	AllowedMentions  *AllowedMentions  `json:"allowed_mentions,omitempty"`
-	MessageReference *MessageReference `json:"message_reference,omitempty"`
-	Components       []Component       `json:"components,omitempty"`
-	StickerIDs       []string          `json:"sticker_ids,omitempty"`
-	Flags            *MessageFlags     `json:"flags,omitempty"`
-	// TODO: Support files and attachments
-}
-
-// EditMessage represents the payload to send to Discord to edit an existing message (discord.Message) in a channel (discord.Channel)
-// https://discord.com/developers/docs/resources/channel#edit-message-jsonform-params
-type EditMessage struct {
-	Content         *string          `json:"content,omitempty"`
-	Embeds          []Embed          `json:"embeds,omitempty"`
-	Flags           *MessageFlags    `json:"flags,omitempty"`
-	AllowedMentions *AllowedMentions `json:"allowed_mentions,omitempty"`
-	// TODO: Support files and attachments
-}
-
-// BulkDeleteMessages represents the payload to send to Discord to perform a bulk delete of multiple messages (discord.Message)
-// https://discord.com/developers/docs/resources/channel#bulk-delete-messages-json-params
-type BulkDeleteMessages struct {
-	Messages []string `json:"messages"`
-
-	AuditLogReason string `json:"-"`
-}
-
 // AllowedMentions represents the allowed mentions for a message (discord.Message)
 // https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mentions-structure
 type AllowedMentions struct {
@@ -306,4 +273,37 @@ type MessageInteraction struct {
 	Name   string          `json:"name"`
 	User   *User           `json:"user"`
 	Member *Member         `json:"member,omitempty"`
+}
+
+// CreateMessage represents the payload to send to Discord to post a message (discord.Message) in a channel (discord.Channel)
+// https://discord.com/developers/docs/resources/channel#create-message-jsonform-params
+type CreateMessage struct {
+	Content          *string           `json:"content,omitempty"`
+	Nonce            *string           `json:"nonce,omitempty"`
+	TTS              *bool             `json:"tts,omitempty"`
+	Embeds           []Embed           `json:"embeds,omitempty"`
+	AllowedMentions  *AllowedMentions  `json:"allowed_mentions,omitempty"`
+	MessageReference *MessageReference `json:"message_reference,omitempty"`
+	Components       []Component       `json:"components,omitempty"`
+	StickerIDs       []string          `json:"sticker_ids,omitempty"`
+	Flags            *MessageFlags     `json:"flags,omitempty"`
+	// TODO: Support files and attachments
+}
+
+// EditMessage represents the payload to send to Discord to edit an existing message (discord.Message) in a channel (discord.Channel)
+// https://discord.com/developers/docs/resources/channel#edit-message-jsonform-params
+type EditMessage struct {
+	Content         *string          `json:"content,omitempty"`
+	Embeds          []Embed          `json:"embeds,omitempty"`
+	Flags           *MessageFlags    `json:"flags,omitempty"`
+	AllowedMentions *AllowedMentions `json:"allowed_mentions,omitempty"`
+	// TODO: Support files and attachments
+}
+
+// BulkDeleteMessages represents the payload to send to Discord to perform a bulk delete of multiple messages (discord.Message)
+// https://discord.com/developers/docs/resources/channel#bulk-delete-messages-json-params
+type BulkDeleteMessages struct {
+	Messages []string `json:"messages"`
+
+	AuditLogReason string `json:"-"`
 }

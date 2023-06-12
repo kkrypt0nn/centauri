@@ -19,6 +19,18 @@ type Member struct {
 	CommunicationDisabledUntil *time.Time  `json:"communication_disabled_until,omitempty"`
 }
 
+// MemberFlags represents the flags of a member (discord.Member)
+// https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-flags
+type MemberFlags uint64
+
+const MemberFlagsNone MemberFlags = 0
+const (
+	MemberFlagDidRejoin MemberFlags = 1 << iota
+	MemberFlagCompletedOnboarding
+	MemberFlagBypassesVerification
+	MemberFlagStartedOnboarding
+)
+
 // ModifyGuildMember represents the payload to send to Discord to modify a guild member (discord.Member)
 // https://discord.com/developers/docs/resources/guild#modify-guild-member-json-params
 type ModifyGuildMember struct {
@@ -32,15 +44,3 @@ type ModifyGuildMember struct {
 
 	AuditLogReason string `json:"-"`
 }
-
-// MemberFlags represents the flags of a member (discord.Member)
-// https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-flags
-type MemberFlags uint64
-
-const MemberFlagsNone MemberFlags = 0
-const (
-	MemberFlagDidRejoin MemberFlags = 1 << iota
-	MemberFlagCompletedOnboarding
-	MemberFlagBypassesVerification
-	MemberFlagStartedOnboarding
-)

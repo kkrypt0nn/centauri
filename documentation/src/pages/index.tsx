@@ -101,6 +101,7 @@ export default function Home() {
 
 import (
 	"fmt"
+
 	"github.com/kkrypt0nn/centauri"
 )
 

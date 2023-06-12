@@ -17,3 +17,24 @@ type GuildTemplate struct {
 	SerializedSourceGuild *PartialGuild `json:"serialized_source_guild"`
 	IsDirty               bool          `json:"is_dirty"`
 }
+
+// CreateGuildFromTemplate represents the payload to send to Discord to create a guild (discord.Guild) based on a template code
+// https://discord.com/developers/docs/resources/guild-template#create-guild-from-guild-template-json-params
+type CreateGuildFromTemplate struct {
+	Name  string  `json:"name"`
+	Image *string `json:"image,omitempty"`
+}
+
+// CreateGuildTemplate represents the payload to send to Discord to create a guild template (discord.GuildTemplate)
+// https://discord.com/developers/docs/resources/guild-template#create-guild-template-json-params
+type CreateGuildTemplate struct {
+	Name        string  `json:"name"`
+	Description *string `json:"description,omitempty"`
+}
+
+// ModifyGuildTemplate represents the payload to send to Discord to modify an existing a guild template (discord.GuildTemplate)
+// https://discord.com/developers/docs/resources/guild-template#modify-guild-template-json-params
+type ModifyGuildTemplate struct {
+	Name        *string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+}

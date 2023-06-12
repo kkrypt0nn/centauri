@@ -61,3 +61,13 @@ type StickerPack struct {
 type NitroStickerPacks struct {
 	StickerPacks []StickerPack `json:"sticker_packs"`
 }
+
+// ModifyGuildSticker represents the payload to send to Discord to modify an existing sticker (discord.Sticker)
+// https://discord.com/developers/docs/resources/sticker#modify-guild-sticker-json-params
+type ModifyGuildSticker struct {
+	Name        *string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+	Tags        *string `json:"tags,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}

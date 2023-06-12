@@ -15,6 +15,11 @@ func (c *Client) ListGuildScheduledEvents(guildID string, withUserCount bool) ([
 	return DoRequestAsList[discord.GuildScheduledEvent](c, "GET", GuildsEndpoint+"/"+guildID+"/scheduled-events", nil, queryParams, 1)
 }
 
+// CreateGuildScheduledEvent creates a guild scheduled event (discord.GuildScheduledEvent) for the given guild ID and returns its structure
+func (c *Client) CreateGuildScheduledEvent(guildID string, scheduledEvent discord.CreateGuildScheduledEvent) (*discord.GuildScheduledEvent, error) {
+	return DoRequestAsStructure[discord.GuildScheduledEvent](c, "POST", GuildsEndpoint+"/"+guildID+"/scheduled-events", scheduledEvent, nil, 1, WithReason(scheduledEvent.AuditLogReason))
+}
+
 // GetGuildScheduledEvent returns a guild scheduled event structure (discord.GuildScheduledEvent) for the given guild ID and scheduled event ID
 func (c *Client) GetGuildScheduledEvent(guildID, scheduledEventID string, withUserCount bool) (*discord.GuildScheduledEvent, error) {
 	queryParams := make(QueryParameters)
@@ -22,6 +27,17 @@ func (c *Client) GetGuildScheduledEvent(guildID, scheduledEventID string, withUs
 		queryParams["with_user_count"] = "true"
 	}
 	return DoRequestAsStructure[discord.GuildScheduledEvent](c, "GET", GuildsEndpoint+"/"+guildID+"/scheduled-events/"+scheduledEventID, nil, nil, 1)
+}
+
+// ModifyGuildScheduledEvent modifies an existing guild scheduled event (discord.GuildScheduledEvent) for the given guild and scheduled event IDs and returns its new structure
+func (c *Client) ModifyGuildScheduledEvent(guildID, scheduledEventID string, scheduledEvent discord.ModifyGuildScheduledEvent) (*discord.GuildScheduledEvent, error) {
+	return DoRequestAsStructure[discord.GuildScheduledEvent](c, "PATCH", GuildsEndpoint+"/"+guildID+"/scheduled-events/"+scheduledEventID, scheduledEvent, nil, 1, WithReason(scheduledEvent.AuditLogReason))
+}
+
+// DeleteGuildScheduledEvent deletes an existing guild scheduled event (discord.GuildScheduledEvent) for the given guild and scheduled event IDs
+func (c *Client) DeleteGuildScheduledEvent(guildID, scheduledEventID string) error {
+	_, _, err := c.DoRequest("DELETE", GuildsEndpoint+"/"+guildID+"/scheduled-events/"+scheduledEventID, nil, nil, 1)
+	return err
 }
 
 // GetGuildScheduledEventUsers returns a list of guild scheduled event user structures (discord.GuildScheduledEventUser)

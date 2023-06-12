@@ -34,7 +34,7 @@ const (
 	PermissionsManageNicknames
 	PermissionsManageRoles
 	PermissionsManageWebhooks
-	PermissionsManageGuildExpressions
+	PermissionsManageExpressions
 	PermissionsUseApplicationCommands
 	PermissionsRequestToSpeak
 	PermissionsManageEvents
@@ -47,7 +47,7 @@ const (
 	PermissionsModerateMembers
 	PermissionsViewCreatorMonetizationAnalytics
 	PermissionsUseSoundboard
-	_
+	PermissionsCreateExpressions
 	_
 	_
 	PermissionsSendVoiceMessages

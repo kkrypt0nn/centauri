@@ -7,7 +7,32 @@ func (c *Client) GetGuildTemplate(templateCode string) (*discord.GuildTemplate, 
 	return DoRequestAsStructure[discord.GuildTemplate](c, "GET", GuildsEndpoint+"/templates/"+templateCode, nil, nil, 1)
 }
 
+// CreateGuildFromTemplate creates a guild (discord.Guild) based on the given template code and returns its structure
+func (c *Client) CreateGuildFromTemplate(templateCode string, guild discord.CreateGuildFromTemplate) (*discord.Guild, error) {
+	return DoRequestAsStructure[discord.Guild](c, "POST", GuildsEndpoint+"/templates/"+templateCode, guild, nil, 1)
+}
+
 // GetGuildTemplates returns a list of guild template structures (discord.GuildTemplate) for the given guild ID
 func (c *Client) GetGuildTemplates(guildID string) ([]discord.GuildTemplate, error) {
 	return DoRequestAsList[discord.GuildTemplate](c, "GET", GuildsEndpoint+"/"+guildID+"/templates", nil, nil, 1)
+}
+
+// CreateGuildTemplate creates a guild template (discord.GuildTemplate) for the given guild ID and returns its structure
+func (c *Client) CreateGuildTemplate(guildID string, guildTemplate discord.CreateGuildTemplate) (*discord.GuildTemplate, error) {
+	return DoRequestAsStructure[discord.GuildTemplate](c, "POST", GuildsEndpoint+"/"+guildID+"/templates", guildTemplate, nil, 1)
+}
+
+// SyncGuildTemplate syncs an existing guild template (discord.GuildTemplate) for the given guild ID and template code and returns its structure
+func (c *Client) SyncGuildTemplate(guildID, templateCode string) (*discord.GuildTemplate, error) {
+	return DoRequestAsStructure[discord.GuildTemplate](c, "PUT", GuildsEndpoint+"/"+guildID+"/templates/"+templateCode, nil, nil, 1)
+}
+
+// ModifyGuildTemplate modifies an existing guild template (discord.GuildTemplate) for the given guild ID and template code and returns its new structure
+func (c *Client) ModifyGuildTemplate(guildID string, guildTemplate discord.ModifyGuildTemplate) (*discord.GuildTemplate, error) {
+	return DoRequestAsStructure[discord.GuildTemplate](c, "PATCH", GuildsEndpoint+"/"+guildID+"/templates", guildTemplate, nil, 1)
+}
+
+// DeleteGuildTemplate deletes an existing guild template (discord.GuildTemplate) for the given guild ID and template code and returns the structure of the deleted template
+func (c *Client) DeleteGuildTemplate(guildID, templateCode string) (*discord.GuildTemplate, error) {
+	return DoRequestAsStructure[discord.GuildTemplate](c, "DELETE", GuildsEndpoint+"/"+guildID+"/templates/"+templateCode, nil, nil, 1)
 }

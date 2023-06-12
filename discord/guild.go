@@ -47,59 +47,6 @@ type Guild struct {
 	PremiumProgressBarEnabled   bool                     `json:"premium_progress_bar_enabled"`
 }
 
-// CreateGuild represents the payload to send to Discord to create a new guild (discord.Guild)
-// https://discord.com/developers/docs/resources/guild#create-guild-json-params
-type CreateGuild struct {
-	Name                        string                    `json:"name"`
-	Region                      *string                   `json:"region,omitempty"`
-	Icon                        *string                   `json:"icon,omitempty"`
-	VerificationLevel           *GuildVerificationLevel   `json:"verification_level,omitempty"`
-	DefaultMessageNotifications *MessageNotificationLevel `json:"default_message_notifications,omitempty"`
-	ExplicitContentFilter       *ExplicitContentFilter    `json:"explicit_content_filter,omitempty"`
-	Roles                       []Role                    `json:"roles,omitempty"`
-	Channels                    []Channel                 `json:"channels,omitempty"`
-	AFKChannelID                *string                   `json:"afk_channel_id,omitempty"`
-	AFKTimeout                  *int                      `json:"afk_timeout,omitempty"`
-	SystemChannelID             *string                   `json:"system_channel_id,omitempty"`
-	SystemChannelFlags          *SystemChannelFlags       `json:"system_channel_flags,omitempty"`
-}
-
-// ModifyGuild represents the payload to send to Discord to modify an existing guild (discord.Guild)
-// https://discord.com/developers/docs/resources/guild#modify-guild-json-params
-type ModifyGuild struct {
-	Name                        *string                   `json:"name,omitempty"`
-	Region                      *string                   `json:"region,omitempty"`
-	VerificationLevel           *GuildVerificationLevel   `json:"verification_level,omitempty"`
-	DefaultMessageNotifications *MessageNotificationLevel `json:"default_message_notifications,omitempty"`
-	ExplicitContentFilter       *ExplicitContentFilter    `json:"explicit_content_filter,omitempty"`
-	AFKChannelID                *string                   `json:"afk_channel_id,omitempty"`
-	AFKTimeout                  *int                      `json:"afk_timeout,omitempty"`
-	Icon                        *string                   `json:"icon,omitempty"`
-	OwnerID                     *string                   `json:"owner_id,omitempty"`
-	Splash                      *string                   `json:"splash,omitempty"`
-	DiscoverySplash             *string                   `json:"discovery_splash,omitempty"`
-	Banner                      *string                   `json:"banner,omitempty"`
-	SystemChannelID             *string                   `json:"system_channel_id,omitempty"`
-	SystemChannelFlags          *SystemChannelFlags       `json:"system_channel_flags,omitempty"`
-	RulesChannelID              *string                   `json:"rules_channel_id,omitempty"`
-	PublicUpdatesChannelID      *string                   `json:"public_updates_channel_id,omitempty"`
-	PreferredLocale             *Locale                   `json:"preferred_locale,omitempty"`
-	Features                    []GuildFeature            `json:"features,omitempty"`
-	Description                 *string                   `json:"description,omitempty"`
-	PremiumProgressBarEnabled   *bool                     `json:"premium_progress_bar_enabled,omitempty"`
-	SafetyAlertsChannelID       *string                   `json:"safety_alerts_channel_id,omitempty"`
-
-	AuditLogReason string `json:"-"`
-}
-
-// ModifyGuildMFALevel represents the payload to send to Discord to modify the MFA level for a guild (discord.Guild)
-// https://discord.com/developers/docs/resources/guild#modify-guild-mfa-level-json-params
-type ModifyGuildMFALevel struct {
-	Level MFALevel `json:"level"`
-
-	AuditLogReason string `json:"-"`
-}
-
 // GuildVerificationLevel represents the verification level used in a guild (discord.Guild)
 // https://discord.com/developers/docs/resources/guild#guild-object-verification-level
 type GuildVerificationLevel int
@@ -361,3 +308,56 @@ const (
 	GuildFeatureVIPRegions                            GuildFeature = "VIP_REGIONS"
 	GuildFeatureWelcomeScreenEnabled                  GuildFeature = "WELCOME_SCREEN_ENABLED"
 )
+
+// CreateGuild represents the payload to send to Discord to create a new guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#create-guild-json-params
+type CreateGuild struct {
+	Name                        string                    `json:"name"`
+	Region                      *string                   `json:"region,omitempty"`
+	Icon                        *string                   `json:"icon,omitempty"`
+	VerificationLevel           *GuildVerificationLevel   `json:"verification_level,omitempty"`
+	DefaultMessageNotifications *MessageNotificationLevel `json:"default_message_notifications,omitempty"`
+	ExplicitContentFilter       *ExplicitContentFilter    `json:"explicit_content_filter,omitempty"`
+	Roles                       []Role                    `json:"roles,omitempty"`
+	Channels                    []Channel                 `json:"channels,omitempty"`
+	AFKChannelID                *string                   `json:"afk_channel_id,omitempty"`
+	AFKTimeout                  *int                      `json:"afk_timeout,omitempty"`
+	SystemChannelID             *string                   `json:"system_channel_id,omitempty"`
+	SystemChannelFlags          *SystemChannelFlags       `json:"system_channel_flags,omitempty"`
+}
+
+// ModifyGuild represents the payload to send to Discord to modify an existing guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#modify-guild-json-params
+type ModifyGuild struct {
+	Name                        *string                   `json:"name,omitempty"`
+	Region                      *string                   `json:"region,omitempty"`
+	VerificationLevel           *GuildVerificationLevel   `json:"verification_level,omitempty"`
+	DefaultMessageNotifications *MessageNotificationLevel `json:"default_message_notifications,omitempty"`
+	ExplicitContentFilter       *ExplicitContentFilter    `json:"explicit_content_filter,omitempty"`
+	AFKChannelID                *string                   `json:"afk_channel_id,omitempty"`
+	AFKTimeout                  *int                      `json:"afk_timeout,omitempty"`
+	Icon                        *string                   `json:"icon,omitempty"`
+	OwnerID                     *string                   `json:"owner_id,omitempty"`
+	Splash                      *string                   `json:"splash,omitempty"`
+	DiscoverySplash             *string                   `json:"discovery_splash,omitempty"`
+	Banner                      *string                   `json:"banner,omitempty"`
+	SystemChannelID             *string                   `json:"system_channel_id,omitempty"`
+	SystemChannelFlags          *SystemChannelFlags       `json:"system_channel_flags,omitempty"`
+	RulesChannelID              *string                   `json:"rules_channel_id,omitempty"`
+	PublicUpdatesChannelID      *string                   `json:"public_updates_channel_id,omitempty"`
+	PreferredLocale             *Locale                   `json:"preferred_locale,omitempty"`
+	Features                    []GuildFeature            `json:"features,omitempty"`
+	Description                 *string                   `json:"description,omitempty"`
+	PremiumProgressBarEnabled   *bool                     `json:"premium_progress_bar_enabled,omitempty"`
+	SafetyAlertsChannelID       *string                   `json:"safety_alerts_channel_id,omitempty"`
+
+	AuditLogReason string `json:"-"`
+}
+
+// ModifyGuildMFALevel represents the payload to send to Discord to modify the MFA level for a guild (discord.Guild)
+// https://discord.com/developers/docs/resources/guild#modify-guild-mfa-level-json-params
+type ModifyGuildMFALevel struct {
+	Level MFALevel `json:"level"`
+
+	AuditLogReason string `json:"-"`
+}

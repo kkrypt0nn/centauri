@@ -19,7 +19,6 @@ type ApplicationCommand struct {
 	Options                  ApplicationCommandOptions `json:"options,omitempty"`
 	DefaultMemberPermissions Permissions               `json:"default_member_permissions,string,omitempty"`
 	DMPermission             bool                      `json:"dm_permission,omitempty"`
-	DefaultPermission        bool                      `json:"default_permission,omitempty"`
 	NSFW                     bool                      `json:"nsfw,omitempty"`
 	Version                  string                    `json:"version"`
 }
@@ -112,12 +111,12 @@ func (o *ApplicationCommandOptions) UnmarshalJSON(b []byte) error {
 // SubCommandOption represents a sub-command option to an application command (discord.ApplicationCommand)
 // https://discord.com/developers/docs/interactions/application-commands#subcommands-and-subcommand-groups
 type SubCommandOption struct {
-	Name                     string                     `json:"name"`
-	NameLocalizations        map[Locale]string          `json:"name_localizations,omitempty"`
-	Description              string                     `json:"description"`
-	DescriptionLocalizations map[Locale]string          `json:"description_localizations,omitempty"`
-	Required                 bool                       `json:"required"`
-	Options                  []ApplicationCommandOption `json:"options,omitempty"`
+	Name                     string                    `json:"name"`
+	NameLocalizations        map[Locale]string         `json:"name_localizations,omitempty"`
+	Description              string                    `json:"description"`
+	DescriptionLocalizations map[Locale]string         `json:"description_localizations,omitempty"`
+	Required                 bool                      `json:"required"`
+	Options                  ApplicationCommandOptions `json:"options,omitempty"`
 }
 
 func (o *SubCommandOption) Type() ApplicationCommandOptionType {
@@ -455,3 +454,55 @@ const (
 	ApplicationCommandPermissionTypeUser
 	ApplicationCommandPermissionTypeChannel
 )
+
+// CreateGlobalApplicationCommand represents the payload to send to Discord to create a new global application command (discord.ApplicationCommand)
+// https://discord.com/developers/docs/interactions/application-commands#create-global-application-command-json-params
+type CreateGlobalApplicationCommand struct {
+	Name                     string                    `json:"name"`
+	NameLocalizations        map[Locale]string         `json:"name_localizations,omitempty"`
+	Description              *string                   `json:"description,omitempty"`
+	DescriptionLocalizations map[Locale]string         `json:"description_localizations,omitempty"`
+	Options                  ApplicationCommandOptions `json:"options,omitempty"`
+	DefaultMemberPermissions *Permissions              `json:"default_member_permissions,string,omitempty"`
+	DMPermission             *bool                     `json:"dm_permission,omitempty"`
+	Type                     *ApplicationCommandType   `json:"type,omitempty"`
+	NSFW                     *bool                     `json:"nsfw,omitempty"`
+}
+
+// CreateGuildApplicationCommand represents the payload to send to Discord to create a new application command (discord.ApplicationCommand)
+// https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command-json-params
+type CreateGuildApplicationCommand struct {
+	Name                     string                    `json:"name"`
+	NameLocalizations        map[Locale]string         `json:"name_localizations,omitempty"`
+	Description              *string                   `json:"description,omitempty"`
+	DescriptionLocalizations map[Locale]string         `json:"description_localizations,omitempty"`
+	Options                  ApplicationCommandOptions `json:"options,omitempty"`
+	DefaultMemberPermissions *Permissions              `json:"default_member_permissions,string,omitempty"`
+	Type                     *ApplicationCommandType   `json:"type,omitempty"`
+	NSFW                     *bool                     `json:"nsfw,omitempty"`
+}
+
+// EditGlobalApplicationCommand represents the payload to send to Discord to edit and existing application command (discord.ApplicationCommand)
+// https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command-json-params
+type EditGlobalApplicationCommand struct {
+	Name                     *string                   `json:"name,omitempty"`
+	NameLocalizations        map[Locale]string         `json:"name_localizations,omitempty"`
+	Description              *string                   `json:"description,omitempty"`
+	DescriptionLocalizations map[Locale]string         `json:"description_localizations,omitempty"`
+	Options                  ApplicationCommandOptions `json:"options,omitempty"`
+	DefaultMemberPermissions *Permissions              `json:"default_member_permissions,string,omitempty"`
+	DMPermission             *bool                     `json:"dm_permission,omitempty"`
+	NSFW                     *bool                     `json:"nsfw,omitempty"`
+}
+
+// EditGuildApplicationCommand represents the payload to send to Discord to edit and existing application command (discord.ApplicationCommand)
+// https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command-json-params
+type EditGuildApplicationCommand struct {
+	Name                     *string                   `json:"name,omitempty"`
+	NameLocalizations        map[Locale]string         `json:"name_localizations,omitempty"`
+	Description              *string                   `json:"description,omitempty"`
+	DescriptionLocalizations map[Locale]string         `json:"description_localizations,omitempty"`
+	Options                  ApplicationCommandOptions `json:"options,omitempty"`
+	DefaultMemberPermissions *Permissions              `json:"default_member_permissions,string,omitempty"`
+	NSFW                     *bool                     `json:"nsfw,omitempty"`
+}

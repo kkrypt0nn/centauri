@@ -54,6 +54,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/kkrypt0nn/centauri"
 )
 

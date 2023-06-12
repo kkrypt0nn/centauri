@@ -29,13 +29,14 @@ const (
 // UnidentifiedComponent represents a component (discord.Component) that hasn't had its type identified yet
 type UnidentifiedComponent struct {
 	Type ComponentType `json:"type"`
+
 	data Component
 }
 
 func (c *UnidentifiedComponent) UnmarshalJSON(b []byte) error {
-	type emptyComponent UnidentifiedComponent
+	type unidentifiedComponent UnidentifiedComponent
 
-	if err := json.Unmarshal(b, (*emptyComponent)(c)); err != nil {
+	if err := json.Unmarshal(b, (*unidentifiedComponent)(c)); err != nil {
 		return fmt.Errorf("failed to unmarshal: %s", err)
 	}
 

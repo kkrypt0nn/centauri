@@ -183,9 +183,9 @@ const (
 	_
 	_
 	_
-	_
-	_
-	_
+	AuditLogActionTypeSoundboardSoundCreate
+	AuditLogActionTypeSoundboardSoundUpdate
+	AuditLogActionTypeSoundboardSoundDelete
 	_
 	_
 	_
@@ -199,6 +199,11 @@ const (
 	AuditLogActionTypeAutoModerationBlockMessage
 	AuditLogActionTypeAutoModerationFlagToChannel
 	AuditLogActionTypeAutoModerationUserCommunicationDisabled
+	AuditLogActionTypeAutoModerationQuarantineUser
+	_
+	_
+	_
+	AuditLogActionTypeCreatorMonetizationRequestCreated
 )
 
 // AuditLogEntryInformation represents additional information for some administrative actions (discord.AuditLogEntry)

@@ -20,3 +20,8 @@ func (c *Client) GetInvite(inviteCode string, withCounts, withExpiration bool, g
 	}
 	return DoRequestAsStructure[discord.Invite](c, "GET", InvitesEndpoint+"/"+inviteCode, nil, queryParams, 1)
 }
+
+// DeleteInvite deletes an existing invitation (discord.Invite) for the given invite code
+func (c *Client) DeleteInvite(inviteCode string) (*discord.Invite, error) {
+	return DoRequestAsStructure[discord.Invite](c, "DELETE", InvitesEndpoint+"/"+inviteCode, nil, nil, 1)
+}

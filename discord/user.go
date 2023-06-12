@@ -90,3 +90,10 @@ const (
 	PurchasedFlagNitro
 	PurchasedFlagGuildBoost
 )
+
+// ModifyCurrentUser represents the payload to send to Discord to modify the current user (discord.User)
+// https://discord.com/developers/docs/resources/user#modify-current-user-json-params
+type ModifyCurrentUser struct {
+	Username *string `json:"username,omitempty"`
+	Avatar   *string `json:"avatar,omitempty"`
+}
