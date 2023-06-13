@@ -1,5 +1,10 @@
 package discord
 
+import (
+	"fmt"
+	"strings"
+)
+
 // Guild represents an isolated collection of users and channels, and are often referred to as "servers" in the UI
 // https://discord.com/developers/docs/resources/guild#guild-object-guild-structure
 type Guild struct {
@@ -45,6 +50,64 @@ type Guild struct {
 	NSFWLevel                   NSFWLevel                `json:"nsfw_level"`
 	Stickers                    []Sticker                `json:"stickers"`
 	PremiumProgressBarEnabled   bool                     `json:"premium_progress_bar_enabled"`
+}
+
+// IconURL returns the URL for the guild icon
+func (g *Guild) IconURL(asFormat ImageFormat) string {
+	if g.Icon != "" {
+		if asFormat == "" {
+			asFormat = "png"
+			if strings.HasPrefix(g.Icon, "a_") {
+				asFormat = "gif"
+			}
+		}
+
+		suffix := fmt.Sprintf("%s.%s", g.Icon, asFormat)
+		return fmt.Sprintf("https://cdn.discordapp.com/icons/%s/%s", g.ID, suffix)
+	}
+	return ""
+}
+
+// SplashURL returns the URL for the guild splash
+func (g *Guild) SplashURL(asFormat ImageFormat) string {
+	if g.Splash != "" {
+		if asFormat == "" {
+			asFormat = "png"
+		}
+
+		suffix := fmt.Sprintf("%s.%s", g.Splash, asFormat)
+		return fmt.Sprintf("https://cdn.discordapp.com/splashes/%s/%s", g.ID, suffix)
+	}
+	return ""
+}
+
+// DiscoverySplashURL returns the URL for the guild discovery splash
+func (g *Guild) DiscoverySplashURL(asFormat ImageFormat) string {
+	if g.DiscoverySplash != "" {
+		if asFormat == "" {
+			asFormat = "png"
+		}
+
+		suffix := fmt.Sprintf("%s.%s", g.DiscoverySplash, asFormat)
+		return fmt.Sprintf("https://cdn.discordapp.com/discovery-splashes/%s/%s", g.ID, suffix)
+	}
+	return ""
+}
+
+// BannerURL returns the URL for the guild banner
+func (g *Guild) BannerURL(asFormat ImageFormat) string {
+	if g.Banner != "" {
+		if asFormat == "" {
+			asFormat = "png"
+			if strings.HasPrefix(g.Banner, "a_") {
+				asFormat = "gif"
+			}
+		}
+
+		suffix := fmt.Sprintf("%s.%s", g.Banner, asFormat)
+		return fmt.Sprintf("https://cdn.discordapp.com/banners/%s/%s", g.ID, suffix)
+	}
+	return ""
 }
 
 // GuildVerificationLevel represents the verification level used in a guild (discord.Guild)

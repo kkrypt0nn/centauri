@@ -1,5 +1,9 @@
 package discord
 
+import (
+	"fmt"
+)
+
 // Sticker represents a sticker that can be sent in messages
 // https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-structure
 type Sticker struct {
@@ -14,6 +18,19 @@ type Sticker struct {
 	GuildID     string            `json:"guild_id,omitempty"`
 	User        *User             `json:"user,omitempty"`
 	SortValue   int               `json:"sort_value"`
+}
+
+// URL returns the URL for the sticker (discord.Sticker)
+func (s *Sticker) URL(asFormat ImageFormat) string {
+	if s.ID != "" {
+		if asFormat == "" {
+			asFormat = "png"
+		}
+
+		suffix := fmt.Sprintf("%s.%s", s.ID, asFormat)
+		return fmt.Sprintf("https://cdn.discordapp.com/stickers/%s", suffix)
+	}
+	return ""
 }
 
 // StickerType represents the type of sticker (discord.Sticker)
@@ -54,6 +71,14 @@ type StickerPack struct {
 	CoverStickerID string    `json:"cover_sticker_id"`
 	Description    string    `json:"description"`
 	BannerAssetID  string    `json:"banner_asset_id"`
+}
+
+// BannerURL returns the banner URL of the sticker pack (discord.StickerPack)
+func (p *StickerPack) BannerURL() string {
+	if p.BannerAssetID != "" {
+		return fmt.Sprintf("https://cdn.discordapp.com/app-icons/710982414301790216/store/%s.png", p.BannerAssetID)
+	}
+	return ""
 }
 
 // NitroStickerPacks represents a list of default stickers (discord.Sticker) available for Nitro subscribers

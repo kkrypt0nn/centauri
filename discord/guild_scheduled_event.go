@@ -1,6 +1,9 @@
 package discord
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 // GuildScheduledEvent represents a scheduled event in a guild (discord.Guild)
 // https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-structure
@@ -21,6 +24,19 @@ type GuildScheduledEvent struct {
 	Creator            *User                              `json:"creator"`
 	UserCount          int                                `json:"user_count"`
 	Image              string                             `json:"image"`
+}
+
+// CoverURL returns the cover URL of the guild scheduled event (discord.GuildScheduledEvent)
+func (e *GuildScheduledEvent) CoverURL(asFormat ImageFormat) string {
+	if e.Image != "" {
+		if asFormat == "" {
+			asFormat = "png"
+		}
+
+		suffix := fmt.Sprintf("%s.%s", e.Image, asFormat)
+		return fmt.Sprintf("https://cdn.discordapp.com/guild-events/%s/%s", e.ID, suffix)
+	}
+	return ""
 }
 
 // GuildScheduledEventPrivacyLevel represents the privacy level for the scheduled event (discord.GuildScheduledEvent)

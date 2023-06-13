@@ -1,6 +1,9 @@
 package discord
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 // Channel represents a guild or DM channel within Discord
 // https://discord.com/developers/docs/resources/channel#channel-object-channel-structure
@@ -40,6 +43,14 @@ type Channel struct {
 	DefaultThreadRateLimitPerUser int                    `json:"default_thread_rate_limit_per_user,omitempty"`
 	DefaultSortOrder              DefaultSortOrderType   `json:"default_sort_order,omitempty"`
 	DefaultForumLayout            DefaultForumLayoutView `json:"default_forum_layout,omitempty"`
+}
+
+// URL returns the URL for the channel (discord.Channel)
+func (c *Channel) URL() string {
+	if c.GuildID != "" {
+		return fmt.Sprintf("https://discord.com/channels/%s/%s", c.GuildID, c.ID)
+	}
+	return ""
 }
 
 // ThreadType represents the type of thread

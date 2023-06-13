@@ -1,5 +1,7 @@
 package discord
 
+import "fmt"
+
 // Role represents a set of permissions attached to a group of users
 // https://discord.com/developers/docs/topics/permissions#role-object-role-structure
 type Role struct {
@@ -14,6 +16,19 @@ type Role struct {
 	Managed      bool        `json:"managed"`
 	Mentionable  bool        `json:"mentionable"`
 	Tags         *RoleTags   `json:"tags,omitempty"`
+}
+
+// IconURL returns the URL for the role icon
+func (r *Role) IconURL(asFormat ImageFormat) string {
+	if r.Icon != "" {
+		if asFormat == "" {
+			asFormat = "png"
+		}
+
+		suffix := fmt.Sprintf("%s.%s", r.Icon, asFormat)
+		return fmt.Sprintf("https://cdn.discordapp.com/role-icons/%s/%s", r.ID, suffix)
+	}
+	return ""
 }
 
 // RoleTags represents the tags the role (discord.Role) has

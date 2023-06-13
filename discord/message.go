@@ -41,6 +41,18 @@ type Message struct {
 	Stickers             []Sticker             `json:"stickers,omitempty"`
 	Position             int                   `json:"position"`
 	RoleSubscriptionData *RoleSubscriptionData `json:"role_subscription_data,omitempty"`
+
+	// Usually that's set by Centauri
+	GuildID string `json:"guild_id"`
+}
+
+// URL returns the URL of the message (discord.Message)
+func (m *Message) URL() string {
+	guildID := m.GuildID
+	if m.GuildID == "" {
+		guildID = "@me"
+	}
+	return fmt.Sprintf("https://discord.com/channels/%s/%s/%s", guildID, m.ChannelID, m.ID)
 }
 
 func (m *Message) UnmarshalJSON(b []byte) error {
