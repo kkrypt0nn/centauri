@@ -1,6 +1,9 @@
 package discord
 
-import "github.com/kkrypt0nn/centauri/oauth2"
+import (
+	"fmt"
+	"github.com/kkrypt0nn/centauri/oauth2"
+)
 
 // ApplicationRoleConnectionMetadata represents a role connection metadata for an application (discord.Application)
 // https://discord.com/developers/docs/resources/application-role-connection-metadata#application-role-connection-metadata-object-application-role-connection-metadata-structure
@@ -54,6 +57,32 @@ type Application struct {
 	RoleConnectionsVerificationURL string           `json:"role_connections_verification_url,omitempty"`
 }
 
+// IconURL returns the icon URL of the application (discord.Application)
+func (a *Application) IconURL(asFormat ImageFormat) string {
+	if a.Icon != "" {
+		if asFormat == "" {
+			asFormat = "png"
+		}
+
+		suffix := fmt.Sprintf("%s.%s", a.Icon, asFormat)
+		return fmt.Sprintf("https://cdn.discordapp.com/app-icons/%s/%s", a.ID, suffix)
+	}
+	return ""
+}
+
+// CoverURL returns the cover URL of the application (discord.Application)
+func (a *Application) CoverURL(asFormat ImageFormat) string {
+	if a.CoverImage != "" {
+		if asFormat == "" {
+			asFormat = "png"
+		}
+
+		suffix := fmt.Sprintf("%s.%s", a.CoverImage, asFormat)
+		return fmt.Sprintf("https://cdn.discordapp.com/app-icons/%s/%s.png", a.ID, suffix)
+	}
+	return ""
+}
+
 // Team represents a group of developers on Discord who want to collaborate on applications
 // https://discord.com/developers/docs/topics/teams#data-models-team-object
 type Team struct {
@@ -62,6 +91,19 @@ type Team struct {
 	Members     []TeamMember `json:"members"`
 	Name        string       `json:"name"`
 	OwnerUserID string       `json:"owner_user_id"`
+}
+
+// IconURL returns the icon URL of the team (discord.Team)
+func (t *Team) IconURL(asFormat ImageFormat) string {
+	if t.Icon != "" {
+		if asFormat == "" {
+			asFormat = "png"
+		}
+
+		suffix := fmt.Sprintf("%s.%s", t.Icon, asFormat)
+		return fmt.Sprintf("https://cdn.discordapp.com/team-icons/%s/%s", t.ID, suffix)
+	}
+	return ""
 }
 
 // TeamMember represents a member of a Discord team (discord.Team)

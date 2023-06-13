@@ -1,5 +1,11 @@
 package discord
 
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
 // User represents a Discord user or a Discord bot
 // https://discord.com/developers/docs/resources/user#user-object-user-structure
 type User struct {
@@ -30,6 +36,67 @@ type User struct {
 	NSFWAllowed       bool              `json:"nsfw_allowed,omitempty"`
 	Biography         string            `json:"bio,omitempty"`
 	Phone             string            `json:"phone,omitempty"`
+}
+
+// BannerURL returns the banner URL of the user (discord.User)
+func (u *User) BannerURL(asFormat ImageFormat) string {
+	if u.Banner != "" {
+		if asFormat == "" {
+			asFormat = "png"
+			if strings.HasPrefix(u.Banner, "a_") {
+				asFormat = "gif"
+			}
+		}
+
+		suffix := fmt.Sprintf("%s.%s", u.Banner, asFormat)
+		return fmt.Sprintf("https://cdn.discordapp.com/banners/%s/%s", u.ID, suffix)
+	}
+	return ""
+}
+
+// DefaultAvatarURL returns the default avatar URL of the user (discord.User)
+func (u *User) DefaultAvatarURL() string {
+	var index int
+	if u.Discriminator == "0" {
+		// User has migrated to the new username system
+		userIdInt, err := strconv.ParseUint(u.ID, 10, 64)
+		if err != nil {
+			return err.Error()
+		}
+		index = int((userIdInt >> 22) % 6)
+	} else {
+		// User is still on the old username and discriminator system
+		discriminatorInt, err := strconv.Atoi(u.Discriminator)
+		if err != nil {
+			return err.Error()
+		}
+		index = discriminatorInt % 5
+	}
+	return fmt.Sprintf("https://cdn.discordapp.com/embed/avatars/%d.png", index)
+}
+
+// AvatarURL returns the avatar URL of the user (discord.User)
+func (u *User) AvatarURL(asFormat ImageFormat) string {
+	if u.Avatar != "" {
+		if asFormat == "" {
+			asFormat = "png"
+			if strings.HasPrefix(u.Avatar, "a_") {
+				asFormat = "gif"
+			}
+		}
+
+		suffix := fmt.Sprintf("%s.%s", u.Avatar, asFormat)
+		return fmt.Sprintf("https://cdn.discordapp.com/avatars/%s/%s", u.ID, suffix)
+	}
+	return u.DefaultAvatarURL()
+}
+
+// EffectiveName returns either the global name or the username of the user (discord.User) which is displayed in the client
+func (u *User) EffectiveName() string {
+	if u.GlobalName != "" {
+		return u.GlobalName
+	}
+	return u.Username
 }
 
 // UserFlags are the flags a User may have

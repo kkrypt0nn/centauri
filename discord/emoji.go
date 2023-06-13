@@ -1,5 +1,9 @@
 package discord
 
+import (
+	"fmt"
+)
+
 // Emoji represents a custom, or not, emoji on Discord
 // https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure
 type Emoji struct {
@@ -11,6 +15,19 @@ type Emoji struct {
 	Managed       bool     `json:"managed,omitempty"`
 	Animated      bool     `json:"animated,omitempty"`
 	Available     bool     `json:"available,omitempty"`
+}
+
+// URL returns the URL for the emoji (discord.Emoji)
+func (e *Emoji) URL(asFormat ImageFormat) string {
+	if e.ID != "" {
+		if asFormat == "" {
+			asFormat = "png"
+		}
+
+		suffix := fmt.Sprintf("%s.%s", e.ID, asFormat)
+		return fmt.Sprintf("https://cdn.discordapp.com/emojis/%s", suffix)
+	}
+	return ""
 }
 
 // CreateGuildEmoji represents the payload to send to Discord to create a new emoji (discord.Emoji) in a guild (discord.Guild)

@@ -62,7 +62,9 @@ func (c *Client) ListActiveThreads(guildID string) (*discord.ActiveThreads, erro
 
 // GetGuildMember returns a member structure (discord.Member) for the given guild and user IDs
 func (c *Client) GetGuildMember(guildID, userID string) (*discord.Member, error) {
-	return DoRequestAsStructure[discord.Member](c, "GET", GuildsEndpoint+"/"+guildID+"/members/"+userID, nil, nil, 1)
+	member, err := DoRequestAsStructure[discord.Member](c, "GET", GuildsEndpoint+"/"+guildID+"/members/"+userID, nil, nil, 1)
+	member.GuildID = guildID
+	return member, err
 }
 
 // SearchGuildMember returns a list of member structures (discord.Member) matching the given query in the given guild ID
@@ -72,12 +74,18 @@ func (c *Client) SearchGuildMember(guildID, query string, limit int) ([]discord.
 	if limit >= 1 && limit <= 1000 {
 		queryParams["limit"] = strconv.Itoa(limit)
 	}
-	return DoRequestAsList[discord.Member](c, "GET", GuildsEndpoint+"/"+guildID+"/members/search", nil, queryParams, 1)
+	members, err := DoRequestAsList[discord.Member](c, "GET", GuildsEndpoint+"/"+guildID+"/members/search", nil, queryParams, 1)
+	for i := 0; i < len(members); i++ {
+		members[i].GuildID = guildID
+	}
+	return members, err
 }
 
 // ModifyGuildMember modifies a guild member (discord.Member) for the given guild and user IDs and returns the new structure
 func (c *Client) ModifyGuildMember(guildID, userID string, member discord.ModifyGuildMember) (*discord.Member, error) {
-	return DoRequestAsStructure[discord.Member](c, "PATCH", GuildsEndpoint+"/"+guildID+"/members/"+userID, member, nil, 1, WithReason(member.AuditLogReason))
+	newMember, err := DoRequestAsStructure[discord.Member](c, "PATCH", GuildsEndpoint+"/"+guildID+"/members/"+userID, member, nil, 1, WithReason(member.AuditLogReason))
+	newMember.GuildID = guildID
+	return newMember, err
 }
 
 // AddGuildMemberRole adds a role (discord.Role) for the given guild, user and role IDs
