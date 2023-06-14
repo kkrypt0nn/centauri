@@ -2,6 +2,7 @@ package discord
 
 import (
 	"fmt"
+	"github.com/kkrypt0nn/centauri/utils/flags"
 	"strconv"
 	"strings"
 )
@@ -129,6 +130,36 @@ const (
 	UserFlagDisablePremium // Undocumented
 	UserFlagActiveDeveloper
 )
+
+// Compute creates a new user flags structure (discord.UserFlags) from the given user flags
+func (f UserFlags) Compute(userFlags ...UserFlags) UserFlags {
+	return flags.Compute(userFlags...)
+}
+
+// Add adds the given user flags (discord.UserFlags) to the current user flags
+func (f UserFlags) Add(userFlags ...UserFlags) UserFlags {
+	return flags.Add(f, userFlags...)
+}
+
+// Remove removes the given user flags (discord.UserFlags) from the current user flags
+func (f UserFlags) Remove(userFlags ...UserFlags) UserFlags {
+	return flags.Remove(f, userFlags...)
+}
+
+// Toggle toggles the given user flags (discord.UserFlags) in the current user flags
+func (f UserFlags) Toggle(userFlags ...UserFlags) UserFlags {
+	return flags.Toggle(f, userFlags...)
+}
+
+// Has checks if the given user flags (discord.UserFlags) are the current user flags
+func (f UserFlags) Has(userFlags ...UserFlags) bool {
+	return flags.Has(f, userFlags...)
+}
+
+// HasNot checks if the given user flags (discord.UserFlags) are not in the current user flags
+func (f UserFlags) HasNot(userFlags ...UserFlags) bool {
+	return flags.HasNot(f, userFlags...)
+}
 
 // PremiumType represents the premium type a User has
 type PremiumType int

@@ -2,6 +2,7 @@ package discord
 
 import (
 	"fmt"
+	"github.com/kkrypt0nn/centauri/utils/flags"
 	"time"
 )
 
@@ -152,7 +153,37 @@ const (
 	ChannelFlagRequireTag
 )
 
-// Tag represents a tag that is able to be applied to a thread in a forum channel (discord.ChannelTypeGuildForum)
+// Compute creates a new channel flags structure (discord.ChannelFlags) from the given channel flags
+func (f ChannelFlags) Compute(channelFlags ...ChannelFlags) ChannelFlags {
+	return flags.Compute(channelFlags...)
+}
+
+// Add adds the given channel flags (discord.ChannelFlags) to the current channel flags
+func (f ChannelFlags) Add(channelFlags ...ChannelFlags) ChannelFlags {
+	return flags.Add(f, channelFlags...)
+}
+
+// Remove removes the given channel flags (discord.ChannelFlags) from the current channel flags
+func (f ChannelFlags) Remove(channelFlags ...ChannelFlags) ChannelFlags {
+	return flags.Remove(f, channelFlags...)
+}
+
+// Toggle toggles the given channel flags (discord.ChannelFlags) in the current channel flags
+func (f ChannelFlags) Toggle(channelFlags ...ChannelFlags) ChannelFlags {
+	return flags.Toggle(f, channelFlags...)
+}
+
+// Has checks if the given channel flags (discord.ChannelFlags) are the current channel flags
+func (f ChannelFlags) Has(channelFlags ...ChannelFlags) bool {
+	return flags.Has(f, channelFlags...)
+}
+
+// HasNot checks if the given channel flags (discord.ChannelFlags) are not in the current channel flags
+func (f ChannelFlags) HasNot(channelFlags ...ChannelFlags) bool {
+	return flags.HasNot(f, channelFlags...)
+}
+
+// Tag represents a tag that can be applied to a thread in a forum channel (discord.ChannelTypeGuildForum)
 // https://discord.com/developers/docs/resources/channel#forum-tag-object-forum-tag-structure
 type Tag struct {
 	ID        string `json:"id"`
@@ -325,7 +356,7 @@ type ForumThreadMessage struct {
 	AllowedMentions *AllowedMentions `json:"allowed_mentions,omitempty"`
 	Components      []Component      `json:"components,omitempty"`
 	StickerIDs      []string         `json:"sticker_ids,omitempty"`
-	Flags           *MessageFlags    `json:"flags,omitempty"`
+	Flags           MessageFlags     `json:"flags,omitempty"`
 	Attachments     []Attachment     `json:"attachments,omitempty"`
 
 	Files []File `json:"-"`
