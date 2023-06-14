@@ -136,29 +136,39 @@ func (f UserFlags) Compute(userFlags ...UserFlags) UserFlags {
 	return flags.Compute(userFlags...)
 }
 
-// Add adds the given user flags (discord.UserFlags) to the current user flags
+// Add adds the given user flags (discord.UserFlags)
 func (f UserFlags) Add(userFlags ...UserFlags) UserFlags {
 	return flags.Add(f, userFlags...)
 }
 
-// Remove removes the given user flags (discord.UserFlags) from the current user flags
+// Remove removes the given user flags (discord.UserFlags)
 func (f UserFlags) Remove(userFlags ...UserFlags) UserFlags {
 	return flags.Remove(f, userFlags...)
 }
 
-// Toggle toggles the given user flags (discord.UserFlags) in the current user flags
+// Toggle toggles the given user flags (discord.UserFlags)
 func (f UserFlags) Toggle(userFlags ...UserFlags) UserFlags {
 	return flags.Toggle(f, userFlags...)
 }
 
-// Has checks if the given user flags (discord.UserFlags) are the current user flags
+// Has checks if all the given user flags (discord.UserFlags) are set
 func (f UserFlags) Has(userFlags ...UserFlags) bool {
 	return flags.Has(f, userFlags...)
 }
 
-// HasNot checks if the given user flags (discord.UserFlags) are not in the current user flags
+// HasAny checks if any of the given user flags (discord.UserFlags) is set
+func (f UserFlags) HasAny(userFlags ...UserFlags) bool {
+	return flags.HasAny(f, userFlags...)
+}
+
+// HasNot checks if all the given user flags (discord.UserFlags) are not set
 func (f UserFlags) HasNot(userFlags ...UserFlags) bool {
 	return flags.HasNot(f, userFlags...)
+}
+
+// HasNotAny checks if any of the given user flags (discord.UserFlags) is not set
+func (f UserFlags) HasNotAny(userFlags ...UserFlags) bool {
+	return flags.HasNotAny(f, userFlags...)
 }
 
 // PremiumType represents the premium type a User has

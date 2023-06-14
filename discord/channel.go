@@ -158,29 +158,39 @@ func (f ChannelFlags) Compute(channelFlags ...ChannelFlags) ChannelFlags {
 	return flags.Compute(channelFlags...)
 }
 
-// Add adds the given channel flags (discord.ChannelFlags) to the current channel flags
+// Add adds the given channel flags (discord.ChannelFlags)
 func (f ChannelFlags) Add(channelFlags ...ChannelFlags) ChannelFlags {
 	return flags.Add(f, channelFlags...)
 }
 
-// Remove removes the given channel flags (discord.ChannelFlags) from the current channel flags
+// Remove removes the given channel flags (discord.ChannelFlags)
 func (f ChannelFlags) Remove(channelFlags ...ChannelFlags) ChannelFlags {
 	return flags.Remove(f, channelFlags...)
 }
 
-// Toggle toggles the given channel flags (discord.ChannelFlags) in the current channel flags
+// Toggle toggles the given channel flags (discord.ChannelFlags)
 func (f ChannelFlags) Toggle(channelFlags ...ChannelFlags) ChannelFlags {
 	return flags.Toggle(f, channelFlags...)
 }
 
-// Has checks if the given channel flags (discord.ChannelFlags) are the current channel flags
+// Has checks if all the given channel flags (discord.ChannelFlags) are set
 func (f ChannelFlags) Has(channelFlags ...ChannelFlags) bool {
 	return flags.Has(f, channelFlags...)
 }
 
-// HasNot checks if the given channel flags (discord.ChannelFlags) are not in the current channel flags
+// HasAny checks if any of the given channel flags (discord.ChannelFlags) is set
+func (f ChannelFlags) HasAny(channelFlags ...ChannelFlags) bool {
+	return flags.HasAny(f, channelFlags...)
+}
+
+// HasNot checks if all the given channel flags (discord.ChannelFlags) are not set
 func (f ChannelFlags) HasNot(channelFlags ...ChannelFlags) bool {
 	return flags.HasNot(f, channelFlags...)
+}
+
+// HasNotAny checks if any of the given channel flags (discord.ChannelFlags) is not set
+func (f ChannelFlags) HasNotAny(channelFlags ...ChannelFlags) bool {
+	return flags.HasNotAny(f, channelFlags...)
 }
 
 // Tag represents a tag that can be applied to a thread in a forum channel (discord.ChannelTypeGuildForum)

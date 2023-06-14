@@ -47,18 +47,36 @@ func TestFlagsToggle(t *testing.T) {
 
 func TestFlagsHas(t *testing.T) {
 	bitfield := Compute(1<<13, 1<<37)
-	if Has(bitfield, 1<<37) && Has(bitfield, 1<<13, 1<<37) {
-		t.Log("Successfully checked if the flag is contained in the bitfield")
+	if Has(bitfield, 1<<37) && Has(bitfield, 1<<13, 1<<37) && !Has(bitfield, 1<<8) && !Has(bitfield, 1<<8, 1<<13) {
+		t.Log("Successfully checked if the flags are contained in the bitfield")
 		return
 	}
-	t.Errorf("Failed checking if the flag is contained in the bitfield (bitfield: %d)", bitfield)
+	t.Errorf("Failed checking if the flags are contained in the bitfield (bitfield: %d)", bitfield)
+}
+
+func TestFlagsHasAny(t *testing.T) {
+	bitfield := Compute(1<<13, 1<<37)
+	if HasAny(bitfield, 1<<37) && HasAny(bitfield, 1<<8, 1<<37) && !HasAny(bitfield, 1<<8) && !HasAny(bitfield, 1<<7, 1<<8) {
+		t.Log("Successfully checked if any of the flag is contained in the bitfield")
+		return
+	}
+	t.Errorf("Failed checking if any of the flag is contained in the bitfield (bitfield: %d)", bitfield)
 }
 
 func TestFlagsHasNot(t *testing.T) {
 	bitfield := Compute(1<<13, 1<<37)
-	if HasNot(bitfield, 1<<8) && HasNot(bitfield, 1<<13, 1<<8) {
-		t.Log("Successfully checked if the flag is not contained in the bitfield")
+	if HasNot(bitfield, 1<<8) && HasNot(bitfield, 1<<7, 1<<8) && !HasNot(bitfield, 1<<8, 1<<13) {
+		t.Log("Successfully checked if the flags are not contained in the bitfield")
 		return
 	}
-	t.Errorf("Failed checking if the flag is not contained in the bitfield (bitfield: %d)", bitfield)
+	t.Errorf("Failed checking if the flags are not contained in the bitfield (bitfield: %d)", bitfield)
+}
+
+func TestFlagsHasNotAny(t *testing.T) {
+	bitfield := Compute(1<<13, 1<<37)
+	if HasNotAny(bitfield, 1<<8) && HasNotAny(bitfield, 1<<8, 1<<13) && HasNotAny(bitfield, 1<<13, 1<<37, 1<<8) && !HasNotAny(bitfield, 1<<13, 1<<37) {
+		t.Log("Successfully checked if any of the flag is not contained in the bitfield")
+		return
+	}
+	t.Errorf("Failed checking if any of the flag is not contained in the bitfield (bitfield: %d)", bitfield)
 }

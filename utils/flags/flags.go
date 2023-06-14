@@ -40,7 +40,7 @@ func Toggle[T Integer](bitfield T, flags ...T) T {
 	return bitfield
 }
 
-// Has checks if the given flags are in the bitfield
+// Has checks if all the given flags are in the bitfield
 func Has[T Integer](bitfield T, flags ...T) bool {
 	for _, flag := range flags {
 		if bitfield&flag != flag {
@@ -50,7 +50,22 @@ func Has[T Integer](bitfield T, flags ...T) bool {
 	return true
 }
 
-// HasNot checks if the given flags are not in the bitfield
+// HasAny checks if any of the given flags is in the bitfield
+func HasAny[T Integer](bitfield T, flags ...T) bool {
+	for _, flag := range flags {
+		if bitfield&flag == flag {
+			return true
+		}
+	}
+	return false
+}
+
+// HasNot checks if all the given flags are not in the bitfield
 func HasNot[T Integer](bitfield T, flags ...T) bool {
+	return !HasAny(bitfield, flags...)
+}
+
+// HasNotAny checks if any of the given flags is not in the bitfield
+func HasNotAny[T Integer](bitfield T, flags ...T) bool {
 	return !Has(bitfield, flags...)
 }

@@ -76,29 +76,39 @@ func (f MemberFlags) Compute(memberFlags ...MemberFlags) MemberFlags {
 	return flags.Compute(memberFlags...)
 }
 
-// Add adds the given member flags (discord.MemberFlags) to the current member flags
+// Add adds the given member flags (discord.MemberFlags)
 func (f MemberFlags) Add(memberFlags ...MemberFlags) MemberFlags {
 	return flags.Add(f, memberFlags...)
 }
 
-// Remove removes the given member flags (discord.MemberFlags) from the current member flags
+// Remove removes the given member flags (discord.MemberFlags)
 func (f MemberFlags) Remove(memberFlags ...MemberFlags) MemberFlags {
 	return flags.Remove(f, memberFlags...)
 }
 
-// Toggle toggles the given member flags (discord.MemberFlags) in the current member flags
+// Toggle toggles the given member flags (discord.MemberFlags)
 func (f MemberFlags) Toggle(memberFlags ...MemberFlags) MemberFlags {
 	return flags.Toggle(f, memberFlags...)
 }
 
-// Has checks if the given member flags (discord.MemberFlags) are the current member flags
+// Has checks if all the given member flags (discord.MemberFlags) are set
 func (f MemberFlags) Has(memberFlags ...MemberFlags) bool {
 	return flags.Has(f, memberFlags...)
 }
 
-// HasNot checks if the given member flags (discord.MemberFlags) are not in the current member flags
+// HasAny checks if any of the given member flags (discord.MemberFlags) is set
+func (f MemberFlags) HasAny(memberFlags ...MemberFlags) bool {
+	return flags.HasAny(f, memberFlags...)
+}
+
+// HasNot checks if all the given member flags (discord.MemberFlags) are not set
 func (f MemberFlags) HasNot(memberFlags ...MemberFlags) bool {
 	return flags.HasNot(f, memberFlags...)
+}
+
+// HasNotAny checks if any of the given member flags (discord.MemberFlags) is not set
+func (f MemberFlags) HasNotAny(memberFlags ...MemberFlags) bool {
+	return flags.HasNotAny(f, memberFlags...)
 }
 
 // ModifyGuildMember represents the payload to send to Discord to modify a guild member (discord.Member)

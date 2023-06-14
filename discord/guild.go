@@ -170,29 +170,39 @@ func (f SystemChannelFlags) Compute(systemChannelFlags ...SystemChannelFlags) Sy
 	return flags.Compute(systemChannelFlags...)
 }
 
-// Add adds the given system channel flags (discord.SystemChannelFlags) to the current system channel flags
+// Add adds the given system channel flags (discord.SystemChannelFlags)
 func (f SystemChannelFlags) Add(systemChannelFlags ...SystemChannelFlags) SystemChannelFlags {
 	return flags.Add(f, systemChannelFlags...)
 }
 
-// Remove removes the given system channel flags (discord.SystemChannelFlags) from the current system channel flags
+// Remove removes the given system channel flags (discord.SystemChannelFlags)
 func (f SystemChannelFlags) Remove(systemChannelFlags ...SystemChannelFlags) SystemChannelFlags {
 	return flags.Remove(f, systemChannelFlags...)
 }
 
-// Toggle toggles the given system channel flags (discord.SystemChannelFlags) in the current system channel flags
+// Toggle toggles the given system channel flags (discord.SystemChannelFlags)
 func (f SystemChannelFlags) Toggle(systemChannelFlags ...SystemChannelFlags) SystemChannelFlags {
 	return flags.Toggle(f, systemChannelFlags...)
 }
 
-// Has checks if the given system channel flags (discord.SystemChannelFlags) are the current system channel flags
+// Has checks if all the given system channel flags (discord.SystemChannelFlags) are set
 func (f SystemChannelFlags) Has(systemChannelFlags ...SystemChannelFlags) bool {
 	return flags.Has(f, systemChannelFlags...)
 }
 
-// HasNot checks if the given system channel flags (discord.SystemChannelFlags) are not in the current system channel flags
+// HasAny checks if any of the given system channel flags (discord.SystemChannelFlags) is set
+func (f SystemChannelFlags) HasAny(systemChannelFlags ...SystemChannelFlags) bool {
+	return flags.HasAny(f, systemChannelFlags...)
+}
+
+// HasNot checks if all the given system channel flags (discord.SystemChannelFlags) are set
 func (f SystemChannelFlags) HasNot(systemChannelFlags ...SystemChannelFlags) bool {
 	return flags.HasNot(f, systemChannelFlags...)
+}
+
+// HasNotAny checks if any of the given system channel flags (discord.SystemChannelFlags) is not set
+func (f SystemChannelFlags) HasNotAny(systemChannelFlags ...SystemChannelFlags) bool {
+	return flags.HasNotAny(f, systemChannelFlags...)
 }
 
 // PremiumTier represents the premium tier, also known as server boost, in a guild (discord.Guild)

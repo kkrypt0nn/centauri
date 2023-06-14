@@ -60,27 +60,37 @@ func (p Permissions) Compute(permissions ...Permissions) Permissions {
 	return flags.Compute(permissions...)
 }
 
-// Add adds the given permissions (discord.Permissions) to the current permissions
+// Add adds the given permissions (discord.Permissions)
 func (p Permissions) Add(permissions ...Permissions) Permissions {
 	return flags.Add(p, permissions...)
 }
 
-// Remove removes the given permissions (discord.Permissions) from the current permissions
+// Remove removes the given permissions (discord.Permissions)
 func (p Permissions) Remove(permissions ...Permissions) Permissions {
 	return flags.Remove(p, permissions...)
 }
 
-// Toggle toggles the given permissions (discord.Permissions) in the current permissions
+// Toggle toggles the given permissions (discord.Permissions)
 func (p Permissions) Toggle(permissions ...Permissions) Permissions {
 	return flags.Toggle(p, permissions...)
 }
 
-// Has checks if the given permissions (discord.Permissions) are the current permissions
+// Has checks if all the given permissions (discord.Permissions) are set
 func (p Permissions) Has(permissions ...Permissions) bool {
 	return flags.Has(p, permissions...)
 }
 
-// HasNot checks if the given permissions (discord.Permissions) are not in the current permissions
+// HasAny checks if any of the given permissions (discord.Permissions) is set
+func (p Permissions) HasAny(permissions ...Permissions) bool {
+	return flags.HasAny(p, permissions...)
+}
+
+// HasNot checks if all the given permissions (discord.Permissions) are not set
 func (p Permissions) HasNot(permissions ...Permissions) bool {
 	return flags.HasNot(p, permissions...)
+}
+
+// HasNotAny checks if any of the given permissions (discord.Permissions) is not set
+func (p Permissions) HasNotAny(permissions ...Permissions) bool {
+	return flags.HasNotAny(p, permissions...)
 }
