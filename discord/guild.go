@@ -2,6 +2,7 @@ package discord
 
 import (
 	"fmt"
+	"github.com/kkrypt0nn/centauri/utils/flags"
 	"strings"
 )
 
@@ -163,6 +164,36 @@ const (
 	SystemChannelFlagsSuppressRoleSubscriptionPurchaseNotifications
 	SystemChannelFlagsSuppressRoleSubscriptionPurchaseNotificationsReplies
 )
+
+// Compute creates a new channel flags structure (discord.SystemChannelFlags) from the given channel flags
+func (f SystemChannelFlags) Compute(systemChannelFlags ...SystemChannelFlags) SystemChannelFlags {
+	return flags.Compute(systemChannelFlags...)
+}
+
+// Add adds the given system channel flags (discord.SystemChannelFlags) to the current system channel flags
+func (f SystemChannelFlags) Add(systemChannelFlags ...SystemChannelFlags) SystemChannelFlags {
+	return flags.Add(f, systemChannelFlags...)
+}
+
+// Remove removes the given system channel flags (discord.SystemChannelFlags) from the current system channel flags
+func (f SystemChannelFlags) Remove(systemChannelFlags ...SystemChannelFlags) SystemChannelFlags {
+	return flags.Remove(f, systemChannelFlags...)
+}
+
+// Toggle toggles the given system channel flags (discord.SystemChannelFlags) in the current system channel flags
+func (f SystemChannelFlags) Toggle(systemChannelFlags ...SystemChannelFlags) SystemChannelFlags {
+	return flags.Toggle(f, systemChannelFlags...)
+}
+
+// Has checks if the given system channel flags (discord.SystemChannelFlags) are the current system channel flags
+func (f SystemChannelFlags) Has(systemChannelFlags ...SystemChannelFlags) bool {
+	return flags.Has(f, systemChannelFlags...)
+}
+
+// HasNot checks if the given system channel flags (discord.SystemChannelFlags) are not in the current system channel flags
+func (f SystemChannelFlags) HasNot(systemChannelFlags ...SystemChannelFlags) bool {
+	return flags.HasNot(f, systemChannelFlags...)
+}
 
 // PremiumTier represents the premium tier, also known as server boost, in a guild (discord.Guild)
 // https://discord.com/developers/docs/resources/guild#guild-object-premium-tier

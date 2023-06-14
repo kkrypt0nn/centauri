@@ -3,6 +3,7 @@ package discord
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/kkrypt0nn/centauri/utils/flags"
 	"io"
 	"time"
 )
@@ -277,6 +278,36 @@ const (
 	MessageFlagSuppressNotifications
 	MessageFlagIsVoiceMessage
 )
+
+// Compute creates a new message flags structure (discord.MessageFlags) from the given message flags
+func (f MessageFlags) Compute(messageFlags ...MessageFlags) MessageFlags {
+	return flags.Compute(messageFlags...)
+}
+
+// Add adds the given message flags (discord.MessageFlags) to the current message flags
+func (f MessageFlags) Add(messageFlags ...MessageFlags) MessageFlags {
+	return flags.Add(f, messageFlags...)
+}
+
+// Remove removes the given message flags (discord.MessageFlags) from the current message flags
+func (f MessageFlags) Remove(messageFlags ...MessageFlags) MessageFlags {
+	return flags.Remove(f, messageFlags...)
+}
+
+// Toggle toggles the given message flags (discord.MessageFlags) in the current message flags
+func (f MessageFlags) Toggle(messageFlags ...MessageFlags) MessageFlags {
+	return flags.Toggle(f, messageFlags...)
+}
+
+// Has checks if the given message flags (discord.MessageFlags) are the current message flags
+func (f MessageFlags) Has(messageFlags ...MessageFlags) bool {
+	return flags.Has(f, messageFlags...)
+}
+
+// HasNot checks if the given message flags (discord.MessageFlags) are not in the current message flags
+func (f MessageFlags) HasNot(messageFlags ...MessageFlags) bool {
+	return flags.HasNot(f, messageFlags...)
+}
 
 // MessageInteraction represents an interaction structure that is sent if the message is a response to an interaction
 // https://discord.com/developers/docs/interactions/receiving-and-responding#message-interaction-object-message-interaction-structure

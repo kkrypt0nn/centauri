@@ -2,6 +2,7 @@ package discord
 
 import (
 	"fmt"
+	"github.com/kkrypt0nn/centauri/utils/flags"
 	"strings"
 	"time"
 )
@@ -69,6 +70,36 @@ const (
 	MemberFlagBypassesVerification
 	MemberFlagStartedOnboarding
 )
+
+// Compute creates a new member flags structure (discord.MemberFlags) from the given member flags
+func (f MemberFlags) Compute(memberFlags ...MemberFlags) MemberFlags {
+	return flags.Compute(memberFlags...)
+}
+
+// Add adds the given member flags (discord.MemberFlags) to the current member flags
+func (f MemberFlags) Add(memberFlags ...MemberFlags) MemberFlags {
+	return flags.Add(f, memberFlags...)
+}
+
+// Remove removes the given member flags (discord.MemberFlags) from the current member flags
+func (f MemberFlags) Remove(memberFlags ...MemberFlags) MemberFlags {
+	return flags.Remove(f, memberFlags...)
+}
+
+// Toggle toggles the given member flags (discord.MemberFlags) in the current member flags
+func (f MemberFlags) Toggle(memberFlags ...MemberFlags) MemberFlags {
+	return flags.Toggle(f, memberFlags...)
+}
+
+// Has checks if the given member flags (discord.MemberFlags) are the current member flags
+func (f MemberFlags) Has(memberFlags ...MemberFlags) bool {
+	return flags.Has(f, memberFlags...)
+}
+
+// HasNot checks if the given member flags (discord.MemberFlags) are not in the current member flags
+func (f MemberFlags) HasNot(memberFlags ...MemberFlags) bool {
+	return flags.HasNot(f, memberFlags...)
+}
 
 // ModifyGuildMember represents the payload to send to Discord to modify a guild member (discord.Member)
 // https://discord.com/developers/docs/resources/guild#modify-guild-member-json-params
