@@ -5,15 +5,16 @@ import (
 	"github.com/kkrypt0nn/centauri/utils/flags"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // User represents a Discord user or a Discord bot
 // https://discord.com/developers/docs/resources/user#user-object-user-structure
 type User struct {
-	ID         string `json:"id"`
-	Username   string `json:"username"`
-	GlobalName string `json:"global_name,omitempty"`
-	Avatar     string `json:"avatar"`
+	ID         Snowflake `json:"id"`
+	Username   string    `json:"username"`
+	GlobalName string    `json:"global_name,omitempty"`
+	Avatar     string    `json:"avatar"`
 	// Deprecated: Will return "0" once a user has migrated to the new usernames
 	Discriminator string      `json:"discriminator"`
 	PublicFlags   UserFlags   `json:"public_flags,omitempty"`
@@ -39,6 +40,11 @@ type User struct {
 	Phone             string            `json:"phone,omitempty"`
 }
 
+// CreatedAt returns the creation time of the user (discord.User)
+func (u *User) CreatedAt() time.Time {
+	return u.ID.CreatedAt()
+}
+
 // BannerURL returns the banner URL of the user (discord.User)
 func (u *User) BannerURL(asFormat ImageFormat) string {
 	if u.Banner != "" {
@@ -50,7 +56,7 @@ func (u *User) BannerURL(asFormat ImageFormat) string {
 		}
 
 		suffix := fmt.Sprintf("%s.%s", u.Banner, asFormat)
-		return fmt.Sprintf("https://cdn.discordapp.com/banners/%s/%s", u.ID, suffix)
+		return fmt.Sprintf("https://cdn.discordapp.com/banners/%d/%s", u.ID, suffix)
 	}
 	return ""
 }
@@ -60,11 +66,7 @@ func (u *User) DefaultAvatarURL() string {
 	var index int
 	if u.Discriminator == "0" {
 		// User has migrated to the new username system
-		userIdInt, err := strconv.ParseUint(u.ID, 10, 64)
-		if err != nil {
-			return err.Error()
-		}
-		index = int((userIdInt >> 22) % 6)
+		index = int((u.ID >> 22) % 6)
 	} else {
 		// User is still on the old username and discriminator system
 		discriminatorInt, err := strconv.Atoi(u.Discriminator)
@@ -87,7 +89,7 @@ func (u *User) AvatarURL(asFormat ImageFormat) string {
 		}
 
 		suffix := fmt.Sprintf("%s.%s", u.Avatar, asFormat)
-		return fmt.Sprintf("https://cdn.discordapp.com/avatars/%s/%s", u.ID, suffix)
+		return fmt.Sprintf("https://cdn.discordapp.com/avatars/%d/%s", u.ID, suffix)
 	}
 	return u.DefaultAvatarURL()
 }

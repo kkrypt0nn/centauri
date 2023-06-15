@@ -3,6 +3,7 @@ package discord
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // AuditLog represents a list of administrative actions performed in a guild
@@ -21,13 +22,18 @@ type AuditLog struct {
 // AuditLogEntry represents an administrative action
 // https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure
 type AuditLogEntry struct {
+	ID         Snowflake                `json:"id"`
 	TargetID   string                   `json:"target_id"`
 	Changes    []AuditLogChange         `json:"changes,omitempty"`
-	UserID     string                   `json:"user_id,omitempty"`
-	ID         string                   `json:"id"`
+	UserID     Snowflake                `json:"user_id,omitempty"`
 	ActionType AuditLogActionType       `json:"action_type,omitempty"`
 	Options    AuditLogEntryInformation `json:"options,omitempty"`
 	Reason     string                   `json:"reason,omitempty"`
+}
+
+// CreatedAt returns the creation time of the audit log entry (discord.AuditLogEntry)
+func (e *AuditLogEntry) CreatedAt() time.Time {
+	return e.ID.CreatedAt()
 }
 
 // AuditLogChange represents a potential change that has been performed during an administrative action (discord.AuditLogEntry)
@@ -209,15 +215,15 @@ const (
 // AuditLogEntryInformation represents additional information for some administrative actions (discord.AuditLogEntry)
 // https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info
 type AuditLogEntryInformation struct {
-	ApplicationID                 string `json:"application_id,omitempty"`
-	AutoModerationRuleName        string `json:"auto_moderation_rule_name,omitempty"`
-	AutoModerationRuleTriggerType string `json:"auto_moderation_rule_trigger_type,omitempty"`
-	ChannelID                     string `json:"channel_id,omitempty"`
-	Count                         string `json:"count,omitempty"`
-	DeleteMemberDays              string `json:"delete_member_days,omitempty"`
-	ID                            string `json:"id,omitempty"`
-	MembersRemoved                string `json:"members_removed,omitempty"`
-	MessageID                     string `json:"message_id,omitempty"`
-	RoleName                      string `json:"role_name,omitempty"`
-	Type                          string `json:"type,omitempty"`
+	ApplicationID                 Snowflake `json:"application_id,omitempty"`
+	AutoModerationRuleName        string    `json:"auto_moderation_rule_name,omitempty"`
+	AutoModerationRuleTriggerType string    `json:"auto_moderation_rule_trigger_type,omitempty"`
+	ChannelID                     Snowflake `json:"channel_id,omitempty"`
+	Count                         string    `json:"count,omitempty"`
+	DeleteMemberDays              string    `json:"delete_member_days,omitempty"`
+	ID                            Snowflake `json:"id,omitempty"`
+	MembersRemoved                string    `json:"members_removed,omitempty"`
+	MessageID                     Snowflake `json:"message_id,omitempty"`
+	RoleName                      string    `json:"role_name,omitempty"`
+	Type                          string    `json:"type,omitempty"`
 }

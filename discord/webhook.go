@@ -1,20 +1,27 @@
 package discord
 
+import "time"
+
 // Webhook represents a low-effort way to post messages to channels (discord.Channel). A bot authentication is not required for using them
 // https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure
 type Webhook struct {
-	ID            string        `json:"id"`
+	ID            Snowflake     `json:"id"`
 	Type          WebhookType   `json:"type"`
-	GuildID       string        `json:"guild_id,omitempty"`
-	ChannelID     string        `json:"channel_id"`
+	GuildID       Snowflake     `json:"guild_id,omitempty"`
+	ChannelID     Snowflake     `json:"channel_id"`
 	User          *User         `json:"user,omitempty"`
 	Name          string        `json:"name"`
 	Avatar        string        `json:"avatar"`
 	Token         string        `json:"token,omitempty"`
-	ApplicationID string        `json:"application_id"`
+	ApplicationID Snowflake     `json:"application_id"`
 	SourceGuild   *PartialGuild `json:"source_guild,omitempty"`
 	SourceChannel *Channel      `json:"source_channel,omitempty"`
 	URL           string        `json:"url,omitempty"`
+}
+
+// CreatedAt returns the creation date of the webhook (discord.Webhook)
+func (w *Webhook) CreatedAt() time.Time {
+	return w.ID.CreatedAt()
 }
 
 // WebhookType represents the type of webhook (discord.Webhook)
@@ -39,9 +46,9 @@ type CreateWebhook struct {
 // ModifyWebhook represents the payload to send to Discord to modify an existing webhook (discord.Webhook)
 // https://discord.com/developers/docs/resources/webhook#modify-webhook-json-params
 type ModifyWebhook struct {
-	Name      *string `json:"name,omitempty"`
-	Avatar    *string `json:"avatar,omitempty"`
-	ChannelID *string `json:"channel_id,omitempty"`
+	Name      *string    `json:"name,omitempty"`
+	Avatar    *string    `json:"avatar,omitempty"`
+	ChannelID *Snowflake `json:"channel_id,omitempty"`
 
 	AuditLogReason string `json:"-"`
 }
@@ -67,6 +74,18 @@ type ExecuteWebhook struct {
 	Components      []Component      `json:"components,omitempty"`
 	Flags           *MessageFlags    `json:"flags,omitempty"`
 	ThreadName      *string          `json:"thread_name,omitempty"`
+	Attachments     []Attachment     `json:"attachments,omitempty"`
+
+	Files []File `json:"-"`
+}
+
+// EditWebhookMessage represents the payload to send to Discord to edit a message (discord.Message) sent by a webhook (discord.Webhook)
+// https://discord.com/developers/docs/resources/webhook#edit-webhook-message-jsonform-params
+type EditWebhookMessage struct {
+	Content         *string          `json:"content,omitempty"`
+	Embeds          []Embed          `json:"embeds,omitempty"`
+	AllowedMentions *AllowedMentions `json:"allowed_mentions,omitempty"`
+	Components      []Component      `json:"components,omitempty"`
 	Attachments     []Attachment     `json:"attachments,omitempty"`
 
 	Files []File `json:"-"`

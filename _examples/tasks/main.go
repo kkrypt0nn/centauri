@@ -18,7 +18,7 @@ func main() {
 			fmt.Println("err:", err)
 			return
 		}
-		fmt.Println(fmt.Sprintf("Got bot %s with ID %s", bot.Username, bot.ID))
+		fmt.Println(fmt.Sprintf("Got bot %s with ID %d", bot.Username, bot.ID))
 	}, 5*time.Second)
 	// Start the task
 	getCurrentUserTask.Start()

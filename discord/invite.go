@@ -46,14 +46,15 @@ const (
 )
 
 // CreateChannelInvite represents the payload to send to Discord to create an invite (discord.Invite) for a channel (discord.Channel)
+// https://discord.com/developers/docs/resources/channel#create-channel-invite-json-params
 type CreateChannelInvite struct {
 	MaxAge              *int              `json:"max_age,omitempty"`
 	MaxUses             *int              `json:"max_uses,omitempty"`
 	Temporary           *bool             `json:"temporary,omitempty"`
 	Unique              *bool             `json:"unique,omitempty"`
 	TargetType          *InviteTargetType `json:"target_type,omitempty"`
-	TargetUserID        string            `json:"target_user_id,omitempty"`
-	TargetApplicationID string            `json:"target_application_id,omitempty"`
+	TargetUserID        Snowflake         `json:"target_user_id,omitempty"`
+	TargetApplicationID Snowflake         `json:"target_application_id,omitempty"`
 
 	AuditLogReason string `json:"-"`
 }

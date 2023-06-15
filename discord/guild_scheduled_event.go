@@ -8,10 +8,10 @@ import (
 // GuildScheduledEvent represents a scheduled event in a guild (discord.Guild)
 // https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-structure
 type GuildScheduledEvent struct {
-	ID                 string                             `json:"id"`
-	GuildID            string                             `json:"guild_id"`
-	ChannelID          string                             `json:"channel_id"`
-	CreatorID          string                             `json:"creator_id"`
+	ID                 Snowflake                          `json:"id"`
+	GuildID            Snowflake                          `json:"guild_id"`
+	ChannelID          Snowflake                          `json:"channel_id"`
+	CreatorID          Snowflake                          `json:"creator_id"`
 	Name               string                             `json:"name"`
 	Description        string                             `json:"description"`
 	ScheduledStartTime time.Time                          `json:"scheduled_start_time"`
@@ -19,11 +19,16 @@ type GuildScheduledEvent struct {
 	PrivacyLevel       GuildScheduledEventPrivacyLevel    `json:"privacy_level"`
 	Status             GuildScheduledEventStatus          `json:"status"`
 	EntityType         GuildScheduledEventEntityType      `json:"entity_type"`
-	EntityID           string                             `json:"entity_id"`
+	EntityID           Snowflake                          `json:"entity_id"`
 	EntityMetadata     *GuildScheduledEventEntityMetadata `json:"entity_metadata"`
 	Creator            *User                              `json:"creator"`
 	UserCount          int                                `json:"user_count"`
 	Image              string                             `json:"image"`
+}
+
+// CreatedAt returns the creation time of the guild scheduled event (discord.GuildScheduledEvent)
+func (e *GuildScheduledEvent) CreatedAt() time.Time {
+	return e.ID.CreatedAt()
 }
 
 // CoverURL returns the cover URL of the guild scheduled event (discord.GuildScheduledEvent)
@@ -34,7 +39,7 @@ func (e *GuildScheduledEvent) CoverURL(asFormat ImageFormat) string {
 		}
 
 		suffix := fmt.Sprintf("%s.%s", e.Image, asFormat)
-		return fmt.Sprintf("https://cdn.discordapp.com/guild-events/%s/%s", e.ID, suffix)
+		return fmt.Sprintf("https://cdn.discordapp.com/guild-events/%d/%s", e.ID, suffix)
 	}
 	return ""
 }
@@ -78,9 +83,9 @@ type GuildScheduledEventEntityMetadata struct {
 // GuildScheduledEventUser represents a user (discord.User) and member (discord.Member), if any, that is subscribed to a scheduled event (discord.GuildScheduledEvent)
 // https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-user-object-guild-scheduled-event-user-structure
 type GuildScheduledEventUser struct {
-	GuildScheduledEventID string  `json:"guild_scheduled_event_id"`
-	User                  *User   `json:"user"`
-	Member                *Member `json:"member,omitempty"`
+	GuildScheduledEventID Snowflake `json:"guild_scheduled_event_id"`
+	User                  *User     `json:"user"`
+	Member                *Member   `json:"member,omitempty"`
 }
 
 // CreateGuildScheduledEvent represents the payload to send to Discord to create a new scheduled event (discord.GuildScheduledEvent)
@@ -88,7 +93,7 @@ type GuildScheduledEventUser struct {
 type CreateGuildScheduledEvent struct {
 	Name               string                             `json:"name"`
 	EntityType         GuildScheduledEventEntityType      `json:"entity_type"`
-	ChannelID          *string                            `json:"channel_id,omitempty"`
+	ChannelID          *Snowflake                         `json:"channel_id,omitempty"`
 	EntityMetadata     *GuildScheduledEventEntityMetadata `json:"entity_metadata,omitempty"`
 	PrivacyLevel       GuildScheduledEventPrivacyLevel    `json:"privacy_level"`
 	ScheduledStartTime time.Time                          `json:"scheduled_start_time"`
@@ -102,16 +107,16 @@ type CreateGuildScheduledEvent struct {
 // ModifyGuildScheduledEvent represents the payload to send to Discord to modify an existing scheduled event (discord.GuildScheduledEvent)
 // https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event-json-params
 type ModifyGuildScheduledEvent struct {
-	ChannelID          *string                            `json:"channel_id,omitempty"`
-	EntityMetadata     *GuildScheduledEventEntityMetadata `json:"entity_metadata,omitempty"`
 	Name               *string                            `json:"name,omitempty"`
+	EntityType         *GuildScheduledEventEntityType     `json:"entity_type,omitempty"`
+	ChannelID          *Snowflake                         `json:"channel_id,omitempty"`
+	EntityMetadata     *GuildScheduledEventEntityMetadata `json:"entity_metadata,omitempty"`
 	PrivacyLevel       *GuildScheduledEventPrivacyLevel   `json:"privacy_level,omitempty"`
 	ScheduledStartTime *time.Time                         `json:"scheduled_start_time,omitempty"`
 	ScheduledEndTime   *time.Time                         `json:"scheduled_end_time,omitempty"`
 	Description        *string                            `json:"description,omitempty"`
-	EntityType         *GuildScheduledEventEntityType     `json:"entity_type,omitempty"`
-	Status             *GuildScheduledEventStatus         `json:"status,omitempty"`
 	Image              *string                            `json:"image,omitempty"`
+	Status             *GuildScheduledEventStatus         `json:"status,omitempty"`
 
 	AuditLogReason string `json:"-"`
 }

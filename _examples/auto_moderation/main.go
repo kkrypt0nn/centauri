@@ -12,7 +12,7 @@ import (
 func main() {
 	botClient := centauri.NewRestClient("Bot BOT_TOKEN")
 	botClient.Debug = true
-	rule, err := botClient.CreateAutoModerationRule("GUILD_ID", discord.CreateAutoModerationRule{
+	rule, err := botClient.CreateAutoModerationRule(123, discord.CreateAutoModerationRule{
 		Name:        "No Java",
 		EventType:   discord.AutoModerationEventTypeMessageSend,
 		TriggerType: discord.AutoModerationTriggerTypeKeyword,

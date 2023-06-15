@@ -11,8 +11,8 @@ import (
 // Message represents a message sent in a channel (discord.Channel) within Discord
 // https://discord.com/developers/docs/resources/channel#message-object-message-structure
 type Message struct {
-	ID                   string                `json:"id"`
-	ChannelID            string                `json:"channel_id"`
+	ID                   Snowflake             `json:"id"`
+	ChannelID            Snowflake             `json:"channel_id"`
 	Author               *User                 `json:"author"`
 	Content              string                `json:"content"`
 	Timestamp            time.Time             `json:"timestamp"`
@@ -27,11 +27,11 @@ type Message struct {
 	Reactions            []Reaction            `json:"reactions,omitempty"`
 	Nonce                string                `json:"nonce,omitempty"`
 	Pinned               bool                  `json:"pinned"`
-	WebhookID            string                `json:"webhook_id,omitempty"`
+	WebhookID            Snowflake             `json:"webhook_id,omitempty"`
 	Type                 MessageType           `json:"type"`
 	Activity             *MessageActivity      `json:"activity,omitempty"`
 	Application          *Application          `json:"application,omitempty"`
-	ApplicationID        string                `json:"application_id,omitempty"`
+	ApplicationID        Snowflake             `json:"application_id,omitempty"`
 	MessageReference     *MessageReference     `json:"message_reference,omitempty"`
 	Flags                MessageFlags          `json:"flags,omitempty"`
 	ReferencedMessage    *Message              `json:"referenced_message,omitempty"`
@@ -47,13 +47,18 @@ type Message struct {
 	GuildID string `json:"guild_id"`
 }
 
+// CreatedAt returns the creation time of the message (discord.Message)
+func (m *Message) CreatedAt() time.Time {
+	return m.ID.CreatedAt()
+}
+
 // URL returns the URL of the message (discord.Message)
 func (m *Message) URL() string {
 	guildID := m.GuildID
 	if m.GuildID == "" {
 		guildID = "@me"
 	}
-	return fmt.Sprintf("https://discord.com/channels/%s/%s/%s", guildID, m.ChannelID, m.ID)
+	return fmt.Sprintf("https://discord.com/channels/%s/%d/%d", guildID, m.ChannelID, m.ID)
 }
 
 func (m *Message) UnmarshalJSON(b []byte) error {
@@ -85,8 +90,8 @@ func (m *Message) UnmarshalJSON(b []byte) error {
 // https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mentions-structure
 type AllowedMentions struct {
 	Parse       []AllowedMentionType `json:"parse,omitempty"`
-	Roles       []string             `json:"roles,omitempty"`
-	Users       []string             `json:"users,omitempty"`
+	Roles       ArraySnowflakes      `json:"roles,omitempty"`
+	Users       ArraySnowflakes      `json:"users,omitempty"`
 	RepliedUser *bool                `json:"replied_user,omitempty"`
 }
 
@@ -103,18 +108,23 @@ const (
 // Attachment represents an attached file in a message (discord.Message)
 // https://discord.com/developers/docs/resources/channel#attachment-object-attachment-structure
 type Attachment struct {
-	ID           string  `json:"id"`
-	Filename     string  `json:"filename"`
-	Description  string  `json:"description,omitempty"`
-	ContentType  string  `json:"content_type,omitempty"`
-	Size         int     `json:"size,omitempty"`
-	URL          string  `json:"url,omitempty"`
-	ProxyURL     string  `json:"proxy_url,omitempty"`
-	Height       int     `json:"height,omitempty"`
-	Width        int     `json:"width,omitempty"`
-	Ephemeral    bool    `json:"ephemeral,omitempty"`
-	DurationSecs float64 `json:"duration_secs,omitempty"`
-	Waveform     string  `json:"waveform,omitempty"`
+	ID           Snowflake `json:"id"`
+	Filename     string    `json:"filename"`
+	Description  string    `json:"description,omitempty"`
+	ContentType  string    `json:"content_type,omitempty"`
+	Size         int       `json:"size,omitempty"`
+	URL          string    `json:"url,omitempty"`
+	ProxyURL     string    `json:"proxy_url,omitempty"`
+	Height       int       `json:"height,omitempty"`
+	Width        int       `json:"width,omitempty"`
+	Ephemeral    bool      `json:"ephemeral,omitempty"`
+	DurationSecs float64   `json:"duration_secs,omitempty"`
+	Waveform     string    `json:"waveform,omitempty"`
+}
+
+// CreatedAt returns the creation time of the attachment (discord.Attachment)
+func (a *Attachment) CreatedAt() time.Time {
+	return a.ID.CreatedAt()
 }
 
 // Embed represents embedded content in a message (discord.Message)
@@ -251,10 +261,10 @@ const (
 // MessageReference represents the referenced message (discord.Message) during a cross-post, channel follow add, pin, or reply message
 // https://discord.com/developers/docs/resources/channel#message-reference-object-message-reference-structure
 type MessageReference struct {
-	MessageID       string `json:"message_id"`
-	ChannelID       string `json:"channel_id,omitempty"`
-	GuildID         string `json:"guild_id,omitempty"`
-	FailIfNotExists bool   `json:"fail_if_not_exists,omitempty"`
+	MessageID       Snowflake `json:"message_id"`
+	ChannelID       Snowflake `json:"channel_id,omitempty"`
+	GuildID         Snowflake `json:"guild_id,omitempty"`
+	FailIfNotExists bool      `json:"fail_if_not_exists,omitempty"`
 }
 
 // MessageFlags represents the flags for a message (discord.Message)
@@ -322,11 +332,16 @@ func (f MessageFlags) HasNotAny(messageFlags ...MessageFlags) bool {
 // MessageInteraction represents an interaction structure that is sent if the message is a response to an interaction
 // https://discord.com/developers/docs/interactions/receiving-and-responding#message-interaction-object-message-interaction-structure
 type MessageInteraction struct {
-	ID     string          `json:"id"`
+	ID     Snowflake       `json:"id"`
 	Type   InteractionType `json:"type"`
 	Name   string          `json:"name"`
 	User   *User           `json:"user"`
 	Member *Member         `json:"member,omitempty"`
+}
+
+// CreatedAt returns the creation time of the message interaction (discord.MessageInteraction)
+func (i *MessageInteraction) CreatedAt() time.Time {
+	return i.ID.CreatedAt()
 }
 
 // File represents a file that can be used to send to Discord in a message
@@ -345,7 +360,7 @@ type CreateMessage struct {
 	AllowedMentions  *AllowedMentions  `json:"allowed_mentions,omitempty"`
 	MessageReference *MessageReference `json:"message_reference,omitempty"`
 	Components       []Component       `json:"components,omitempty"`
-	StickerIDs       []string          `json:"sticker_ids,omitempty"`
+	StickerIDs       ArraySnowflakes   `json:"sticker_ids,omitempty"`
 	Flags            *MessageFlags     `json:"flags,omitempty"`
 	Attachments      []Attachment      `json:"attachments,omitempty"`
 
@@ -367,7 +382,7 @@ type EditMessage struct {
 // BulkDeleteMessages represents the payload to send to Discord to perform a bulk delete of multiple messages (discord.Message)
 // https://discord.com/developers/docs/resources/channel#bulk-delete-messages-json-params
 type BulkDeleteMessages struct {
-	Messages []string `json:"messages"`
+	Messages ArraySnowflakes `json:"messages"`
 
 	AuditLogReason string `json:"-"`
 }

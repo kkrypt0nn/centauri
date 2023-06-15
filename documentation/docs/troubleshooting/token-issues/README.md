@@ -72,7 +72,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-       fmt.Println(fmt.Sprintf("Got bot %s with ID %s", bot.Username, bot.ID))
+       fmt.Println(fmt.Sprintf("Got bot %s with ID %d", bot.Username, bot.ID))
 	}
 }
 ```

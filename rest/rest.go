@@ -221,7 +221,7 @@ func DoRequestAsList[T any](client *Client, method, url string, requestBody any,
 
 // CreateMultipartBodyWithJSON returns the new bytes for when uploading files to Discord
 // https://discord.com/developers/docs/reference#uploading-files
-func CreateMultipartBodyWithJSON[T discord.CreateMessage | discord.EditMessage | discord.ExecuteWebhook | discord.StartThreadInForumChannel | discord.CreateGuildSticker](data T, files []discord.File) (string, []byte, error) {
+func CreateMultipartBodyWithJSON[T discord.CreateMessage | discord.EditMessage | discord.ExecuteWebhook | discord.EditWebhookMessage | discord.StartThreadInForumChannel | discord.CreateGuildSticker](data T, files []discord.File) (string, []byte, error) {
 	body := &bytes.Buffer{}
 	bodyWriter := multipart.NewWriter(body)
 
