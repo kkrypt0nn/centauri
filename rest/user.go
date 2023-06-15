@@ -1,18 +1,15 @@
 package rest
 
 import (
+	"github.com/kkrypt0nn/centauri/endpoints"
 	"strconv"
 
 	"github.com/kkrypt0nn/centauri/discord"
 )
 
-const (
-	UsersEndpoint = Endpoint + "users"
-)
-
 // GetCurrentUser returns the current user structure (discord.User)
 func (c *Client) GetCurrentUser() (*discord.User, error) {
-	return DoRequestAsStructure[discord.User](c, "GET", UsersEndpoint+"/@me", nil, nil, 1)
+	return DoRequestAsStructure[discord.User](c, "GET", endpoints.SelfUser(), nil, nil, 1)
 }
 
 // GetSelfUser is an alias of GetCurrentUser
@@ -22,12 +19,12 @@ func (c *Client) GetSelfUser() (*discord.User, error) {
 
 // GetUser returns a user structure (discord.User) for the given user ID
 func (c *Client) GetUser(userID discord.Snowflake) (*discord.User, error) {
-	return DoRequestAsStructure[discord.User](c, "GET", UsersEndpoint+"/"+userID.String(), nil, nil, 1)
+	return DoRequestAsStructure[discord.User](c, "GET", endpoints.User(userID), nil, nil, 1)
 }
 
 // ModifyCurrentUser modifies the current user (discord.User) and returns its new structure
 func (c *Client) ModifyCurrentUser(user discord.ModifyCurrentUser) (*discord.User, error) {
-	return DoRequestAsStructure[discord.User](c, "PATCH", UsersEndpoint+"/@me", user, nil, 1)
+	return DoRequestAsStructure[discord.User](c, "PATCH", endpoints.SelfUser(), user, nil, 1)
 }
 
 // GetCurrentUserGuilds returns a list of partial guild structures (discord.PartialGuild)
@@ -42,12 +39,12 @@ func (c *Client) GetCurrentUserGuilds(before, after discord.Snowflake, limit int
 	if limit >= 1 && limit <= 200 {
 		queryParams["limit"] = strconv.Itoa(limit)
 	}
-	return DoRequestAsList[discord.PartialGuild](c, "GET", UsersEndpoint+"/@me/guilds", nil, queryParams, 1)
+	return DoRequestAsList[discord.PartialGuild](c, "GET", endpoints.SelfUserGuilds(), nil, queryParams, 1)
 }
 
 // LeaveGuild leaves a guild (discord.Guild) from the given guild ID
 func (c *Client) LeaveGuild(guildID discord.Snowflake) error {
-	return DoEmptyRequest(c, "DELETE", GuildsEndpoint+"/"+guildID.String(), nil, nil, 1)
+	return DoEmptyRequest(c, "DELETE", endpoints.Guild(guildID), nil, nil, 1)
 }
 
 // CreateDM creates a new DM channel (discord.Channel) for the given user ID and returns its structure
@@ -57,5 +54,5 @@ func (c *Client) CreateDM(userID discord.Snowflake) (*discord.Channel, error) {
 	}{
 		RecipientID: userID,
 	}
-	return DoRequestAsStructure[discord.Channel](c, "POST", UsersEndpoint+"/@me/channels", payload, nil, 1)
+	return DoRequestAsStructure[discord.Channel](c, "POST", endpoints.SelfUserChannels(), payload, nil, 1)
 }

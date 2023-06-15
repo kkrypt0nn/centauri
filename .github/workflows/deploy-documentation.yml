@@ -1,4 +1,4 @@
-name: Centauri CI (Deploy Documentation)
+name: Centauri CD (Deploy Documentation)
 
 on:
     workflow_run:

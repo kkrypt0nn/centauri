@@ -19,12 +19,6 @@ import (
 	"github.com/kkrypt0nn/logger.go"
 )
 
-const (
-	BaseURL  = "https://discord.com/api/v"
-	Version  = "10"
-	Endpoint = BaseURL + Version + "/"
-)
-
 // Client is a client made to send REST API requests only
 type Client struct {
 	HttpClient  *HttpClient

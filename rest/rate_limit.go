@@ -19,7 +19,7 @@ type Bucket struct {
 	ResetAt   time.Time
 }
 
-// NewBucket returns a new rest.Bucket based on a key
+// NewBucket returns a new bucket (rest.Bucket) based on a key
 func NewBucket(key string) *Bucket {
 	return &Bucket{
 		Key:       key,
@@ -27,7 +27,7 @@ func NewBucket(key string) *Bucket {
 	}
 }
 
-// RateLimiter represents the rate limiter holding a map of rest.Bucket and responsible to sleep when someone is doing too many requests
+// RateLimiter represents the rate limiter holding a map of buckets (rest.Bucket) and responsible to sleep when someone is doing too many requests
 type RateLimiter struct {
 	sync.Mutex
 	Buckets       map[string]*Bucket
@@ -35,7 +35,7 @@ type RateLimiter struct {
 	MaxRetries    int
 }
 
-// NewRateLimiter returns a new rest.RateLimiter
+// NewRateLimiter returns a new rate limited (rest.RateLimiter)
 func NewRateLimiter() *RateLimiter {
 	return &RateLimiter{
 		Buckets:       make(map[string]*Bucket),
@@ -44,7 +44,7 @@ func NewRateLimiter() *RateLimiter {
 	}
 }
 
-// GetBucket returns a rest.Bucket based on the given key (URL without query parameters)
+// GetBucket returns a bucket (rest.Bucket) based on the given key (URL without query parameters)
 func (r *RateLimiter) GetBucket(key string) *Bucket {
 	r.Lock()
 	defer r.Unlock()
@@ -60,7 +60,7 @@ func (r *RateLimiter) GetBucket(key string) *Bucket {
 	return bucket
 }
 
-// LockBucket locks a rest.Bucket and waits if needed until it is no longer rate limited
+// LockBucket locks a bucket (rest.Bucket) and waits if needed until it is no longer rate limited
 func (r *RateLimiter) LockBucket(key string) *Bucket {
 	// Get and lock the bucket
 	bucket := r.GetBucket(key)
@@ -80,7 +80,7 @@ func (r *RateLimiter) LockBucket(key string) *Bucket {
 	return bucket
 }
 
-// UnlockBucket unlocks a rest.Bucket and sets the new values about the rate limits
+// UnlockBucket unlocks a bucket (rest.Bucket) and sets the new values about the rate limits
 func (r *RateLimiter) UnlockBucket(bucket *Bucket, headers http.Header) error {
 	defer bucket.Unlock()
 

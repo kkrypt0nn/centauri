@@ -22,7 +22,7 @@ jobs:
     test:
         name: Test
         needs: lint
-        runs-on:  ${{matrix.os.fullName}}
+        runs-on: ${{matrix.os.fullName}}
         strategy:
             matrix:
                 os:

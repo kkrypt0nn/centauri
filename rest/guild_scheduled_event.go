@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"github.com/kkrypt0nn/centauri/endpoints"
 	"strconv"
 
 	"github.com/kkrypt0nn/centauri/discord"
@@ -12,12 +13,12 @@ func (c *Client) ListGuildScheduledEvents(guildID discord.Snowflake, withUserCou
 	if withUserCount {
 		queryParams["with_user_count"] = "true"
 	}
-	return DoRequestAsList[discord.GuildScheduledEvent](c, "GET", GuildsEndpoint+"/"+guildID.String()+"/scheduled-events", nil, queryParams, 1)
+	return DoRequestAsList[discord.GuildScheduledEvent](c, "GET", endpoints.GuildScheduledEvents(guildID), nil, queryParams, 1)
 }
 
 // CreateGuildScheduledEvent creates a guild scheduled event (discord.GuildScheduledEvent) for the given guild ID and returns its structure
 func (c *Client) CreateGuildScheduledEvent(guildID discord.Snowflake, scheduledEvent discord.CreateGuildScheduledEvent) (*discord.GuildScheduledEvent, error) {
-	return DoRequestAsStructure[discord.GuildScheduledEvent](c, "POST", GuildsEndpoint+"/"+guildID.String()+"/scheduled-events", scheduledEvent, nil, 1, WithReason(scheduledEvent.AuditLogReason))
+	return DoRequestAsStructure[discord.GuildScheduledEvent](c, "POST", endpoints.GuildScheduledEvents(guildID), scheduledEvent, nil, 1, WithReason(scheduledEvent.AuditLogReason))
 }
 
 // GetGuildScheduledEvent returns a guild scheduled event structure (discord.GuildScheduledEvent) for the given guild ID and scheduled event ID
@@ -26,17 +27,17 @@ func (c *Client) GetGuildScheduledEvent(guildID, scheduledEventID discord.Snowfl
 	if withUserCount {
 		queryParams["with_user_count"] = "true"
 	}
-	return DoRequestAsStructure[discord.GuildScheduledEvent](c, "GET", GuildsEndpoint+"/"+guildID.String()+"/scheduled-events/"+scheduledEventID.String(), nil, nil, 1)
+	return DoRequestAsStructure[discord.GuildScheduledEvent](c, "GET", endpoints.GuildScheduledEvent(guildID, scheduledEventID), nil, nil, 1)
 }
 
 // ModifyGuildScheduledEvent modifies an existing guild scheduled event (discord.GuildScheduledEvent) for the given guild and scheduled event IDs and returns its new structure
 func (c *Client) ModifyGuildScheduledEvent(guildID, scheduledEventID discord.Snowflake, scheduledEvent discord.ModifyGuildScheduledEvent) (*discord.GuildScheduledEvent, error) {
-	return DoRequestAsStructure[discord.GuildScheduledEvent](c, "PATCH", GuildsEndpoint+"/"+guildID.String()+"/scheduled-events/"+scheduledEventID.String(), scheduledEvent, nil, 1, WithReason(scheduledEvent.AuditLogReason))
+	return DoRequestAsStructure[discord.GuildScheduledEvent](c, "PATCH", endpoints.GuildScheduledEvent(guildID, scheduledEventID), scheduledEvent, nil, 1, WithReason(scheduledEvent.AuditLogReason))
 }
 
 // DeleteGuildScheduledEvent deletes an existing guild scheduled event (discord.GuildScheduledEvent) for the given guild and scheduled event IDs
 func (c *Client) DeleteGuildScheduledEvent(guildID, scheduledEventID discord.Snowflake) error {
-	return DoEmptyRequest(c, "DELETE", GuildsEndpoint+"/"+guildID.String()+"/scheduled-events/"+scheduledEventID.String(), nil, nil, 1)
+	return DoEmptyRequest(c, "DELETE", endpoints.GuildScheduledEvent(guildID, scheduledEventID), nil, nil, 1)
 }
 
 // GetGuildScheduledEventUsers returns a list of guild scheduled event user structures (discord.GuildScheduledEventUser)
@@ -54,5 +55,5 @@ func (c *Client) GetGuildScheduledEventUsers(guildID, scheduledEventID, before, 
 	if withMember {
 		queryParams["with_member"] = "true"
 	}
-	return DoRequestAsList[discord.GuildScheduledEventUser](c, "GET", GuildsEndpoint+"/"+guildID.String()+"/scheduled-events/"+scheduledEventID.String()+"/users", nil, queryParams, 1)
+	return DoRequestAsList[discord.GuildScheduledEventUser](c, "GET", endpoints.GuildScheduledEventUsers(guildID, scheduledEventID), nil, queryParams, 1)
 }
