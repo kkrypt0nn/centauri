@@ -58,3 +58,15 @@ jobs:
         run: go build -v ./...
       - name: Test
         run: go test -v ./...
+  deploy-documentation:
+    name: deploy documentation
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: redkubes/docusaurus-deploy-action@v1.2
+        with:
+          source-folder: documentation
+          git-user: kkrypt0nn
+          git-password: ${{ secrets.PAT }}
+          deployment-branch: gh-pages
