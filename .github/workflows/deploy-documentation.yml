@@ -14,9 +14,9 @@ permissions:
 
 jobs:
     deploy-documentation:
-        name: Deploy documentation
-        needs: [lint, test]
+        name: Deploy Documentation
         runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         steps:
             - uses: actions/checkout@master
             - uses: redkubes/docusaurus-deploy-action@v1.2
