@@ -1,62 +1,60 @@
 name: Centauri CI (Lint & Test)
 
-on:
-    - push
-    - pull_request
+on: [ push, pull_request ]
 
 permissions:
     contents: read
 
 jobs:
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.20.3
-      - name: Lint
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: latest
-  test:
-    name: Test
-    needs: lint
-    runs-on: ${{matrix.os.fullName}}
-    strategy:
-      matrix:
-        os:
-          - { prettyName: Linux, fullName: ubuntu-latest }
-          - { prettyName: Windows, fullName: windows-latest }
-          - { prettyName: macOS, fullName: macos-latest }
-        goos: [ linux, windows, darwin ]
-        goarch: [ "386", amd64, arm64 ]
-        exclude:
-          - os: { fullName: ubuntu-latest }
-            goos: darwin
-          - os: { fullName: ubuntu-latest }
-            goos: windows
-          - os: { fullName: windows-latest }
-            goos: linux
-          - os: { fullName: windows-latest }
-            goos: darwin
-          - os: { fullName: macos-latest }
-            goos: linux
-          - os: { fullName: macos-latest }
-            goos: windows
+    lint:
+        name: Lint
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Set up Go
+              uses: actions/setup-go@v3
+              with:
+                  go-version: 1.20.5
+            - name: Lint
+              uses: golangci/golangci-lint-action@v3
+              with:
+                  version: latest
+    test:
+        name: Test
+        needs: lint
+        runs-on:  ${{matrix.os.fullName}}
+        strategy:
+            matrix:
+                os:
+                    - { prettyName: Linux, fullName: ubuntu-latest }
+                    - { prettyName: Windows, fullName: windows-latest }
+                    - { prettyName: macOS, fullName: macos-latest }
+                goos: [ linux, windows, darwin ]
+                goarch: [ "386", amd64, arm64 ]
+                exclude:
+                    - os: { fullName: ubuntu-latest }
+                      goos: darwin
+                    - os: { fullName: ubuntu-latest }
+                      goos: windows
+                    - os: { fullName: windows-latest }
+                      goos: linux
+                    - os: { fullName: windows-latest }
+                      goos: darwin
+                    - os: { fullName: macos-latest }
+                      goos: linux
+                    - os: { fullName: macos-latest }
+                      goos: windows
 
-          # Not a valid combination
-          - goarch: "386"
-            goos: darwin
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.20.3
-      - name: Build
-        run: go build -v ./...
-      - name: Test
-        run: go test -v ./...
+                    # Not a valid combination
+                    - goarch: "386"
+                      goos: darwin
+        steps:
+            - uses: actions/checkout@v3
+            - name: Set up Go
+              uses: actions/setup-go@v3
+              with:
+                  go-version: 1.20.5
+            - name: Build
+              run: go build -v ./...
+            - name: Test
+              run: go test -v ./...
