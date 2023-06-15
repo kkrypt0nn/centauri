@@ -4,25 +4,26 @@ import (
 	"fmt"
 	"github.com/kkrypt0nn/centauri/utils/flags"
 	"strings"
+	"time"
 )
 
 // Guild represents an isolated collection of users and channels, and are often referred to as "servers" in the UI
 // https://discord.com/developers/docs/resources/guild#guild-object-guild-structure
 type Guild struct {
-	ID                          string                   `json:"id"`
+	ID                          Snowflake                `json:"id"`
 	Name                        string                   `json:"name"`
 	Icon                        string                   `json:"icon"`
 	IconHash                    string                   `json:"icon_hash"`
 	Splash                      string                   `json:"splash"`
 	DiscoverySplash             string                   `json:"discovery_splash"`
 	Owner                       bool                     `json:"owner"`
-	OwnerID                     string                   `json:"owner_id"`
-	Permissions                 uint64                   `json:"permissions,string"`
+	OwnerID                     Snowflake                `json:"owner_id"`
+	Permissions                 uint64                   `json:"permissions"`
 	Region                      string                   `json:"region"`
-	AFKChannelID                string                   `json:"afk_channel_id"`
+	AFKChannelID                Snowflake                `json:"afk_channel_id"`
 	AFKTimeout                  int                      `json:"afk_timeout"`
 	WidgetEnabled               bool                     `json:"widget_enabled"`
-	WidgetChannelID             string                   `json:"widget_channel_id"`
+	WidgetChannelID             Snowflake                `json:"widget_channel_id"`
 	VerificationLevel           GuildVerificationLevel   `json:"verification_level"`
 	DefaultMessageNotifications MessageNotificationLevel `json:"default_message_notifications"`
 	ExplicitContentFilter       ExplicitContentFilter    `json:"explicit_content_filter"`
@@ -30,10 +31,10 @@ type Guild struct {
 	Emojis                      []Emoji                  `json:"emojis"`
 	Features                    []GuildFeature           `json:"features"`
 	MFALevel                    MFALevel                 `json:"mfa_level"`
-	ApplicationID               string                   `json:"application_id"`
-	SystemChannelID             string                   `json:"system_channel_id"`
+	ApplicationID               Snowflake                `json:"application_id"`
+	SystemChannelID             Snowflake                `json:"system_channel_id"`
 	SystemChannelFlags          SystemChannelFlags       `json:"system_channel_flags"`
-	RulesChannelID              string                   `json:"rules_channel_id"`
+	RulesChannelID              Snowflake                `json:"rules_channel_id"`
 	MaxPresences                int                      `json:"max_presences"`
 	MaxMembers                  int                      `json:"max_members"`
 	VanityURLCode               string                   `json:"vanity_url_code"`
@@ -42,7 +43,7 @@ type Guild struct {
 	PremiumTier                 PremiumTier              `json:"premium_tier"`
 	PremiumSubscriptionCount    int                      `json:"premium_subscription_count"`
 	PreferredLocale             Locale                   `json:"preferred_locale"`
-	PublicUpdatesChannelID      string                   `json:"public_updates_channel_id"`
+	PublicUpdatesChannelID      Snowflake                `json:"public_updates_channel_id"`
 	MaxVideoChannelUsers        int                      `json:"max_video_channel_users"`
 	MaxStageVideoChannelUsers   int                      `json:"max_stage_video_channel_users"`
 	ApproximateMemberCount      int                      `json:"approximate_member_count"`
@@ -51,6 +52,12 @@ type Guild struct {
 	NSFWLevel                   NSFWLevel                `json:"nsfw_level"`
 	Stickers                    []Sticker                `json:"stickers"`
 	PremiumProgressBarEnabled   bool                     `json:"premium_progress_bar_enabled"`
+	SafetyAlertsChannelID       Snowflake                `json:"safety_alerts_channel_id,omitempty"`
+}
+
+// CreatedAt returns the creation time of the guild (discord.Guild)
+func (g *Guild) CreatedAt() time.Time {
+	return g.ID.CreatedAt()
 }
 
 // IconURL returns the URL for the guild icon
@@ -64,7 +71,7 @@ func (g *Guild) IconURL(asFormat ImageFormat) string {
 		}
 
 		suffix := fmt.Sprintf("%s.%s", g.Icon, asFormat)
-		return fmt.Sprintf("https://cdn.discordapp.com/icons/%s/%s", g.ID, suffix)
+		return fmt.Sprintf("https://cdn.discordapp.com/icons/%d/%s", g.ID, suffix)
 	}
 	return ""
 }
@@ -77,7 +84,7 @@ func (g *Guild) SplashURL(asFormat ImageFormat) string {
 		}
 
 		suffix := fmt.Sprintf("%s.%s", g.Splash, asFormat)
-		return fmt.Sprintf("https://cdn.discordapp.com/splashes/%s/%s", g.ID, suffix)
+		return fmt.Sprintf("https://cdn.discordapp.com/splashes/%d/%s", g.ID, suffix)
 	}
 	return ""
 }
@@ -90,7 +97,7 @@ func (g *Guild) DiscoverySplashURL(asFormat ImageFormat) string {
 		}
 
 		suffix := fmt.Sprintf("%s.%s", g.DiscoverySplash, asFormat)
-		return fmt.Sprintf("https://cdn.discordapp.com/discovery-splashes/%s/%s", g.ID, suffix)
+		return fmt.Sprintf("https://cdn.discordapp.com/discovery-splashes/%d/%s", g.ID, suffix)
 	}
 	return ""
 }
@@ -106,7 +113,7 @@ func (g *Guild) BannerURL(asFormat ImageFormat) string {
 		}
 
 		suffix := fmt.Sprintf("%s.%s", g.Banner, asFormat)
-		return fmt.Sprintf("https://cdn.discordapp.com/banners/%s/%s", g.ID, suffix)
+		return fmt.Sprintf("https://cdn.discordapp.com/banners/%d/%s", g.ID, suffix)
 	}
 	return ""
 }
@@ -236,10 +243,10 @@ type ModifyGuildWelcomeScreen struct {
 // WelcomeScreenChannel represents a channel shown in the welcome screen
 // https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure
 type WelcomeScreenChannel struct {
-	ChannelID   string `json:"channel_id"`
-	Description string `json:"description"`
-	EmojiID     string `json:"emoji_id"`
-	EmojiName   string `json:"emoji_name"`
+	ChannelID   Snowflake `json:"channel_id"`
+	Description string    `json:"description"`
+	EmojiID     Snowflake `json:"emoji_id,omitempty"`
+	EmojiName   string    `json:"emoji_name,omitempty"`
 }
 
 // NSFWLevel represents the NSFW level of a guild (discord.Guild)
@@ -256,7 +263,7 @@ const (
 // GuildPreview represents a small preview of a guild (discord.Guild) with partial information
 // https://discord.com/developers/docs/resources/guild#guild-preview-object-guild-preview-structure
 type GuildPreview struct {
-	ID                       string         `json:"id"`
+	ID                       Snowflake      `json:"id"`
 	Name                     string         `json:"name"`
 	Icon                     string         `json:"icon"`
 	Splash                   string         `json:"splash"`
@@ -267,6 +274,11 @@ type GuildPreview struct {
 	ApproximatePresenceCount int            `json:"approximate_presence_count"`
 	Description              string         `json:"description"`
 	Stickers                 []Sticker      `json:"stickers"`
+}
+
+// CreatedAt returns the creation time of the guild preview (discord.GuildPreview)
+func (p *GuildPreview) CreatedAt() time.Time {
+	return p.ID.CreatedAt()
 }
 
 // GuildBan represents a banned user (discord.User) in a guild (discord.Guild)
@@ -281,8 +293,8 @@ type GuildBan struct {
 type CreateGuildBan struct {
 	DeleteMessageSeconds *int `json:"delete_message_seconds,omitempty"`
 
-	UserID         string `json:"-"`
-	AuditLogReason string `json:"-"`
+	UserID         Snowflake `json:"-"`
+	AuditLogReason string    `json:"-"`
 }
 
 // GuildPrune represents how many members (discord.Member) will get pruned when performing a prune
@@ -294,9 +306,9 @@ type GuildPrune struct {
 // BeginGuildPrune represents the payload to send to Discord to begin a guild prune operation (discord.GuildPrune)
 // https://discord.com/developers/docs/resources/guild#begin-guild-prune-json-params
 type BeginGuildPrune struct {
-	Days              *int     `json:"days,omitempty"`
-	ComputePruneCount *bool    `json:"compute_prune_count,omitempty"`
-	IncludeRoles      []string `json:"include_roles,omitempty"`
+	Days              *int            `json:"days,omitempty"`
+	ComputePruneCount *bool           `json:"compute_prune_count,omitempty"`
+	IncludeRoles      ArraySnowflakes `json:"include_roles,omitempty"`
 
 	AuditLogReason string `json:"-"`
 }
@@ -304,14 +316,14 @@ type BeginGuildPrune struct {
 // WidgetSetting represents the channel (discord.Channel) used and whether the widget (discord.Widget) of the guild (discord.Guild) is enabled
 // https://discord.com/developers/docs/resources/guild#guild-widget-settings-object-guild-widget-settings-structure
 type WidgetSetting struct {
-	Enabled   bool   `json:"enabled"`
-	ChannelID string `json:"channel_id"`
+	Enabled   bool      `json:"enabled"`
+	ChannelID Snowflake `json:"channel_id"`
 }
 
 // Widget represents the guild's (discord.Guild) widget
 // https://discord.com/developers/docs/resources/guild#guild-widget-object-guild-widget-structure
 type Widget struct {
-	ID            string    `json:"id"`
+	ID            Snowflake `json:"id"`
 	Name          string    `json:"name"`
 	InstantInvite string    `json:"instant_invite"`
 	Channels      []Channel `json:"channels"`
@@ -322,8 +334,8 @@ type Widget struct {
 // ModifyGuildWidget represents the payload to send to Discord to modify the guild widget (discord.Widget)
 // https://discord.com/developers/docs/resources/guild#guild-widget-settings-object-guild-widget-settings-structure
 type ModifyGuildWidget struct {
-	Enabled   *bool   `json:"enabled,omitempty"`
-	ChannelID *string `json:"channel_id,omitempty"`
+	Enabled   *bool      `json:"enabled,omitempty"`
+	ChannelID *Snowflake `json:"channel_id,omitempty"`
 
 	AuditLogReason string `json:"-"`
 }
@@ -331,22 +343,27 @@ type ModifyGuildWidget struct {
 // Onboarding represents the onboarding flow for a guild (discord.Guild)
 // https://discord.com/developers/docs/resources/guild#guild-onboarding-object-guild-onboarding-structure
 type Onboarding struct {
-	GuildID           string             `json:"guild_id"`
+	GuildID           Snowflake          `json:"guild_id"`
 	Prompts           []OnboardingPrompt `json:"prompts"`
-	DefaultChannelIDs []string           `json:"default_channel_ids"`
+	DefaultChannelIDs ArraySnowflakes    `json:"default_channel_ids"`
 	Enabled           bool               `json:"enabled"`
 }
 
 // OnboardingPrompt represents a prompt shown during onboarding (discord.Onboarding) and in customize community
 // https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-prompt-structure
 type OnboardingPrompt struct {
-	ID           string                   `json:"id"`
+	ID           Snowflake                `json:"id"`
 	Type         OnboardingPromptType     `json:"type"`
 	Options      []OnboardingPromptOption `json:"options"`
 	Title        string                   `json:"title"`
 	SingleSelect bool                     `json:"single_select"`
 	Required     bool                     `json:"required"`
 	InOnboarding bool                     `json:"in_onboarding"`
+}
+
+// CreatedAt returns the creation time of the onboarding prompt (discord.OnboardingPrompt)
+func (p *OnboardingPrompt) CreatedAt() time.Time {
+	return p.ID.CreatedAt()
 }
 
 // OnboardingPromptType represents the type of prompt for the onboarding prompt (discord.OnboardingPrompt)
@@ -361,23 +378,33 @@ const (
 // OnboardingPromptOption represents the options available within the prompt (discord.OnboardingPrompt)
 // https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-option-structure
 type OnboardingPromptOption struct {
-	ID          string   `json:"id"`
-	ChannelIDs  []string `json:"channel_ids"`
-	RoleIDs     []string `json:"role_ids"`
-	Emoji       *Emoji   `json:"emoji"`
-	Title       string   `json:"title"`
-	Description string   `json:"description"`
+	ID          Snowflake       `json:"id"`
+	ChannelIDs  ArraySnowflakes `json:"channel_ids"`
+	RoleIDs     ArraySnowflakes `json:"role_ids"`
+	Emoji       *Emoji          `json:"emoji"`
+	Title       string          `json:"title"`
+	Description string          `json:"description"`
 }
 
-// PartialGuild represents a discord.Guild with only a few fields
+// CreatedAt returns the creation time of the onboarding prompt option (discord.OnboardingPromptOption)
+func (o *OnboardingPromptOption) CreatedAt() time.Time {
+	return o.ID.CreatedAt()
+}
+
+// PartialGuild represents a guild (discord.Guild) with only a few fields
 // https://discord.com/developers/docs/resources/user#get-current-user-guilds-example-partial-guild
 type PartialGuild struct {
-	ID          string         `json:"id"`
+	ID          Snowflake      `json:"id"`
 	Name        string         `json:"name"`
 	Icon        string         `json:"icon"`
 	Owner       bool           `json:"owner"`
-	Permissions uint64         `json:"permissions,string"`
+	Permissions uint64         `json:"permissions"`
 	Features    []GuildFeature `json:"features"`
+}
+
+// CreatedAt returns the creation time of the partial guild (discord.PartialGuild)
+func (g *PartialGuild) CreatedAt() time.Time {
+	return g.ID.CreatedAt()
 }
 
 // GuildFeature represents the different features a guild may have activated
@@ -403,6 +430,7 @@ const (
 	GuildFeatureNews                                  GuildFeature = "NEWS"
 	GuildFeaturePartnered                             GuildFeature = "PARTNERED"
 	GuildFeaturePreviewEnabled                        GuildFeature = "PREVIEW_ENABLED"
+	GuildFeatureRaidAlertsDisabled                    GuildFeature = "RAID_ALERTS_DISABLED"
 	GuildFeatureRoleIcons                             GuildFeature = "ROLE_ICONS"
 	GuildFeatureRoleSubscriptionsAvailableForPurchase GuildFeature = "ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE"
 	GuildFeatureRoleSubscriptionsEnabled              GuildFeature = "ROLE_SUBSCRIPTIONS_ENABLED"
@@ -424,9 +452,9 @@ type CreateGuild struct {
 	ExplicitContentFilter       *ExplicitContentFilter    `json:"explicit_content_filter,omitempty"`
 	Roles                       []Role                    `json:"roles,omitempty"`
 	Channels                    []Channel                 `json:"channels,omitempty"`
-	AFKChannelID                *string                   `json:"afk_channel_id,omitempty"`
+	AFKChannelID                *Snowflake                `json:"afk_channel_id,omitempty"`
 	AFKTimeout                  *int                      `json:"afk_timeout,omitempty"`
-	SystemChannelID             *string                   `json:"system_channel_id,omitempty"`
+	SystemChannelID             *Snowflake                `json:"system_channel_id,omitempty"`
 	SystemChannelFlags          *SystemChannelFlags       `json:"system_channel_flags,omitempty"`
 }
 
@@ -438,22 +466,22 @@ type ModifyGuild struct {
 	VerificationLevel           *GuildVerificationLevel   `json:"verification_level,omitempty"`
 	DefaultMessageNotifications *MessageNotificationLevel `json:"default_message_notifications,omitempty"`
 	ExplicitContentFilter       *ExplicitContentFilter    `json:"explicit_content_filter,omitempty"`
-	AFKChannelID                *string                   `json:"afk_channel_id,omitempty"`
+	AFKChannelID                *Snowflake                `json:"afk_channel_id,omitempty"`
 	AFKTimeout                  *int                      `json:"afk_timeout,omitempty"`
 	Icon                        *string                   `json:"icon,omitempty"`
-	OwnerID                     *string                   `json:"owner_id,omitempty"`
+	OwnerID                     *Snowflake                `json:"owner_id,omitempty"`
 	Splash                      *string                   `json:"splash,omitempty"`
 	DiscoverySplash             *string                   `json:"discovery_splash,omitempty"`
 	Banner                      *string                   `json:"banner,omitempty"`
-	SystemChannelID             *string                   `json:"system_channel_id,omitempty"`
+	SystemChannelID             *Snowflake                `json:"system_channel_id,omitempty"`
 	SystemChannelFlags          *SystemChannelFlags       `json:"system_channel_flags,omitempty"`
-	RulesChannelID              *string                   `json:"rules_channel_id,omitempty"`
-	PublicUpdatesChannelID      *string                   `json:"public_updates_channel_id,omitempty"`
+	RulesChannelID              *Snowflake                `json:"rules_channel_id,omitempty"`
+	PublicUpdatesChannelID      *Snowflake                `json:"public_updates_channel_id,omitempty"`
 	PreferredLocale             *Locale                   `json:"preferred_locale,omitempty"`
 	Features                    []GuildFeature            `json:"features,omitempty"`
 	Description                 *string                   `json:"description,omitempty"`
 	PremiumProgressBarEnabled   *bool                     `json:"premium_progress_bar_enabled,omitempty"`
-	SafetyAlertsChannelID       *string                   `json:"safety_alerts_channel_id,omitempty"`
+	SafetyAlertsChannelID       *Snowflake                `json:"safety_alerts_channel_id,omitempty"`
 
 	AuditLogReason string `json:"-"`
 }

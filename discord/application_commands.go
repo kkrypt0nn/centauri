@@ -3,24 +3,30 @@ package discord
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // ApplicationCommand represents an application command that is natively implemented within Discord
 // https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure
 type ApplicationCommand struct {
-	ID                       string                    `json:"id"`
+	ID                       Snowflake                 `json:"id"`
 	Type                     ApplicationCommandType    `json:"type,omitempty"`
-	ApplicationID            string                    `json:"application_id"`
-	GuildID                  string                    `json:"guild_id,omitempty"`
+	ApplicationID            Snowflake                 `json:"application_id"`
+	GuildID                  Snowflake                 `json:"guild_id,omitempty"`
 	Name                     string                    `json:"name"`
 	NameLocalizations        map[Locale]string         `json:"name_localizations,omitempty"`
 	Description              string                    `json:"description"`
 	DescriptionLocalizations map[Locale]string         `json:"description_localizations,omitempty"`
 	Options                  ApplicationCommandOptions `json:"options,omitempty"`
-	DefaultMemberPermissions Permissions               `json:"default_member_permissions,string,omitempty"`
+	DefaultMemberPermissions Permissions               `json:"default_member_permissions,omitempty"`
 	DMPermission             bool                      `json:"dm_permission,omitempty"`
 	NSFW                     bool                      `json:"nsfw,omitempty"`
-	Version                  string                    `json:"version"`
+	Version                  Snowflake                 `json:"version"`
+}
+
+// CreatedAt returns the creation time of the application command (discord.ApplicationCommand)
+func (c *ApplicationCommand) CreatedAt() time.Time {
+	return c.ID.CreatedAt()
 }
 
 // ApplicationCommandType represents the type of command it is
@@ -431,18 +437,23 @@ const (
 // GuildApplicationCommandPermissions represents the permissions for an app's command in a guild
 // https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-guild-application-command-permissions-structure
 type GuildApplicationCommandPermissions struct {
-	ID            string                         `json:"id"`
-	ApplicationID string                         `json:"application_id"`
-	GuildID       string                         `json:"guild_id"`
+	ID            Snowflake                      `json:"id"`
+	ApplicationID Snowflake                      `json:"application_id"`
+	GuildID       Snowflake                      `json:"guild_id"`
 	Permissions   []ApplicationCommandPermission `json:"permissions"`
 }
 
 // ApplicationCommandPermission represents the permissions for an application command (discord.ApplicationCommand)
 // https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-application-command-permissions-structure
 type ApplicationCommandPermission struct {
-	ID         string                           `json:"id"`
+	ID         Snowflake                        `json:"id"`
 	Type       ApplicationCommandPermissionType `json:"type"`
 	Permission bool                             `json:"permission"`
+}
+
+// CreatedAt returns the creation time of the application command permission (discord.ApplicationCommandPermission)
+func (p *ApplicationCommandPermission) CreatedAt() time.Time {
+	return p.ID.CreatedAt()
 }
 
 // ApplicationCommandPermissionType represents the type of application command permission (discord.ApplicationCommandPermission) it is
@@ -463,7 +474,7 @@ type CreateGlobalApplicationCommand struct {
 	Description              *string                   `json:"description,omitempty"`
 	DescriptionLocalizations map[Locale]string         `json:"description_localizations,omitempty"`
 	Options                  ApplicationCommandOptions `json:"options,omitempty"`
-	DefaultMemberPermissions *Permissions              `json:"default_member_permissions,string,omitempty"`
+	DefaultMemberPermissions *Permissions              `json:"default_member_permissions,omitempty"`
 	DMPermission             *bool                     `json:"dm_permission,omitempty"`
 	Type                     *ApplicationCommandType   `json:"type,omitempty"`
 	NSFW                     *bool                     `json:"nsfw,omitempty"`
@@ -477,7 +488,7 @@ type CreateGuildApplicationCommand struct {
 	Description              *string                   `json:"description,omitempty"`
 	DescriptionLocalizations map[Locale]string         `json:"description_localizations,omitempty"`
 	Options                  ApplicationCommandOptions `json:"options,omitempty"`
-	DefaultMemberPermissions *Permissions              `json:"default_member_permissions,string,omitempty"`
+	DefaultMemberPermissions *Permissions              `json:"default_member_permissions,omitempty"`
 	Type                     *ApplicationCommandType   `json:"type,omitempty"`
 	NSFW                     *bool                     `json:"nsfw,omitempty"`
 }
@@ -490,7 +501,7 @@ type EditGlobalApplicationCommand struct {
 	Description              *string                   `json:"description,omitempty"`
 	DescriptionLocalizations map[Locale]string         `json:"description_localizations,omitempty"`
 	Options                  ApplicationCommandOptions `json:"options,omitempty"`
-	DefaultMemberPermissions *Permissions              `json:"default_member_permissions,string,omitempty"`
+	DefaultMemberPermissions *Permissions              `json:"default_member_permissions,omitempty"`
 	DMPermission             *bool                     `json:"dm_permission,omitempty"`
 	NSFW                     *bool                     `json:"nsfw,omitempty"`
 }
@@ -503,6 +514,6 @@ type EditGuildApplicationCommand struct {
 	Description              *string                   `json:"description,omitempty"`
 	DescriptionLocalizations map[Locale]string         `json:"description_localizations,omitempty"`
 	Options                  ApplicationCommandOptions `json:"options,omitempty"`
-	DefaultMemberPermissions *Permissions              `json:"default_member_permissions,string,omitempty"`
+	DefaultMemberPermissions *Permissions              `json:"default_member_permissions,omitempty"`
 	NSFW                     *bool                     `json:"nsfw,omitempty"`
 }

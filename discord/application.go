@@ -3,6 +3,7 @@ package discord
 import (
 	"fmt"
 	"github.com/kkrypt0nn/centauri/oauth2"
+	"time"
 )
 
 // ApplicationRoleConnectionMetadata represents a role connection metadata for an application (discord.Application)
@@ -34,7 +35,7 @@ const (
 // Application represents a Discord application
 // https://discord.com/developers/docs/resources/application#application-object-application-structure
 type Application struct {
-	ID                             string           `json:"id"`
+	ID                             Snowflake        `json:"id"`
 	Name                           string           `json:"name"`
 	Icon                           string           `json:"icon,omitempty"`
 	Description                    string           `json:"description"`
@@ -46,8 +47,8 @@ type Application struct {
 	Owner                          *User            `json:"owner,omitempty"`
 	VerifyKey                      string           `json:"verify_key"`
 	Team                           *Team            `json:"team,omitempty"`
-	GuildID                        string           `json:"guild_id,omitempty"`
-	PrimarySKUID                   string           `json:"primary_sku_id,omitempty"`
+	GuildID                        Snowflake        `json:"guild_id,omitempty"`
+	PrimarySKUID                   Snowflake        `json:"primary_sku_id,omitempty"`
 	Slug                           string           `json:"slug,omitempty"`
 	CoverImage                     string           `json:"cover_image,omitempty"`
 	Flags                          ApplicationFlags `json:"flags,omitempty"`
@@ -55,6 +56,11 @@ type Application struct {
 	InstallParams                  InstallParams    `json:"install_params,omitempty"`
 	CustomInstallURL               string           `json:"custom_install_url,omitempty"`
 	RoleConnectionsVerificationURL string           `json:"role_connections_verification_url,omitempty"`
+}
+
+// CreatedAt returns the creation time of the application (discord.Application)
+func (a *Application) CreatedAt() time.Time {
+	return a.ID.CreatedAt()
 }
 
 // IconURL returns the icon URL of the application (discord.Application)
@@ -65,7 +71,7 @@ func (a *Application) IconURL(asFormat ImageFormat) string {
 		}
 
 		suffix := fmt.Sprintf("%s.%s", a.Icon, asFormat)
-		return fmt.Sprintf("https://cdn.discordapp.com/app-icons/%s/%s", a.ID, suffix)
+		return fmt.Sprintf("https://cdn.discordapp.com/app-icons/%d/%s", a.ID, suffix)
 	}
 	return ""
 }
@@ -78,7 +84,7 @@ func (a *Application) CoverURL(asFormat ImageFormat) string {
 		}
 
 		suffix := fmt.Sprintf("%s.%s", a.CoverImage, asFormat)
-		return fmt.Sprintf("https://cdn.discordapp.com/app-icons/%s/%s.png", a.ID, suffix)
+		return fmt.Sprintf("https://cdn.discordapp.com/app-icons/%d/%s.png", a.ID, suffix)
 	}
 	return ""
 }
@@ -86,11 +92,16 @@ func (a *Application) CoverURL(asFormat ImageFormat) string {
 // Team represents a group of developers on Discord who want to collaborate on applications
 // https://discord.com/developers/docs/topics/teams#data-models-team-object
 type Team struct {
+	ID          Snowflake    `json:"id"`
 	Icon        string       `json:"icon,omitempty"`
-	ID          string       `json:"id"`
 	Members     []TeamMember `json:"members"`
 	Name        string       `json:"name"`
 	OwnerUserID string       `json:"owner_user_id"`
+}
+
+// CreatedAt returns the creation time of the team (discord.Team)
+func (t *Team) CreatedAt() time.Time {
+	return t.ID.CreatedAt()
 }
 
 // IconURL returns the icon URL of the team (discord.Team)
@@ -101,7 +112,7 @@ func (t *Team) IconURL(asFormat ImageFormat) string {
 		}
 
 		suffix := fmt.Sprintf("%s.%s", t.Icon, asFormat)
-		return fmt.Sprintf("https://cdn.discordapp.com/team-icons/%s/%s", t.ID, suffix)
+		return fmt.Sprintf("https://cdn.discordapp.com/team-icons/%d/%s", t.ID, suffix)
 	}
 	return ""
 }
@@ -111,7 +122,7 @@ func (t *Team) IconURL(asFormat ImageFormat) string {
 type TeamMember struct {
 	MembershipState MembershipState `json:"membership_state"`
 	Permissions     []string        `json:"permissions"`
-	TeamID          string          `json:"team_id"`
+	TeamID          Snowflake       `json:"team_id"`
 	User            *User           `json:"user"`
 }
 
@@ -160,5 +171,5 @@ const (
 // https://discord.com/developers/docs/resources/application#install-params-object-install-params-structure
 type InstallParams struct {
 	Scopes      []oauth2.Scope `json:"scopes"`
-	Permissions Permissions    `json:"permissions,string"`
+	Permissions Permissions    `json:"permissions"`
 }

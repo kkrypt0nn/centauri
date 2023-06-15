@@ -1,10 +1,12 @@
 package discord
 
+import "time"
+
 // AutoModerationRule is a rule that trigger based on some criteria
 // https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-auto-moderation-rule-structure
 type AutoModerationRule struct {
-	ID              string                        `json:"id"`
-	GuildID         string                        `json:"guild_id"`
+	ID              Snowflake                     `json:"id"`
+	GuildID         Snowflake                     `json:"guild_id"`
 	Name            string                        `json:"name"`
 	CreatorID       string                        `json:"creator_id"`
 	EventType       AutoModerationEventType       `json:"event_type"`
@@ -12,8 +14,13 @@ type AutoModerationRule struct {
 	TriggerMetadata AutoModerationTriggerMetadata `json:"trigger_metadata"`
 	Actions         []AutoModerationAction        `json:"actions"`
 	Enabled         bool                          `json:"enabled"`
-	ExemptRoles     []string                      `json:"exempt_roles"`
-	ExemptChannels  []string                      `json:"exempt_channels"`
+	ExemptRoles     ArraySnowflakes               `json:"exempt_roles"`
+	ExemptChannels  ArraySnowflakes               `json:"exempt_channels"`
+}
+
+// CreatedAt returns the creation time of the auto moderation rule (discord.AutoModerationRule)
+func (r *AutoModerationRule) CreatedAt() time.Time {
+	return r.ID.CreatedAt()
 }
 
 // AutoModerationEventType represents in what event context a rule (discord.AutoModerationRule) should be checked
@@ -76,9 +83,9 @@ const (
 // AutoModerationActionMetadata represents additional data used when an action (discord.AutoModerationAction) is executed. Different fields are relevant based on the value of action type (discord.AutoModerationActionType)
 // https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-action-object-action-metadata
 type AutoModerationActionMetadata struct {
-	ChannelID       string `json:"channel_id,omitempty"`
-	DurationSeconds int    `json:"duration_seconds,omitempty"`
-	CustomMessage   string `json:"custom_message,omitempty"`
+	ChannelID       Snowflake `json:"channel_id,omitempty"`
+	DurationSeconds int       `json:"duration_seconds,omitempty"`
+	CustomMessage   string    `json:"custom_message,omitempty"`
 }
 
 // CreateAutoModerationRule represents the payload to send to Discord to create a new auto moderation rule (discord.AutoModerationRule)
@@ -90,8 +97,8 @@ type CreateAutoModerationRule struct {
 	TriggerMetadata *AutoModerationTriggerMetadata `json:"trigger_metadata,omitempty"`
 	Actions         []AutoModerationAction         `json:"actions"`
 	Enabled         *bool                          `json:"enabled,omitempty"`
-	ExemptRoles     []string                       `json:"exempt_roles,omitempty"`
-	ExemptChannels  []string                       `json:"exempt_channels,omitempty"`
+	ExemptRoles     ArraySnowflakes                `json:"exempt_roles,omitempty"`
+	ExemptChannels  ArraySnowflakes                `json:"exempt_channels,omitempty"`
 
 	AuditLogReason string `json:"-"`
 }
@@ -104,8 +111,8 @@ type ModifyAutoModerationRule struct {
 	TriggerMetadata *AutoModerationTriggerMetadata `json:"trigger_metadata,omitempty"`
 	Actions         []AutoModerationAction         `json:"actions,omitempty"`
 	Enabled         *bool                          `json:"enabled,omitempty"`
-	ExemptRoles     []string                       `json:"exempt_roles,omitempty"`
-	ExemptChannels  []string                       `json:"exempt_channels,omitempty"`
+	ExemptRoles     ArraySnowflakes                `json:"exempt_roles,omitempty"`
+	ExemptChannels  ArraySnowflakes                `json:"exempt_channels,omitempty"`
 
 	AuditLogReason string `json:"-"`
 }

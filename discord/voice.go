@@ -15,7 +15,7 @@ type VoiceRegion struct {
 // ModifyCurrentUserVoiceState represents the payload to send to Discord to modify the voice state of the current user (discord.User) in a guild (discord.Guild)
 // https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state-json-params
 type ModifyCurrentUserVoiceState struct {
-	ChannelID               *string    `json:"channel_id,omitempty"`
+	ChannelID               *Snowflake `json:"channel_id,omitempty"`
 	Suppress                *bool      `json:"suppress,omitempty"`
 	RequestToSpeakTimestamp *time.Time `json:"request_to_speak_timestamp,omitempty"`
 }
@@ -23,6 +23,6 @@ type ModifyCurrentUserVoiceState struct {
 // ModifyUserVoiceState represents the payload to send to Discord to modify the voice state of a user (discord.User) in a guild (discord.Guild)
 // https://discord.com/developers/docs/resources/guild#modify-user-voice-state-json-params
 type ModifyUserVoiceState struct {
-	ChannelID *string `json:"channel_id,omitempty"`
-	Suppress  *bool   `json:"suppress,omitempty"`
+	ChannelID *Snowflake `json:"channel_id,omitempty"`
+	Suppress  *bool      `json:"suppress,omitempty"`
 }

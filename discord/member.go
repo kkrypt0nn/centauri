@@ -10,21 +10,26 @@ import (
 // Member represents a user (discord.User) that is a member/that has joined a guild (discord.Guild)
 // https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-structure
 type Member struct {
-	User                       *User       `json:"user,omitempty"`
-	Nick                       string      `json:"nick,omitempty"`
-	Avatar                     string      `json:"avatar,omitempty"`
-	Roles                      []string    `json:"roles,omitempty"`
-	JoinedAt                   time.Time   `json:"joined_at"`
-	PremiumSince               *time.Time  `json:"premium_since,omitempty"`
-	Deaf                       bool        `json:"deaf"`
-	Mute                       bool        `json:"mute"`
-	Flags                      MemberFlags `json:"flags"`
-	Pending                    bool        `json:"pending,omitempty"`
-	Permissions                Permissions `json:"permissions,string,omitempty"`
-	CommunicationDisabledUntil *time.Time  `json:"communication_disabled_until,omitempty"`
+	User                       *User           `json:"user,omitempty"`
+	Nick                       string          `json:"nick,omitempty"`
+	Avatar                     string          `json:"avatar,omitempty"`
+	Roles                      ArraySnowflakes `json:"roles,omitempty"`
+	JoinedAt                   time.Time       `json:"joined_at"`
+	PremiumSince               *time.Time      `json:"premium_since,omitempty"`
+	Deaf                       bool            `json:"deaf"`
+	Mute                       bool            `json:"mute"`
+	Flags                      MemberFlags     `json:"flags"`
+	Pending                    bool            `json:"pending,omitempty"`
+	Permissions                Permissions     `json:"permissions,omitempty"`
+	CommunicationDisabledUntil *time.Time      `json:"communication_disabled_until,omitempty"`
 
 	// Usually that's set by Centauri
-	GuildID string `json:"guild_id,omitempty"`
+	GuildID Snowflake `json:"guild_id,omitempty"`
+}
+
+// CreatedAt returns the creation time of the member (discord.Member)
+func (m *Member) CreatedAt() time.Time {
+	return m.User.ID.CreatedAt()
 }
 
 // GuildAvatarURL returns the avatar URL specific to the guild (discord.Guild)
@@ -38,7 +43,7 @@ func (m *Member) GuildAvatarURL(asFormat ImageFormat) string {
 		}
 
 		suffix := fmt.Sprintf("%s.%s", m.Avatar, asFormat)
-		return fmt.Sprintf("https://cdn.discordapp.com/guilds/%s/users/%s/avatars/%s", m.GuildID, m.User.ID, suffix)
+		return fmt.Sprintf("https://cdn.discordapp.com/guilds/%d/users/%d/avatars/%s", m.GuildID, m.User.ID, suffix)
 	}
 	return ""
 }
@@ -114,13 +119,13 @@ func (f MemberFlags) HasNotAny(memberFlags ...MemberFlags) bool {
 // ModifyGuildMember represents the payload to send to Discord to modify a guild member (discord.Member)
 // https://discord.com/developers/docs/resources/guild#modify-guild-member-json-params
 type ModifyGuildMember struct {
-	Nick                       *string      `json:"nick,omitempty"`
-	Roles                      []string     `json:"roles,omitempty"`
-	Deaf                       *bool        `json:"deaf,omitempty"`
-	Mute                       *bool        `json:"mute,omitempty"`
-	ChannelID                  *string      `json:"channel_id,omitempty"`
-	CommunicationDisabledUntil *time.Time   `json:"communication_disabled_until,omitempty"`
-	Flags                      *MemberFlags `json:"flags,omitempty"`
+	Nick                       *string         `json:"nick,omitempty"`
+	Roles                      ArraySnowflakes `json:"roles,omitempty"`
+	Deaf                       *bool           `json:"deaf,omitempty"`
+	Mute                       *bool           `json:"mute,omitempty"`
+	ChannelID                  *Snowflake      `json:"channel_id,omitempty"`
+	CommunicationDisabledUntil *time.Time      `json:"communication_disabled_until,omitempty"`
+	Flags                      *MemberFlags    `json:"flags,omitempty"`
 
 	AuditLogReason string `json:"-"`
 }
