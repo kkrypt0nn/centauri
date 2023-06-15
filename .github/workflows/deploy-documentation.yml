@@ -1,0 +1,27 @@
+name: Centauri CI (Deploy Documentation)
+
+on:
+    workflow_run:
+        workflows:
+            - "Centauri CI (Lint & Test)"
+        branches:
+            - main
+        types:
+            - completed
+
+permissions:
+    contents: read
+
+jobs:
+    deploy-documentation:
+        name: Deploy documentation
+        needs: [lint, test]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - uses: redkubes/docusaurus-deploy-action@v1.2
+              with:
+                  source-folder: documentation
+                  git-user: kkrypt0nn
+                  git-password: ${{ secrets.PAT }}
+                  deployment-branch: gh-pages

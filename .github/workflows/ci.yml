@@ -7,7 +7,7 @@ permissions:
 
 jobs:
   lint:
-    name: lint
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,7 +20,7 @@ jobs:
         with:
           version: latest
   test:
-    name: test
+    name: Test
     needs: lint
     runs-on: ${{matrix.os.fullName}}
     strategy:
