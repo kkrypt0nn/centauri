@@ -25,6 +25,10 @@ func TestApplicationRoleConnectionMetadataRecords(t *testing.T) {
 	}
 
 	records, err := testingRestClient.GetApplicationRoleConnectionMetadataRecords(testingBotID)
+	if err != nil {
+		t.Error(err)
+		return
+	}
 	if len(records) != 2 {
 		t.Errorf("Got invalid number of application role connection metadata records (expected: 2, got: %d)", len(records))
 		return
