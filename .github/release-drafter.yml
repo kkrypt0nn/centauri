@@ -11,6 +11,8 @@ categories:
     label: 'documentation'
   - title: '🧰 Maintenance'
     label: 'chore'
+  - title: '🧪 Tests'
+    label: 'tests'
   - title: '⬆️ Dependencies'
     collapse-after: 3
     labels:
