@@ -2,7 +2,6 @@ package discord
 
 import (
 	"fmt"
-	"github.com/kkrypt0nn/centauri/oauth2"
 	"time"
 )
 
@@ -170,6 +169,6 @@ const (
 // InstallParams represents the application's default in-app authorization link
 // https://discord.com/developers/docs/resources/application#install-params-object-install-params-structure
 type InstallParams struct {
-	Scopes      []oauth2.Scope `json:"scopes"`
-	Permissions Permissions    `json:"permissions"`
+	Scopes      []Scope     `json:"scopes"`
+	Permissions Permissions `json:"permissions"`
 }

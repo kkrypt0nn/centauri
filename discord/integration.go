@@ -2,8 +2,6 @@ package discord
 
 import (
 	"time"
-
-	"github.com/kkrypt0nn/centauri/oauth2"
 )
 
 // Integration represents an integration that is contained within a guild (discord.Guild)
@@ -24,7 +22,7 @@ type Integration struct {
 	SubscriberCount   int                       `json:"subscriber_count,omitempty"`
 	Revoked           bool                      `json:"revoked,omitempty"`
 	Application       IntegrationApplication    `json:"application,omitempty"`
-	Scopes            []oauth2.Scope            `json:"scopes,omitempty"`
+	Scopes            []Scope                   `json:"scopes,omitempty"`
 }
 
 // CreatedAt returns the creation time of the integration (discord.Integration)

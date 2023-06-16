@@ -18,7 +18,7 @@ type Guild struct {
 	DiscoverySplash             string                   `json:"discovery_splash"`
 	Owner                       bool                     `json:"owner"`
 	OwnerID                     Snowflake                `json:"owner_id"`
-	Permissions                 uint64                   `json:"permissions"`
+	Permissions                 Permissions              `json:"permissions"`
 	Region                      string                   `json:"region"`
 	AFKChannelID                Snowflake                `json:"afk_channel_id"`
 	AFKTimeout                  int                      `json:"afk_timeout"`
@@ -398,7 +398,7 @@ type PartialGuild struct {
 	Name        string         `json:"name"`
 	Icon        string         `json:"icon"`
 	Owner       bool           `json:"owner"`
-	Permissions uint64         `json:"permissions"`
+	Permissions Permissions    `json:"permissions"`
 	Features    []GuildFeature `json:"features"`
 }
 
