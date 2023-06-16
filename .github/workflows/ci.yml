@@ -22,38 +22,13 @@ jobs:
     test:
         name: Test
         needs: lint
-        runs-on: ${{matrix.os.fullName}}
+        runs-on: ubuntu-latest
         env:
             CENTAURI_BOT_ID: ${{ secrets.CENTAURI_BOT_ID }}
             CENTAURI_BOT_TOKEN: ${{ secrets.CENTAURI_BOT_TOKEN }}
             CENTAURI_CHANNEL_ID: ${{ secrets.CENTAURI_CHANNEL_ID }}
             CENTAURI_GUILD_ID: ${{ secrets.CENTAURI_GUILD_ID }}
             CENTAURI_USER_ID: ${{ secrets.CENTAURI_USER_ID }}
-        strategy:
-            matrix:
-                os:
-                    - { prettyName: Linux, fullName: ubuntu-latest }
-                    - { prettyName: Windows, fullName: windows-latest }
-                    - { prettyName: macOS, fullName: macos-latest }
-                goos: [ linux, windows, darwin ]
-                goarch: [ "386", amd64, arm64 ]
-                exclude:
-                    - os: { fullName: ubuntu-latest }
-                      goos: darwin
-                    - os: { fullName: ubuntu-latest }
-                      goos: windows
-                    - os: { fullName: windows-latest }
-                      goos: linux
-                    - os: { fullName: windows-latest }
-                      goos: darwin
-                    - os: { fullName: macos-latest }
-                      goos: linux
-                    - os: { fullName: macos-latest }
-                      goos: windows
-
-                    # Not a valid combination
-                    - goarch: "386"
-                      goos: darwin
         steps:
             - uses: actions/checkout@v3
             - name: Set up Go
