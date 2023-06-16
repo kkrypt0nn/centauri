@@ -1,4 +1,4 @@
-package oauth2
+package discord
 
 // Scope represents the various OAuth 2 scopes available
 // https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes

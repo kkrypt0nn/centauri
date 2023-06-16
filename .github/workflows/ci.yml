@@ -23,6 +23,12 @@ jobs:
         name: Test
         needs: lint
         runs-on: ${{matrix.os.fullName}}
+        env:
+            CENTAURI_BOT_ID: ${{ secrets.CENTAURI_BOT_ID }}
+            CENTAURI_BOT_TOKEN: ${{ secrets.CENTAURI_BOT_TOKEN }}
+            CENTAURI_CHANNEL_ID: ${{ secrets.CENTAURI_CHANNEL_ID }}
+            CENTAURI_GUILD_ID: ${{ secrets.CENTAURI_GUILD_ID }}
+            CENTAURI_USER_ID: ${{ secrets.CENTAURI_USER_ID }}
         strategy:
             matrix:
                 os:

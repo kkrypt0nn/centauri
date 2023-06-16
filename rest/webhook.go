@@ -51,19 +51,22 @@ func (c *Client) DeleteWebhookWithToken(webhookID discord.Snowflake, webhookToke
 }
 
 // ExecuteWebhook executes a webhook (discord.Webhook) to send some message with it for the given webhook ID and webhook token (can also be executed in a given thread ID)
-func (c *Client) ExecuteWebhook(webhookID discord.Snowflake, webhookToken string, threadID discord.Snowflake, message discord.ExecuteWebhook) error {
+func (c *Client) ExecuteWebhook(webhookID discord.Snowflake, webhookToken string, threadID discord.Snowflake, wait bool, message discord.ExecuteWebhook) (*discord.Message, error) {
 	queryParams := make(QueryParameters)
+	if wait {
+		queryParams["wait"] = "true"
+	}
 	if threadID != 0 {
 		queryParams["thread_id"] = threadID.String()
 	}
 	if len(message.Files) >= 1 {
 		contentType, body, err := CreateMultipartBodyWithJSON(message, message.Files)
 		if err != nil {
-			return err
+			return nil, err
 		}
-		return DoEmptyRequestWithFiles(c, "POST", endpoints.WebhookWithToken(webhookID, webhookToken), body, queryParams, 1, WithHeader("Content-Type", contentType))
+		return DoRequestWithFiles[discord.Message](c, "POST", endpoints.WebhookWithToken(webhookID, webhookToken), body, queryParams, 1, WithHeader("Content-Type", contentType))
 	} else {
-		return DoEmptyRequest(c, "POST", endpoints.WebhookWithToken(webhookID, webhookToken), message, queryParams, 1)
+		return DoRequestAsStructure[discord.Message](c, "POST", endpoints.WebhookWithToken(webhookID, webhookToken), message, queryParams, 1)
 	}
 }
 

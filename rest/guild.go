@@ -130,8 +130,9 @@ func (c *Client) CreateGuildBan(guildID discord.Snowflake, ban discord.CreateGui
 }
 
 // RemoveGuildBan removes an existing guild ban (discord.GuildBan) for the given guild and user IDs
+// Note: This endpoint is the only endpoint rejecting a "Content-Type: application/json" header without body...
 func (c *Client) RemoveGuildBan(guildID, userID discord.Snowflake, reason string) error {
-	return DoEmptyRequest(c, "DELETE", endpoints.GuildBan(guildID, userID), nil, nil, 1, WithReason(reason))
+	return DoEmptyRequest(c, "DELETE", endpoints.GuildBan(guildID, userID), nil, nil, 1, WithReason(reason), WithHeader("Content-Type", ""))
 }
 
 // GetGuildRoles returns a list role structures (discord.Role)

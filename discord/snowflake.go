@@ -94,6 +94,16 @@ func (s *ArraySnowflakes) UnmarshalJSON(b []byte) error {
 
 // ParseSnowflake parses a string as a snowflake (discord.Snowflake)
 func ParseSnowflake(snowflake string) (Snowflake, error) {
+	if snowflake == "" {
+		return Snowflake(0), nil
+	}
+
 	sf, err := strconv.ParseUint(snowflake, 10, 64)
 	return Snowflake(sf), err
+}
+
+// MustParseSnowflake parses a string as a snowflake (discord.Snowflake) - must be valid
+func MustParseSnowflake(snowflake string) Snowflake {
+	sf, _ := strconv.ParseUint(snowflake, 10, 64)
+	return Snowflake(sf)
 }

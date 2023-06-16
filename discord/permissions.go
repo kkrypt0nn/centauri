@@ -32,6 +32,10 @@ func (p *Permissions) UnmarshalJSON(b []byte) error {
 
 // ParsePermissions parses a string as a permissions bitfield (discord.Permissions)
 func ParsePermissions(permissions string) (Permissions, error) {
+	if permissions == "" {
+		return Permissions(0), nil
+	}
+
 	p, err := strconv.ParseUint(permissions, 10, 64)
 	return Permissions(p), err
 }
