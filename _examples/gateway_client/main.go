@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/kkrypt0nn/centauri"
+	"github.com/kkrypt0nn/centauri/discord"
+	"github.com/kkrypt0nn/centauri/gateway"
 	"log"
 	"os"
 	"os/signal"
@@ -9,8 +12,15 @@ import (
 )
 
 func main() {
-	botClient := centauri.NewGatewayClient("Bot MTAyNDM1Njk3Njk0MTA4ODg1OQ.G7h4xH.kNLn5uIhTfBDZWyelAgTxgONnZKgCtFlmHV_DM")
-	botClient.Debug = true
+	botClient := centauri.NewGatewayClient(os.Getenv("TOKEN"), discord.IntentsGuildMessages|discord.IntentsMessageContent)
+
+	botClient.On(gateway.EventTypeReady, func(c *gateway.Client, ready *gateway.Ready) {
+		botClient.Logger.Info(fmt.Sprintf("We are now logged in as %s", ready.User.Username))
+	})
+	botClient.On(gateway.EventTypeMessageCreate, func(c *gateway.Client, message *gateway.MessageCreate) {
+		botClient.Logger.Info(fmt.Sprintf("Got a new message from %s: %s", message.Author.Username, message.Content))
+	})
+
 	err := botClient.Login()
 	if err != nil {
 		log.Fatal(err)

@@ -1,6 +1,7 @@
 package centauri
 
 import (
+	"github.com/kkrypt0nn/centauri/discord"
 	"github.com/kkrypt0nn/centauri/gateway"
 	"net/http"
 	"time"
@@ -28,6 +29,6 @@ func NewRestClient(token string) *rest.Client {
 }
 
 // NewGatewayClient returns a new Gateway API client (gateway.Client) to handle real-time events from Discord
-func NewGatewayClient(token string) *gateway.Client {
-	return gateway.New(token)
+func NewGatewayClient(token string, intents discord.Intents) *gateway.Client {
+	return gateway.New(token, intents)
 }
