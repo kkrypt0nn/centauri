@@ -2,8 +2,6 @@ package gateway
 
 import (
 	"encoding/json"
-	"github.com/kkrypt0nn/centauri/discord"
-	"github.com/kkrypt0nn/centauri/gateway/packets"
 	"io"
 )
 
@@ -11,15 +9,55 @@ import (
 type EventType string
 
 const (
-	EventTypeReady         EventType = "READY"
-	EventTypeResumed       EventType = "RESUMED"
-	EventTypeMessageCreate EventType = "MESSAGE_CREATE"
+	EventTypeReady                               EventType = "READY"
+	EventTypeResumed                             EventType = "RESUMED"
+	EventTypeApplicationCommandPermissionsUpdate EventType = "APPLICATION_COMMAND_PERMISSIONS_UPDATE"
+	EventTypeAutoModerationRuleCreate            EventType = "AUTO_MODERATION_RULE_CREATE"
+	EventTypeAutoModerationRuleUpdate            EventType = "AUTO_MODERATION_RULE_UPDATE"
+	EventTypeAutoModerationRuleDelete            EventType = "AUTO_MODERATION_RULE_DELETE"
+	EventTypeAutoModerationActionExecution       EventType = "AUTO_MODERATION_ACTION_EXECUTION"
+	EventTypeChannelCreate                       EventType = "CHANNEL_CREATE"
+	EventTypeChannelUpdate                       EventType = "CHANNEL_UPDATE"
+	EventTypeChannelDelete                       EventType = "CHANNEL_DELETE"
+	EventTypeChannelPinsUpdate                   EventType = "CHANNEL_PINS_UPDATE"
+	EventTypeThreadCreate                        EventType = "THREAD_CREATE"
+	EventTypeThreadUpdate                        EventType = "THREAD_UPDATE"
+	EventTypeThreadDelete                        EventType = "THREAD_DELETE"
+	EventTypeThreadListSync                      EventType = "THREAD_LIST_SYNC"
+	EventTypeThreadMemberUpdate                  EventType = "THREAD_MEMBER_UPDATE"
+	EventTypeThreadMembersUpdate                 EventType = "THREAD_MEMBERS_UPDATE"
+	EventTypeGuildCreate                         EventType = "GUILD_CREATE"
+	EventTypeGuildUpdate                         EventType = "GUILD_UPDATE"
+	EventTypeGuildDelete                         EventType = "GUILD_DELETE"
+	EventTypeGuildAuditLogEntryCreate            EventType = "GUILD_AUDIT_LOG_ENTRY_CREATE"
+	EventTypeGuildBanAdd                         EventType = "GUILD_BAN_ADD"
+	EventTypeGuildBanRemove                      EventType = "GUILD_BAN_REMOVE"
+	EventTypeGuildEmojisUpdate                   EventType = "GUILD_EMOJIS_UPDATE"
+	EventTypeGuildStickersUpdate                 EventType = "GUILD_STICKERS_UPDATE"
+	EventTypeGuildIntegrationsUpdate             EventType = "GUILD_INTEGRATIONS_UPDATE"
+	EventTypeGuildMemberAdd                      EventType = "GUILD_MEMBER_ADD"
+	EventTypeGuildMemberRemove                   EventType = "GUILD_MEMBER_REMOVE"
+	EventTypeGuildMemberUpdate                   EventType = "GUILD_MEMBER_UPDATE"
+	EventTypeGuildMembersChunk                   EventType = "GUILD_MEMBERS_CHUNK"
+	EventTypeGuildRoleCreate                     EventType = "GUILD_ROLE_CREATE"
+	EventTypeGuildRoleUpdate                     EventType = "GUILD_ROLE_UPDATE"
+	EventTypeGuildRoleDelete                     EventType = "GUILD_ROLE_DELETE"
+	EventTypeGuildScheduledEventCreate           EventType = "GUILD_SCHEDULED_EVENT_CREATE"
+	EventTypeGuildScheduledEventUpdate           EventType = "GUILD_SCHEDULED_EVENT_UPDATE"
+	EventTypeGuildScheduledEventDelete           EventType = "GUILD_SCHEDULED_EVENT_DELETE"
+	EventTypeGuildScheduledEventUserAdd          EventType = "GUILD_SCHEDULED_EVENT_USER_ADD"
+	EventTypeGuildScheduledEventUserRemove       EventType = "GUILD_SCHEDULED_EVENT_USER_REMOVE"
+	EventTypeIntegrationCreate                   EventType = "INTEGRATION_CREATE"
+	EventTypeIntegrationUpdate                   EventType = "INTEGRATION_UPDATE"
+	EventTypeIntegrationDelete                   EventType = "INTEGRATION_DELETE"
+	EventTypeInteractionCreate                   EventType = "INTERACTION_CREATE"
+	EventTypeMessageCreate                       EventType = "MESSAGE_CREATE"
 )
 
 // Event is the structure of a gateway event
 // https://discord.com/developers/docs/topics/gateway#gateway-events-example-gateway-event
 type Event struct {
-	OpCode   packets.OpCode  `json:"op"`
+	OpCode   OpCode          `json:"op"`
 	Sequence int64           `json:"s"`
 	Type     string          `json:"t"`
 	Data     json.RawMessage `json:"d"`
@@ -35,57 +73,4 @@ func NewEvent(message io.Reader) (*Event, error) {
 		return nil, err
 	}
 	return event, err
-}
-
-// EventHello represents an event sent by the gateway to inform we should now identify
-// https://discord.com/developers/docs/topics/gateway-events#hello
-type EventHello struct {
-	HeartbeatInterval int `json:"heartbeat_interval"`
-}
-
-// EventIdentify represents the event to send to the gateway right after opening a connection
-// https://discord.com/developers/docs/topics/gateway-events#identify
-type EventIdentify struct {
-	OpCode packets.OpCode `json:"op"`
-	Data   IdentifyData   `json:"d"`
-}
-
-// NewIdentifyEvent creates a new identifying event
-func NewIdentifyEvent(token string, properties ConnectionProperties, intents discord.Intents) EventIdentify {
-	return EventIdentify{
-		OpCode: packets.OpCodeIdentify,
-		Data: IdentifyData{
-			Token:      token,
-			Properties: properties,
-			Intents:    intents,
-		},
-	}
-}
-
-// IdentifyData represents the data to send when sending an identify event (discord.EventIdentify)
-type IdentifyData struct {
-	Token      string               `json:"token"`
-	Properties ConnectionProperties `json:"properties"`
-	Intents    discord.Intents      `json:"intents"`
-}
-
-// ConnectionProperties represents properties about the client connecting
-type ConnectionProperties struct {
-	OS      string `json:"os"`
-	Browser string `json:"browser"`
-	Device  string `json:"device"`
-}
-
-// Heartbeat represents a heartbeat event that should be sent do Discord to keep the connection alive
-type Heartbeat struct {
-	OpCode   packets.OpCode `json:"op"`
-	Sequence int64          `json:"d"`
-}
-
-// NewHeartbeat creates a new heartbeat event
-func NewHeartbeat(sequence int64) Heartbeat {
-	return Heartbeat{
-		OpCode:   packets.OpCodeHeartbeat,
-		Sequence: sequence,
-	}
 }

@@ -1,4 +1,4 @@
-package packets
+package gateway
 
 // CloseCode represents a code sent when the connection is closed
 // https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-close-event-codes

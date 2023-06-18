@@ -1,4 +1,4 @@
-package packets
+package gateway
 
 // OpCode represents operation codes from the Gateway API
 // https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes

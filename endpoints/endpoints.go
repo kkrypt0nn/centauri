@@ -6,7 +6,7 @@ const (
 	Version  = "10"
 	Endpoint = BaseURL + Version + "/"
 
-	GatewayBaseURL = "wss://gateway.discord.gg/?v"
+	GatewayBaseURL = "wss://gateway.discord.gg/?v="
 	GatewayVersion = "10"
-	GatewayURL     = GatewayBaseURL + Version + "&encoding=json"
+	GatewayURL     = GatewayBaseURL + GatewayVersion + "&encoding=json"
 )

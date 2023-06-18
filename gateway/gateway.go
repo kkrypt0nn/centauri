@@ -9,7 +9,6 @@ import (
 	"github.com/kkrypt0nn/centauri/discord"
 	"github.com/kkrypt0nn/centauri/endpoints"
 	"github.com/kkrypt0nn/centauri/ext/tasks"
-	"github.com/kkrypt0nn/centauri/gateway/packets"
 	"github.com/kkrypt0nn/centauri/rest"
 	"github.com/kkrypt0nn/logger.go"
 	"io"
@@ -45,7 +44,7 @@ type Client struct {
 	restClient *rest.Client
 }
 
-var eventNameToStruct map[EventType]EventInterface
+var eventTypeToInterface map[EventType]EventInterface
 
 // New creates a new Gateway API and REST API client
 func New(token string, intents discord.Intents) *Client {
@@ -94,6 +93,20 @@ func (c *Client) Rest() *rest.Client {
 	return c.restClient
 }
 
+// On will listen to an event type and execute the given function when it is geting dispatched
+func (c *Client) On(eventType EventType, handlerFunction interface{}) {
+	eventHandler := handlerForFunction(handlerFunction)
+	if handlerFunction == nil {
+		c.Logger.Error("Invalid handler function type")
+		return
+	}
+
+	if c.eventHandlers == nil {
+		c.eventHandlers = map[EventType][]EventHandler{}
+	}
+	c.eventHandlers[eventType] = append(c.eventHandlers[eventType], eventHandler)
+}
+
 // Login connects the client to the gateway
 func (c *Client) Login() error {
 	if c.Connection != nil {
@@ -129,18 +142,18 @@ func (c *Client) Login() error {
 	}
 
 	// The first event coming from Discord must be an OpCode 10 (Hello) Event
-	if event.OpCode != packets.OpCodeHello {
+	if event.OpCode != OpCodeHello {
 		return fmt.Errorf("expecting OpCode 10, got OpCode %d instead", event.OpCode)
 	}
 	if c.Debug {
 		c.Logger.Info("Got HELLO event from Discord")
 	}
 	c.lastHeartbeatAck = time.Now()
-	var eventHello EventHello
-	if err = json.Unmarshal(event.Data, &eventHello); err != nil {
+	var hello Hello
+	if err = json.Unmarshal(event.Data, &hello); err != nil {
 		return fmt.Errorf("failed unmarshalling event HELLO: %s", err)
 	}
-	c.heartbeatInterval = time.Duration(eventHello.HeartbeatInterval)
+	c.heartbeatInterval = time.Duration(hello.HeartbeatInterval)
 
 	if c.SessionID == "" && c.LastSequence == 0 {
 		// We identify
@@ -149,6 +162,7 @@ func (c *Client) Login() error {
 		}
 	} else {
 		// TODO: We resume
+		c.Logger.Info("TODO: We need to resume")
 	}
 
 	// Now we should get either a READY or RESUMED event
@@ -185,6 +199,19 @@ func (c *Client) Login() error {
 	return nil
 }
 
+// Close closes the connection to Discord
+func (c *Client) Close() {
+	c.CloseWithStatusCode(websocket.StatusInternalError, "the sky is falling")
+}
+
+// CloseWithStatusCode closes the connection to Discord with a custom status code
+func (c *Client) CloseWithStatusCode(statusCode websocket.StatusCode, reason string) {
+	_ = c.Connection.Close(statusCode, reason)
+	c.Connection = nil
+	c.connectionClose <- true
+}
+
+// identify will send an identify event to the gateway
 func (c *Client) identify(ctx context.Context) error {
 	identifyEvent := NewIdentifyEvent(c.token, ConnectionProperties{
 		OS:      runtime.GOOS,
@@ -198,6 +225,7 @@ func (c *Client) identify(ctx context.Context) error {
 	return nil
 }
 
+// doHeartbeat will make sure to send a new heartbeat to the gateway for the given interval
 func (c *Client) doHeartbeat(ctx context.Context, connection *websocket.Conn) {
 	if connection == nil {
 		return
@@ -207,8 +235,8 @@ func (c *Client) doHeartbeat(ctx context.Context, connection *websocket.Conn) {
 	for {
 		c.lastHeartbeat = time.Now()
 		err := wsjson.Write(ctx, connection, NewHeartbeat(c.LastSequence))
-		if err != nil || time.Now().Sub(c.lastHeartbeatAck) > (c.heartbeatInterval*5*time.Millisecond) {
-			c.Logger.Error(fmt.Sprintf("Error sending heartbeat to the gateway: %s", err))
+		if err != nil || time.Since(c.lastHeartbeatAck) > (c.heartbeatInterval*5*time.Millisecond) {
+			c.Logger.Error(fmt.Sprintf("Error sending a heartbeat or receiving a heartbeat ACK from the gateway: %s", err))
 			c.Close()
 			c.reconnect()
 			return
@@ -226,18 +254,6 @@ func (c *Client) doHeartbeat(ctx context.Context, connection *websocket.Conn) {
 	}
 }
 
-// Close closes the connection to Discord
-func (c *Client) Close() {
-	c.CloseWithStatusCode(websocket.StatusInternalError, "the sky is falling")
-}
-
-// CloseWithStatusCode closes the connection to Discord with a custom status code
-func (c *Client) CloseWithStatusCode(statusCode websocket.StatusCode, reason string) {
-	_ = c.Connection.Close(statusCode, reason)
-	c.Connection = nil
-	c.connectionClose <- true
-}
-
 // listenForEvents will listen for gateway events and send it over to the event handler
 func (c *Client) listenForEvents(ctx context.Context, connection *websocket.Conn) {
 	if c.Debug {
@@ -251,7 +267,7 @@ func (c *Client) listenForEvents(ctx context.Context, connection *websocket.Conn
 				return
 			}
 			closeStatus := websocket.CloseStatus(err)
-			reconnect := packets.CloseCode(closeStatus).ShouldReconnect()
+			reconnect := CloseCode(closeStatus).ShouldReconnect()
 			if errors.Is(err, net.ErrClosed) {
 				reconnect = false
 			}
@@ -302,10 +318,10 @@ func (c *Client) reconnect() {
 			if timer > 600 {
 				timer = 600
 			}
+		} else {
+			c.Logger.Info("Successfully reconnected to the gateway")
+			return
 		}
-
-		c.Logger.Info("Successfully reconnected to the gateway")
-		return
 	}
 }
 
@@ -317,7 +333,7 @@ func (c *Client) onEvent(event *Event, ctx context.Context) error {
 
 	c.LastSequence = event.Sequence
 
-	if event.OpCode == packets.OpCodeHeartbeat {
+	if event.OpCode == OpCodeHeartbeat {
 		if c.Debug {
 			c.Logger.Info("Sending heartbeat event in response to a heartbeat request")
 		}
@@ -332,7 +348,7 @@ func (c *Client) onEvent(event *Event, ctx context.Context) error {
 		return nil
 	}
 
-	if event.OpCode == packets.OpCodeReconnect {
+	if event.OpCode == OpCodeReconnect {
 		if c.Debug {
 			c.Logger.Info("Closing and reconnecting due to the gateway asking so")
 		}
@@ -341,7 +357,7 @@ func (c *Client) onEvent(event *Event, ctx context.Context) error {
 		return nil
 	}
 
-	if event.OpCode == packets.OpCodeInvalidSession {
+	if event.OpCode == OpCodeInvalidSession {
 		if c.Debug {
 			c.Logger.Info("Identifying once again due to the gateway asking so")
 		}
@@ -351,7 +367,7 @@ func (c *Client) onEvent(event *Event, ctx context.Context) error {
 		return nil
 	}
 
-	if event.OpCode == packets.OpCodeHeartbeatACK {
+	if event.OpCode == OpCodeHeartbeatACK {
 		if c.Debug {
 			c.Logger.Info("Got a heartbeat ACK event")
 		}
@@ -359,8 +375,8 @@ func (c *Client) onEvent(event *Event, ctx context.Context) error {
 		return nil
 	}
 
-	if event.OpCode == packets.OpCodeDispatch {
-		if h, ok := eventNameToStruct[EventType(event.Type)]; ok {
+	if event.OpCode == OpCodeDispatch {
+		if h, ok := eventTypeToInterface[EventType(event.Type)]; ok {
 			event.Struct = h.New()
 			if err := json.Unmarshal(event.Data, event.Struct); err != nil {
 				return fmt.Errorf("failed unmarshalling event data of %s event: %s", event.Type, err)
@@ -374,7 +390,7 @@ func (c *Client) onEvent(event *Event, ctx context.Context) error {
 }
 
 // handleEvent handles the event and make sure it dispatches correctly
-func (c *Client) handleEvent(eventName string, eventData interface{}) {
+func (c *Client) handleEvent(eventType string, eventData interface{}) {
 	// First some internal listeners only
 	switch d := eventData.(type) {
 	case *Ready:
@@ -383,28 +399,55 @@ func (c *Client) handleEvent(eventName string, eventData interface{}) {
 	}
 
 	// Then we dispatch them to the various user listeners
-	for _, eh := range c.eventHandlers[EventType(eventName)] {
-		eh.Handle(c, eventData)
+	for _, eventHandler := range c.eventHandlers[EventType(eventType)] {
+		eventHandler.Handle(c, eventData)
 	}
 }
 
-// registerEventInterfaces registers the different event names and their respective handler
+// registerEventInterfaces registers the different event types and their respective handler interface
 func registerEventInterfaces() {
-	eventNameToStruct = map[EventType]EventInterface{
-		EventTypeReady:         readyEventHandler(nil),
-		EventTypeMessageCreate: messageCreateEventHandler(nil),
+	eventTypeToInterface = map[EventType]EventInterface{
+		EventTypeReady: readyEventHandler(nil),
+		EventTypeApplicationCommandPermissionsUpdate: applicationCommandPermissionsUpdateEventHandler(nil),
+		EventTypeAutoModerationRuleCreate:            autoModerationRuleCreateEventHandler(nil),
+		EventTypeAutoModerationRuleUpdate:            autoModerationRuleUpdateEventHandler(nil),
+		EventTypeAutoModerationRuleDelete:            autoModerationRuleDeleteEventHandler(nil),
+		EventTypeAutoModerationActionExecution:       autoModerationActionExecutionEventHandler(nil),
+		EventTypeChannelCreate:                       channelCreateEventHandler(nil),
+		EventTypeChannelUpdate:                       channelUpdateEventHandler(nil),
+		EventTypeChannelDelete:                       channelDeleteEventHandler(nil),
+		EventTypeChannelPinsUpdate:                   channelPinsUpdateEventHandler(nil),
+		EventTypeThreadCreate:                        threadCreateEventHandler(nil),
+		EventTypeThreadUpdate:                        threadUpdateEventHandler(nil),
+		EventTypeThreadDelete:                        threadDeleteEventHandler(nil),
+		EventTypeThreadListSync:                      threadListSyncEventHandler(nil),
+		EventTypeThreadMemberUpdate:                  threadMemberUpdateEventHandler(nil),
+		EventTypeThreadMembersUpdate:                 threadMembersUpdateEventHandler(nil),
+		EventTypeGuildCreate:                         guildCreateEventHandler(nil),
+		EventTypeGuildUpdate:                         guildUpdateEventHandler(nil),
+		EventTypeGuildDelete:                         guildDeleteEventHandler(nil),
+		EventTypeGuildAuditLogEntryCreate:            guildAuditLogEntryCreateEventHandler(nil),
+		EventTypeGuildBanAdd:                         guildBanAddEventHandler(nil),
+		EventTypeGuildBanRemove:                      guildBanRemoveEventHandler(nil),
+		EventTypeGuildEmojisUpdate:                   guildEmojisUpdateEventHandler(nil),
+		EventTypeGuildStickersUpdate:                 guildStickersUpdateEventHandler(nil),
+		EventTypeGuildIntegrationsUpdate:             guildIntegrationsUpdateEventHandler(nil),
+		EventTypeGuildMemberAdd:                      guildMemberAddEventHandler(nil),
+		EventTypeGuildMemberRemove:                   guildMemberRemoveEventHandler(nil),
+		EventTypeGuildMemberUpdate:                   guildMemberUpdateEventHandler(nil),
+		EventTypeGuildMembersChunk:                   guildMembersChunkEventHandler(nil),
+		EventTypeGuildRoleCreate:                     guildRoleCreateEventHandler(nil),
+		EventTypeGuildRoleUpdate:                     guildRoleUpdateEventHandler(nil),
+		EventTypeGuildRoleDelete:                     guildRoleDeleteEventHandler(nil),
+		EventTypeGuildScheduledEventCreate:           guildScheduledEventCreateEventHandler(nil),
+		EventTypeGuildScheduledEventUpdate:           guildScheduledEventUpdateEventHandler(nil),
+		EventTypeGuildScheduledEventDelete:           guildScheduledEventDeleteEventHandler(nil),
+		EventTypeGuildScheduledEventUserAdd:          guildScheduledEventUserAddEventHandler(nil),
+		EventTypeGuildScheduledEventUserRemove:       guildScheduledEventUserRemoveEventHandler(nil),
+		EventTypeIntegrationCreate:                   integrationCreateEventHandler(nil),
+		EventTypeIntegrationUpdate:                   integrationUpdateEventHandler(nil),
+		EventTypeIntegrationDelete:                   integrationDeleteEventHandler(nil),
+		EventTypeInteractionCreate:                   interactionCreateEventHandler(nil),
+		EventTypeMessageCreate:                       messageCreateEventHandler(nil),
 	}
-}
-
-func (c *Client) On(eventType EventType, handlerFunction interface{}) {
-	eventHandler := handlerForFunction(handlerFunction)
-	if handlerFunction == nil {
-		c.Logger.Error("Invalid handler function type")
-		return
-	}
-
-	if c.eventHandlers == nil {
-		c.eventHandlers = map[EventType][]EventHandler{}
-	}
-	c.eventHandlers[eventType] = append(c.eventHandlers[eventType], eventHandler)
 }
