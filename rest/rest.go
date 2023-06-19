@@ -34,6 +34,7 @@ type Client struct {
 	authorizationHeader string
 }
 
+// QueryParameters is a map of query parameters when sending requests
 type QueryParameters map[string]string
 
 // SetAuthorizationHeader sets the authorization header of the RestClient

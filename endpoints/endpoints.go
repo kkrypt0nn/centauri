@@ -5,4 +5,8 @@ const (
 	BaseURL  = "https://discord.com/api/v"
 	Version  = "10"
 	Endpoint = BaseURL + Version + "/"
+
+	GatewayBaseURL = "wss://gateway.discord.gg/?v="
+	GatewayVersion = "10"
+	GatewayURL     = GatewayBaseURL + GatewayVersion + "&encoding=json"
 )

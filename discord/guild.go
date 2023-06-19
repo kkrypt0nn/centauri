@@ -407,6 +407,18 @@ func (g *PartialGuild) CreatedAt() time.Time {
 	return g.ID.CreatedAt()
 }
 
+// UnavailableGuild represents a guild (discord.Guild) that is currently unavailable
+// https://discord.com/developers/docs/resources/guild#unavailable-guild-object
+type UnavailableGuild struct {
+	ID          Snowflake `json:"id"`
+	Unavailable bool      `json:"unavailable"`
+}
+
+// CreatedAt returns the creation time of the unavailable guild (discord.UnavailableGuild)
+func (g *UnavailableGuild) CreatedAt() time.Time {
+	return g.ID.CreatedAt()
+}
+
 // GuildFeature represents the different features a guild may have activated
 // https://discord.com/developers/docs/resources/guild#guild-object-guild-features
 type GuildFeature string
