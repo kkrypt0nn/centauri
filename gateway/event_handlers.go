@@ -635,6 +635,275 @@ func (h interactionCreateEventHandler) New() interface{} {
 	return &InteractionCreate{}
 }
 
+// inviteCreateEventHandler is the event handler for the Invite Create event (gateway.InviteCreate)
+type inviteCreateEventHandler func(*Client, *InviteCreate)
+
+// Handle handles the Invite Create event (gateway.InviteCreate)
+func (h inviteCreateEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*InviteCreate); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Invite Create event (gateway.InviteCreate)
+func (h inviteCreateEventHandler) New() interface{} {
+	return &InviteCreate{}
+}
+
+// inviteDeleteEventHandler is the event handler for the Invite Delete event (gateway.InviteDelete)
+type inviteDeleteEventHandler func(*Client, *InviteDelete)
+
+// Handle handles the Invite Delete event (gateway.InviteDelete)
+func (h inviteDeleteEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*InviteDelete); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Invite Delete event (gateway.InviteDelete)
+func (h inviteDeleteEventHandler) New() interface{} {
+	return &InviteDelete{}
+}
+
+// messageUpdateEventHandler is the event handler for the Message Update event (gateway.MessageUpdate)
+type messageUpdateEventHandler func(*Client, *MessageUpdate)
+
+// Handle handles the Message Update event (gateway.MessageUpdate)
+func (h messageUpdateEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*MessageUpdate); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Message Update event (gateway.MessageUpdate)
+func (h messageUpdateEventHandler) New() interface{} {
+	return &MessageUpdate{}
+}
+
+// messageDeleteEventHandler is the event handler for the Message Delete event (gateway.MessageDelete)
+type messageDeleteEventHandler func(*Client, *MessageDelete)
+
+// Handle handles the Message Delete event (gateway.MessageDelete)
+func (h messageDeleteEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*MessageDelete); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Message Delete event (gateway.MessageDelete)
+func (h messageDeleteEventHandler) New() interface{} {
+	return &MessageDelete{}
+}
+
+// messageDeleteBulkEventHandler is the event handler for the Message Delete Bulk event (gateway.MessageDeleteBulk)
+type messageDeleteBulkEventHandler func(*Client, *MessageDeleteBulk)
+
+// Handle handles the Message Delete Bulk event (gateway.MessageDeleteBulk)
+func (h messageDeleteBulkEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*MessageDeleteBulk); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Message Delete Bulk event (gateway.MessageDeleteBulk)
+func (h messageDeleteBulkEventHandler) New() interface{} {
+	return &MessageDeleteBulk{}
+}
+
+// messageReactionAddEventHandler is the event handler for the Message Reaction Add event (gateway.MessageReactionAdd)
+type messageReactionAddEventHandler func(*Client, *MessageReactionAdd)
+
+// Handle handles the Message Reaction Add event (gateway.MessageReactionAdd)
+func (h messageReactionAddEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*MessageReactionAdd); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Message Reaction Add event (gateway.MessageReactionAdd)
+func (h messageReactionAddEventHandler) New() interface{} {
+	return &MessageReactionAdd{}
+}
+
+// messageReactionRemoveEventHandler is the event handler for the Message Reaction Remove event (gateway.MessageReactionRemove)
+type messageReactionRemoveEventHandler func(*Client, *MessageReactionRemove)
+
+// Handle handles the Message Reaction Remove event (gateway.MessageReactionRemove)
+func (h messageReactionRemoveEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*MessageReactionRemove); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Message Reaction Remove event (gateway.MessageReactionRemove)
+func (h messageReactionRemoveEventHandler) New() interface{} {
+	return &MessageReactionRemove{}
+}
+
+// messageReactionRemoveAllEventHandler is the event handler for the Message Reaction Remove All event (gateway.MessageReactionRemoveAll)
+type messageReactionRemoveAllEventHandler func(*Client, *MessageReactionRemoveAll)
+
+// Handle handles the Message Reaction Remove All event (gateway.MessageReactionRemoveAll)
+func (h messageReactionRemoveAllEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*MessageReactionRemoveAll); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Message Reaction Remove All event (gateway.MessageReactionRemoveAll)
+func (h messageReactionRemoveAllEventHandler) New() interface{} {
+	return &MessageReactionRemoveAll{}
+}
+
+// messageReactionRemoveEmojiEventHandler is the event handler for the Message Reaction Remove Emoji event (gateway.MessageReactionRemoveEmoji)
+type messageReactionRemoveEmojiEventHandler func(*Client, *MessageReactionRemoveEmoji)
+
+// Handle handles the Message Reaction Remove Emoji event (gateway.MessageReactionRemoveEmoji)
+func (h messageReactionRemoveEmojiEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*MessageReactionRemoveEmoji); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Message Reaction Remove Emoji event (gateway.MessageReactionRemoveEmoji)
+func (h messageReactionRemoveEmojiEventHandler) New() interface{} {
+	return &MessageReactionRemoveEmoji{}
+}
+
+type presenceUpdateEventHandler func(*Client, *PresenceUpdate)
+
+// Handle handles the Presence Update event (gateway.PresenceUpdate)
+func (h presenceUpdateEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*PresenceUpdate); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Presence Update event (gateway.PresenceUpdate)
+func (h presenceUpdateEventHandler) New() interface{} {
+	return &PresenceUpdate{}
+}
+
+// stageInstanceCreateEventHandler is the event handler for the Stage Instance Create event (gateway.StageInstanceCreate)
+type stageInstanceCreateEventHandler func(*Client, *StageInstanceCreate)
+
+// Handle handles the Stage Instance Create event (gateway.StageInstanceCreate)
+func (h stageInstanceCreateEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*StageInstanceCreate); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Stage Instance Create event (gateway.StageInstanceCreate)
+func (h stageInstanceCreateEventHandler) New() interface{} {
+	return &StageInstanceCreate{}
+}
+
+// stageInstanceUpdateEventHandler is the event handler for the Stage Instance Update event (gateway.StageInstanceUpdate)
+type stageInstanceUpdateEventHandler func(*Client, *StageInstanceUpdate)
+
+// Handle handles the Stage Instance Update event (gateway.StageInstanceUpdate)
+func (h stageInstanceUpdateEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*StageInstanceUpdate); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Stage Instance Update event (gateway.StageInstanceUpdate)
+func (h stageInstanceUpdateEventHandler) New() interface{} {
+	return &StageInstanceUpdate{}
+}
+
+// stageInstanceDeleteEventHandler is the event handler for the Stage Instance Delete event (gateway.StageInstanceDelete)
+type stageInstanceDeleteEventHandler func(*Client, *StageInstanceDelete)
+
+// Handle handles the Stage Instance Delete event (gateway.StageInstanceDelete)
+func (h stageInstanceDeleteEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*StageInstanceDelete); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Stage Instance Delete event (gateway.StageInstanceDelete)
+func (h stageInstanceDeleteEventHandler) New() interface{} {
+	return &StageInstanceDelete{}
+}
+
+// typingStartEventHandler is the event handler for the Typing Start event (gateway.TypingStart)
+type typingStartEventHandler func(*Client, *TypingStart)
+
+// Handle handles the Typing Start event (gateway.TypingStart)
+func (h typingStartEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*TypingStart); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Typing Start event (gateway.TypingStart)
+func (h typingStartEventHandler) New() interface{} {
+	return &TypingStart{}
+}
+
+// userUpdateEventHandler is the event handler for the User Update event (gateway.UserUpdate)
+type userUpdateEventHandler func(*Client, *UserUpdate)
+
+// Handle handles the User Update event (gateway.UserUpdate)
+func (h userUpdateEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*UserUpdate); ok {
+		h(c, e)
+	}
+}
+
+// New returns the User Update event (gateway.UserUpdate)
+func (h userUpdateEventHandler) New() interface{} {
+	return &UserUpdate{}
+}
+
+// voiceStateUpdateEventHandler is the event handler for the Voice State Update event (gateway.VoiceStateUpdate)
+type voiceStateUpdateEventHandler func(*Client, *VoiceStateUpdate)
+
+// Handle handles the Voice State Update event (gateway.VoiceStateUpdate)
+func (h voiceStateUpdateEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*VoiceStateUpdate); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Voice State Update event (gateway.VoiceStateUpdate)
+func (h voiceStateUpdateEventHandler) New() interface{} {
+	return &VoiceStateUpdate{}
+}
+
+// voiceServerUpdateEventHandler is the event handler for the Voice Server Update event (gateway.VoiceServerUpdate)
+type voiceServerUpdateEventHandler func(*Client, *VoiceServerUpdate)
+
+// Handle handles the Voice Server Update event (gateway.VoiceServerUpdate)
+func (h voiceServerUpdateEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*VoiceServerUpdate); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Voice Server Update event (gateway.VoiceServerUpdate)
+func (h voiceServerUpdateEventHandler) New() interface{} {
+	return &VoiceServerUpdate{}
+}
+
+// webhooksUpdateEventHandler is the event handler for the Webhooks Update event (gateway.WebhooksUpdate)
+type webhooksUpdateEventHandler func(*Client, *WebhooksUpdate)
+
+// Handle handles the Webhooks Update event (gateway.WebhooksUpdate)
+func (h webhooksUpdateEventHandler) Handle(c *Client, i interface{}) {
+	if e, ok := i.(*WebhooksUpdate); ok {
+		h(c, e)
+	}
+}
+
+// New returns the Webhooks Update event (gateway.WebhooksUpdate)
+func (h webhooksUpdateEventHandler) New() interface{} {
+	return &WebhooksUpdate{}
+}
+
 // handlerForFunction returns the event handler for the given function
 func handlerForFunction(f interface{}) EventHandler {
 	switch t := f.(type) {
@@ -720,8 +989,45 @@ func handlerForFunction(f interface{}) EventHandler {
 		return integrationDeleteEventHandler(t)
 	case func(*Client, *InteractionCreate):
 		return interactionCreateEventHandler(t)
+	case func(*Client, *InviteCreate):
+		return inviteCreateEventHandler(t)
+	case func(*Client, *InviteDelete):
+		return inviteDeleteEventHandler(t)
 	case func(*Client, *MessageCreate):
 		return messageCreateEventHandler(t)
+	case func(*Client, *MessageUpdate):
+		return messageUpdateEventHandler(t)
+	case func(*Client, *MessageDelete):
+		return messageDeleteEventHandler(t)
+	case func(*Client, *MessageDeleteBulk):
+		return messageDeleteBulkEventHandler(t)
+	case func(*Client, *MessageReactionAdd):
+		return messageReactionAddEventHandler(t)
+	case func(*Client, *MessageReactionRemove):
+		return messageReactionRemoveEventHandler(t)
+	case func(*Client, *MessageReactionRemoveAll):
+		return messageReactionRemoveAllEventHandler(t)
+	case func(*Client, *MessageReactionRemoveEmoji):
+		return messageReactionRemoveEmojiEventHandler(t)
+	case func(*Client, *PresenceUpdate):
+		return presenceUpdateEventHandler(t)
+	case func(*Client, *StageInstanceCreate):
+		return stageInstanceCreateEventHandler(t)
+	case func(*Client, *StageInstanceUpdate):
+		return stageInstanceUpdateEventHandler(t)
+	case func(*Client, *StageInstanceDelete):
+		return stageInstanceDeleteEventHandler(t)
+	case func(*Client, *TypingStart):
+		return typingStartEventHandler(t)
+	case func(*Client, *UserUpdate):
+		return userUpdateEventHandler(t)
+	case func(*Client, *VoiceStateUpdate):
+		return voiceStateUpdateEventHandler(t)
+	case func(*Client, *VoiceServerUpdate):
+		return voiceServerUpdateEventHandler(t)
+	case func(*Client, *WebhooksUpdate):
+		return webhooksUpdateEventHandler(t)
+	default:
+		return nil
 	}
-	return nil
 }

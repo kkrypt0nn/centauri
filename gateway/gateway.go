@@ -40,6 +40,7 @@ type Client struct {
 	lastHeartbeatAck  time.Time
 	connectionClose   chan bool
 	gatewayURL        string
+	context           context.Context
 
 	restClient *rest.Client
 }
@@ -55,6 +56,7 @@ func New(token string, intents discord.Intents) *Client {
 		intents:         intents,
 		gatewayURL:      endpoints.GatewayURL,
 		connectionClose: make(chan bool),
+		context:         context.Background(),
 	}
 	gatewayClient.SetToken(token)
 	restClient := &rest.Client{
@@ -115,8 +117,7 @@ func (c *Client) Login() error {
 
 	c.lastHeartbeat = time.Now()
 
-	ctx := context.Background()
-	connection, response, err := websocket.Dial(ctx, c.gatewayURL, nil)
+	connection, response, err := websocket.Dial(c.context, c.gatewayURL, nil)
 	if err != nil {
 		responseBody := "<empty>"
 		if response != nil && response.Body != nil {
@@ -132,7 +133,7 @@ func (c *Client) Login() error {
 	c.Connection = connection
 
 	// Handle hello event and wait for ready or resumed event from the gateway before handling other events
-	_, message, err := connection.Reader(ctx)
+	_, message, err := connection.Reader(c.context)
 	if err != nil {
 		return fmt.Errorf("failed reading first event coming from the gateway: %s", err)
 	}
@@ -157,46 +158,48 @@ func (c *Client) Login() error {
 
 	if c.SessionID == "" && c.LastSequence == 0 {
 		// We identify
-		if err := c.identify(ctx); err != nil {
+		if err := c.identify(c.context); err != nil {
 			return fmt.Errorf("failed sending IDENTIFY event: %s", err)
 		}
 	} else {
-		// TODO: We resume
-		c.Logger.Info("TODO: We need to resume")
-	}
-
-	// Now we should get either a READY or RESUMED event
-	_, message, err = connection.Reader(ctx)
-	if err != nil {
-		return fmt.Errorf("failed reading second event coming from the gateway: %s", err)
-	}
-	event, err = NewEvent(message)
-	if err != nil {
-		return fmt.Errorf("failed parsing an event coming from the gateway: %s", err)
-	}
-	if event.Type != string(EventTypeReady) {
-		c.Logger.Warn(fmt.Sprintf("Expected a READY event but got %s instead", event.Type))
-	}
-
-	if c.Debug {
-		c.Logger.Info("Got READY event from Discord")
-	}
-
-	if event.Type == string(EventTypeReady) {
-		var eventReady Ready
-		if err = json.Unmarshal(event.Data, &eventReady); err != nil {
-			return fmt.Errorf("failed unmarshalling event READY: %s", err)
-		}
-		if err := c.onEvent(event, ctx); err != nil {
-			return err
+		// We resume
+		resumeEvent := NewResumeEvent(c.token, c.SessionID, c.LastSequence)
+		resumeErr := wsjson.Write(c.context, c.Connection, resumeEvent)
+		if resumeErr != nil {
+			return fmt.Errorf("failed sending the RESUME event: %s", resumeErr)
 		}
 	}
 
 	// Start sending heartbeats and listening to events
-	go c.doHeartbeat(ctx, connection)
-	go c.listenForEvents(ctx, connection)
+	go c.doHeartbeat(c.context, connection)
+	go c.listenForEvents(c.context, connection)
 
 	return nil
+}
+
+// Send will send an event to the gateway
+func (c *Client) Send(event EventSend) {
+	if c.Connection == nil || c.context == nil {
+		c.Logger.Error("The client is not connected to the Gateway API")
+		return
+	}
+
+	eventSendErr := wsjson.Write(c.context, c.Connection, event)
+	if eventSendErr != nil {
+		c.Logger.Error(fmt.Sprintf("Failed sending the event: %s", eventSendErr))
+		return
+	}
+}
+
+// SetActivity sets the activity of the client connected to the gateway
+func (c *Client) SetActivity(statusType discord.StatusType, activityType discord.ActivityType, activity string) {
+	c.Logger.Error(string(statusType))
+	c.Send(NewUpdatePresenceEvent(0, []discord.Activity{
+		{
+			Type: activityType,
+			Name: activity,
+		},
+	}, statusType, false))
 }
 
 // Close closes the connection to Discord
@@ -234,7 +237,7 @@ func (c *Client) doHeartbeat(ctx context.Context, connection *websocket.Conn) {
 	ticker := time.NewTicker(c.heartbeatInterval * time.Millisecond)
 	for {
 		c.lastHeartbeat = time.Now()
-		err := wsjson.Write(ctx, connection, NewHeartbeat(c.LastSequence))
+		err := wsjson.Write(ctx, connection, NewHeartbeatEvent(c.LastSequence))
 		if err != nil || time.Since(c.lastHeartbeatAck) > (c.heartbeatInterval*5*time.Millisecond) {
 			c.Logger.Error(fmt.Sprintf("Error sending a heartbeat or receiving a heartbeat ACK from the gateway: %s", err))
 			c.Close()
@@ -337,7 +340,7 @@ func (c *Client) onEvent(event *Event, ctx context.Context) error {
 		if c.Debug {
 			c.Logger.Info("Sending heartbeat event in response to a heartbeat request")
 		}
-		heartbeatEvent, err := json.Marshal(NewHeartbeat(c.LastSequence))
+		heartbeatEvent, err := json.Marshal(NewHeartbeatEvent(c.LastSequence))
 		if err != nil {
 			return err
 		}
@@ -448,6 +451,24 @@ func registerEventInterfaces() {
 		EventTypeIntegrationUpdate:                   integrationUpdateEventHandler(nil),
 		EventTypeIntegrationDelete:                   integrationDeleteEventHandler(nil),
 		EventTypeInteractionCreate:                   interactionCreateEventHandler(nil),
+		EventTypeInviteCreate:                        inviteCreateEventHandler(nil),
+		EventTypeInviteDelete:                        inviteDeleteEventHandler(nil),
+		EventTypeMessageUpdate:                       messageUpdateEventHandler(nil),
 		EventTypeMessageCreate:                       messageCreateEventHandler(nil),
+		EventTypeMessageDelete:                       messageDeleteEventHandler(nil),
+		EventTypeMessageDeleteBulk:                   messageDeleteBulkEventHandler(nil),
+		EventTypeMessageReactionAdd:                  messageReactionAddEventHandler(nil),
+		EventTypeMessageReactionRemove:               messageReactionRemoveEventHandler(nil),
+		EventTypeMessageReactionRemoveAll:            messageReactionRemoveAllEventHandler(nil),
+		EventTypeMessageReactionRemoveEmoji:          messageReactionRemoveEmojiEventHandler(nil),
+		EventTypePresenceUpdate:                      presenceUpdateEventHandler(nil),
+		EventTypeStageInstanceCreate:                 stageInstanceCreateEventHandler(nil),
+		EventTypeStageInstanceUpdate:                 stageInstanceUpdateEventHandler(nil),
+		EventTypeStageInstanceDelete:                 stageInstanceDeleteEventHandler(nil),
+		EventTypeTypingStart:                         typingStartEventHandler(nil),
+		EventTypeUserUpdate:                          userUpdateEventHandler(nil),
+		EventTypeVoiceStateUpdate:                    voiceStateUpdateEventHandler(nil),
+		EventTypeVoiceServerUpdate:                   voiceServerUpdateEventHandler(nil),
+		EventTypeWebhooksUpdate:                      webhooksUpdateEventHandler(nil),
 	}
 }

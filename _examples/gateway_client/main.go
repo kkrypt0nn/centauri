@@ -12,13 +12,16 @@ import (
 )
 
 func main() {
-	botClient := centauri.NewGatewayClient(os.Getenv("TOKEN"), discord.IntentsGuildMessages|discord.IntentsMessageContent)
+	botClient := centauri.NewGatewayClient("Bot BOT_TOKEN", discord.IntentsGuildMessages|discord.IntentsMessageContent)
 
 	botClient.On(gateway.EventTypeReady, func(c *gateway.Client, ready *gateway.Ready) {
 		botClient.Logger.Info(fmt.Sprintf("We are now logged in as %s", ready.User.Username))
 	})
 	botClient.On(gateway.EventTypeMessageCreate, func(c *gateway.Client, message *gateway.MessageCreate) {
 		botClient.Logger.Info(fmt.Sprintf("Got a new message from %s: %s", message.Author.Username, message.Content))
+		if message.Content == "updateActivity" {
+			botClient.SetActivity(discord.StatusTypeDND, discord.ActivityTypeWatching, "the series Dark")
+		}
 	})
 
 	err := botClient.Login()

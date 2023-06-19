@@ -173,7 +173,7 @@ type GuildAuditLogEntryCreate struct {
 	discord.AuditLogEntry
 }
 
-// GenericGuildBan is the data of the Guild Ban Add/Remove events
+// GenericGuildBan is the common data of the Guild Ban Add/Remove events
 // https://discord.com/developers/docs/topics/gateway-events#guild-ban-add
 // https://discord.com/developers/docs/topics/gateway-events#guild-ban-remove
 type GenericGuildBan struct {
@@ -254,10 +254,10 @@ type GuildMembersChunk struct {
 	Nonce string `json:"nonce"`
 }
 
-// GenericGuildRoleEvent is the data of the Guild Role Create/Update events
+// GenericGuildRole is the common data of the Guild Role Create/Update events
 // https://discord.com/developers/docs/topics/gateway-events#guild-role-create
 // https://discord.com/developers/docs/topics/gateway-events#guild-role-update
-type GenericGuildRoleEvent struct {
+type GenericGuildRole struct {
 	GuildID discord.Snowflake `json:"guild_id"`
 	Role    discord.Role      `json:"role"`
 }
@@ -265,13 +265,13 @@ type GenericGuildRoleEvent struct {
 // GuildRoleCreate is the data of the Guild Role Create event
 // https://discord.com/developers/docs/topics/gateway-events#guild-role-create
 type GuildRoleCreate struct {
-	GenericGuildRoleEvent
+	GenericGuildRole
 }
 
 // GuildRoleUpdate is the data of the Guild Role Update event
 // https://discord.com/developers/docs/topics/gateway-events#guild-role-update
 type GuildRoleUpdate struct {
-	GenericGuildRoleEvent
+	GenericGuildRole
 }
 
 // GuildRoleDelete is the data of the Guild Role Delete event
@@ -299,7 +299,7 @@ type GuildScheduledEventDelete struct {
 	discord.GuildScheduledEvent
 }
 
-// GenericGuildScheduledEventUser is the data of the Guild Scheduled Event User Add/Remove events
+// GenericGuildScheduledEventUser is the common data of the Guild Scheduled Event User Add/Remove events
 // https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-user-add
 // https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-user-remove
 type GenericGuildScheduledEventUser struct {
@@ -320,7 +320,7 @@ type GuildScheduledEventUserRemove struct {
 	GenericGuildScheduledEventUser
 }
 
-// GenericIntegration is the data of the Integration Create/Update events
+// GenericIntegration is the common data of the Integration Create/Update events
 // https://discord.com/developers/docs/topics/gateway-events#integration-create
 // https://discord.com/developers/docs/topics/gateway-events#integration-update
 type GenericIntegration struct {
@@ -354,8 +354,169 @@ type InteractionCreate struct {
 	discord.Interaction
 }
 
+// InviteCreate is the data of the Invite Create event
+// https://discord.com/developers/docs/topics/gateway-events#invite-create
+type InviteCreate struct {
+	ChannelID         discord.Snowflake        `json:"channel_id"`
+	Code              string                   `json:"code"`
+	CreatedAt         time.Time                `json:"created_at"`
+	GuildID           discord.Snowflake        `json:"guild_id,omitempty"`
+	Inviter           discord.User             `json:"inviter"`
+	MaxAge            int                      `json:"max_age"`
+	MaxUses           int                      `json:"max_uses"`
+	TargetType        discord.InviteTargetType `json:"target_type"`
+	TargetUser        *discord.User            `json:"target_user,omitempty"`
+	TargetApplication *discord.Application     `json:"target_application,omitempty"`
+	Temporary         bool                     `json:"temporary"`
+	Uses              int                      `json:"uses"`
+}
+
+// InviteDelete is the data of the Invite Delete event
+// https://discord.com/developers/docs/topics/gateway-events#invite-delete
+type InviteDelete struct {
+	ChannelID discord.Snowflake `json:"channel_id"`
+	GuildID   discord.Snowflake `json:"guild_id,omitempty"`
+	Code      string            `json:"code"`
+}
+
+// GenericMessage is the common data of the Message Create/Update events
+// https://discord.com/developers/docs/topics/gateway-events#message-create
+// https://discord.com/developers/docs/topics/gateway-events#message-update
+type GenericMessage struct {
+	discord.Message
+	Member *discord.Member `json:"member,omitempty"`
+}
+
 // MessageCreate is the data of the Message Create event
 // https://discord.com/developers/docs/topics/gateway-events#message-create
 type MessageCreate struct {
-	discord.Message
+	GenericMessage
+}
+
+// MessageUpdate is the data of the Message Update event
+// https://discord.com/developers/docs/topics/gateway-events#message-update
+type MessageUpdate struct {
+	GenericMessage
+}
+
+// MessageDelete is the data of the Message Delete event
+// https://discord.com/developers/docs/topics/gateway-events#message-delete
+type MessageDelete struct {
+	ID        discord.Snowflake `json:"id"`
+	ChannelID discord.Snowflake `json:"channel_id"`
+	GuildID   discord.Snowflake `json:"guild_id,omitempty"`
+}
+
+// MessageDeleteBulk is the data of the Message Delete Bulk event
+// https://discord.com/developers/docs/topics/gateway-events#message-delete-bulk
+type MessageDeleteBulk struct {
+	IDs       discord.ArraySnowflakes `json:"ids"`
+	ChannelID discord.Snowflake       `json:"channel_id"`
+	GuildID   discord.Snowflake       `json:"guild_id,omitempty"`
+}
+
+// GenericMessageReaction is the common data of the Message Reaction Add/Remove/Remove All/Remove Emoji events
+// https://discord.com/developers/docs/topics/gateway-events#message-reaction-add
+// https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove
+// https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-all
+// https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-emoji
+type GenericMessageReaction struct {
+	ChannelID discord.Snowflake `json:"channel_id"`
+	MessageID discord.Snowflake `json:"message_id"`
+	GuildID   discord.Snowflake `json:"guild_id,omitempty"`
+}
+
+// MessageReactionAdd is the data of the Message Reaction Add event
+// https://discord.com/developers/docs/topics/gateway-events#message-reaction-add
+type MessageReactionAdd struct {
+	GenericMessageReaction
+	UserID discord.Snowflake `json:"user_id"`
+	Member *discord.Member   `json:"member,omitempty"`
+	Emoji  discord.Emoji     `json:"emoji"`
+}
+
+// MessageReactionRemove is the data of the Message Reaction Remove event
+// https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove
+type MessageReactionRemove struct {
+	GenericMessageReaction
+	UserID discord.Snowflake `json:"user_id"`
+	Emoji  discord.Emoji     `json:"emoji"`
+}
+
+// MessageReactionRemoveAll is the data of the Message Reaction Remove All event
+// https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-all
+type MessageReactionRemoveAll struct {
+	GenericMessageReaction
+}
+
+// MessageReactionRemoveEmoji is the data of the Message Reaction Remove Emoji event
+// https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-emoji
+type MessageReactionRemoveEmoji struct {
+	GenericMessageReaction
+	Emoji discord.Emoji `json:"emoji"`
+}
+
+// PresenceUpdate is the data of the Presence Update event
+// https://discord.com/developers/docs/topics/gateway-events#presence-update
+type PresenceUpdate struct {
+	User         discord.User         `json:"user"`
+	GuildID      discord.Snowflake    `json:"guild_id"`
+	Status       string               `json:"status"`
+	Activities   []discord.Activity   `json:"activities"`
+	ClientStatus discord.ClientStatus `json:"client_status"`
+}
+
+// StageInstanceCreate is the data of the Stage Instance Create event
+// https://discord.com/developers/docs/topics/gateway-events#stage-instance-create
+type StageInstanceCreate struct {
+	discord.StageInstance
+}
+
+// StageInstanceUpdate is the data of the Stage Instance Update event
+// https://discord.com/developers/docs/topics/gateway-events#stage-instance-update
+type StageInstanceUpdate struct {
+	discord.StageInstance
+}
+
+// StageInstanceDelete is the data of the Stage Instance Delete event
+// https://discord.com/developers/docs/topics/gateway-events#stage-instance-delete
+type StageInstanceDelete struct {
+	discord.StageInstance
+}
+
+// TypingStart is the data of the Typing Start event
+// https://discord.com/developers/docs/topics/gateway-events#typing-start
+type TypingStart struct {
+	ChannelID discord.Snowflake `json:"channel_id"`
+	GuildID   discord.Snowflake `json:"guild_id,omitempty"`
+	UserID    discord.Snowflake `json:"user_id"`
+	Timestamp int               `json:"timestamp"`
+	Member    *discord.Member   `json:"member,omitempty"`
+}
+
+// UserUpdate is the data of the User Update event
+// https://discord.com/developers/docs/topics/gateway-events#user-update
+type UserUpdate struct {
+	discord.User
+}
+
+// VoiceStateUpdate is the data of the Voice State Update event
+// https://discord.com/developers/docs/topics/gateway-events#voice-state-update
+type VoiceStateUpdate struct {
+	discord.VoiceState
+}
+
+// VoiceServerUpdate is the data of the Voice Server Update event
+// https://discord.com/developers/docs/topics/gateway-events#voice-server-update
+type VoiceServerUpdate struct {
+	Token    string            `json:"token"`
+	GuildID  discord.Snowflake `json:"guild_id"`
+	Endpoint string            `json:"endpoint"`
+}
+
+// WebhooksUpdate is the data of the Webhooks Update event
+// https://discord.com/developers/docs/topics/gateway-events#webhooks-update
+type WebhooksUpdate struct {
+	GuildID   discord.Snowflake `json:"guild_id"`
+	ChannelID discord.Snowflake `json:"channel_id"`
 }
