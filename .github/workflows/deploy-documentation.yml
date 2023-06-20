@@ -1,6 +1,8 @@
 name: Centauri CD (Deploy Documentation)
 
-on: release
+on:
+  release:
+    types: [ published ]
 
 permissions:
     contents: read
