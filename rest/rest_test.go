@@ -26,5 +26,9 @@ var (
 		RateLimiter:         NewRateLimiter(),
 		TaskManager:         tasks.NewTaskManager(),
 		authorizationHeader: testingBotToken,
+		// This shouldn't be done
+		selfUser: discord.User{
+			ID: testingBotID,
+		},
 	}
 )

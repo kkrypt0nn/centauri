@@ -2,6 +2,7 @@ package discord
 
 import (
 	"fmt"
+	"github.com/kkrypt0nn/centauri/utils/flags"
 	"time"
 )
 
@@ -165,6 +166,46 @@ const (
 	_
 	ApplicationFlagApplicationCommandBadge
 )
+
+// ComputeApplicationFlags creates a new application flags structure (discord.ApplicationFlags) from the given application flags
+func ComputeApplicationFlags(applicationFlags ...ApplicationFlags) ApplicationFlags {
+	return flags.Compute(applicationFlags...)
+}
+
+// Add adds the given application flags (discord.ApplicationFlags)
+func (f ApplicationFlags) Add(applicationFlags ...ApplicationFlags) ApplicationFlags {
+	return flags.Add(f, applicationFlags...)
+}
+
+// Remove removes the given application flags (discord.ApplicationFlags)
+func (f ApplicationFlags) Remove(applicationFlags ...ApplicationFlags) ApplicationFlags {
+	return flags.Remove(f, applicationFlags...)
+}
+
+// Toggle toggles the given application flags (discord.ApplicationFlags)
+func (f ApplicationFlags) Toggle(applicationFlags ...ApplicationFlags) ApplicationFlags {
+	return flags.Toggle(f, applicationFlags...)
+}
+
+// Has checks if all the given application flags (discord.ApplicationFlags) are set
+func (f ApplicationFlags) Has(applicationFlags ...ApplicationFlags) bool {
+	return flags.Has(f, applicationFlags...)
+}
+
+// HasAny checks if any of the given application flags (discord.ApplicationFlags) is set
+func (f ApplicationFlags) HasAny(applicationFlags ...ApplicationFlags) bool {
+	return flags.HasAny(f, applicationFlags...)
+}
+
+// HasNot checks if all the given application flags (discord.ApplicationFlags) are not set
+func (f ApplicationFlags) HasNot(applicationFlags ...ApplicationFlags) bool {
+	return flags.HasNot(f, applicationFlags...)
+}
+
+// HasNotAny checks if any of the given application flags (discord.ApplicationFlags) is not set
+func (f ApplicationFlags) HasNotAny(applicationFlags ...ApplicationFlags) bool {
+	return flags.HasNotAny(f, applicationFlags...)
+}
 
 // InstallParams represents the application's default in-app authorization link
 // https://discord.com/developers/docs/resources/application#install-params-object-install-params-structure

@@ -6,7 +6,7 @@ import (
 )
 
 func TestApplicationRoleConnectionMetadataRecords(t *testing.T) {
-	_, err := testingRestClient.UpdateApplicationRoleConnectionMetadataRecords(testingBotID, []discord.ApplicationRoleConnectionMetadata{
+	_, err := testingRestClient.UpdateApplicationRoleConnectionMetadataRecords([]discord.ApplicationRoleConnectionMetadata{
 		{
 			Type:        discord.ApplicationRoleConnectionMetadataTypeIntegerEqual,
 			Key:         "test1",
@@ -24,7 +24,7 @@ func TestApplicationRoleConnectionMetadataRecords(t *testing.T) {
 		return
 	}
 
-	records, err := testingRestClient.GetApplicationRoleConnectionMetadataRecords(testingBotID)
+	records, err := testingRestClient.GetApplicationRoleConnectionMetadataRecords()
 	if err != nil {
 		t.Error(err)
 		return
@@ -36,5 +36,5 @@ func TestApplicationRoleConnectionMetadataRecords(t *testing.T) {
 
 	t.Log("Successfully updated and got the new application role connection metadata records")
 
-	_, _ = testingRestClient.UpdateApplicationRoleConnectionMetadataRecords(testingBotID, []discord.ApplicationRoleConnectionMetadata{})
+	_, _ = testingRestClient.UpdateApplicationRoleConnectionMetadataRecords([]discord.ApplicationRoleConnectionMetadata{})
 }

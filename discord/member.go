@@ -76,8 +76,8 @@ const (
 	MemberFlagStartedOnboarding
 )
 
-// Compute creates a new member flags structure (discord.MemberFlags) from the given member flags
-func (f MemberFlags) Compute(memberFlags ...MemberFlags) MemberFlags {
+// ComputeMemberFlags creates a new member flags structure (discord.MemberFlags) from the given member flags
+func ComputeMemberFlags(memberFlags ...MemberFlags) MemberFlags {
 	return flags.Compute(memberFlags...)
 }
 

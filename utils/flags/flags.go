@@ -15,7 +15,7 @@ func Compute[T Integer](flags ...T) T {
 	return bitfield
 }
 
-// Add adds multiple flags to the bitfield
+// Add adds the given flags to the bitfield
 func Add[T Integer](bitfield T, flags ...T) T {
 	for _, flag := range flags {
 		bitfield |= flag
@@ -23,7 +23,7 @@ func Add[T Integer](bitfield T, flags ...T) T {
 	return bitfield
 }
 
-// Remove removes multiple flags from the bitfield
+// Remove removes the given flags from the bitfield
 func Remove[T Integer](bitfield T, flags ...T) T {
 	var toRemove T
 	for _, flag := range flags {

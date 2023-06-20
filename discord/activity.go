@@ -1,5 +1,7 @@
 package discord
 
+import "github.com/kkrypt0nn/centauri/utils/flags"
+
 // Activity represents a user's activity on Discord
 // https://discord.com/developers/docs/topics/gateway-events#activity-object
 type Activity struct {
@@ -80,6 +82,46 @@ const (
 	ActivityFlagPartyPrivacyVoiceChannel
 	ActivityFlagEmbedded
 )
+
+// ComputeActivityFlags creates a new activity flags structure (discord.ActivityFlags) from the given activity flags
+func ComputeActivityFlags(activityFlags ...ActivityFlags) ActivityFlags {
+	return flags.Compute(activityFlags...)
+}
+
+// Add adds the given activity flags (discord.ActivityFlags)
+func (f ActivityFlags) Add(activityFlags ...ActivityFlags) ActivityFlags {
+	return flags.Add(f, activityFlags...)
+}
+
+// Remove removes the given activity flags (discord.ActivityFlags)
+func (f ActivityFlags) Remove(activityFlags ...ActivityFlags) ActivityFlags {
+	return flags.Remove(f, activityFlags...)
+}
+
+// Toggle toggles the given activity flags (discord.ActivityFlags)
+func (f ActivityFlags) Toggle(activityFlags ...ActivityFlags) ActivityFlags {
+	return flags.Toggle(f, activityFlags...)
+}
+
+// Has checks if all the given activity flags (discord.ActivityFlags) are set
+func (f ActivityFlags) Has(activityFlags ...ActivityFlags) bool {
+	return flags.Has(f, activityFlags...)
+}
+
+// HasAny checks if any of the given activity flags (discord.ActivityFlags) is set
+func (f ActivityFlags) HasAny(activityFlags ...ActivityFlags) bool {
+	return flags.HasAny(f, activityFlags...)
+}
+
+// HasNot checks if all the given activity flags (discord.ActivityFlags) are not set
+func (f ActivityFlags) HasNot(activityFlags ...ActivityFlags) bool {
+	return flags.HasNot(f, activityFlags...)
+}
+
+// HasNotAny checks if any of the given activity flags (discord.ActivityFlags) is not set
+func (f ActivityFlags) HasNotAny(activityFlags ...ActivityFlags) bool {
+	return flags.HasNotAny(f, activityFlags...)
+}
 
 // ActivityButton represents buttons in an activity (discord.Activity)
 // https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-buttons

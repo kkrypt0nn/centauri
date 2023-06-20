@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/kkrypt0nn/centauri"
 )
 
@@ -13,6 +12,6 @@ func main() {
 	if err != nil {
 		fmt.Println("err:", err)
 	} else {
-		fmt.Println(fmt.Sprintf("Got bot %s with ID %s", bot.Username, bot.ID))
+		fmt.Println(fmt.Sprintf("Got bot %s with ID %d", bot.Username, bot.ID))
 	}
 }

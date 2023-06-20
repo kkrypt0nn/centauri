@@ -133,8 +133,8 @@ const (
 	UserFlagActiveDeveloper
 )
 
-// Compute creates a new user flags structure (discord.UserFlags) from the given user flags
-func (f UserFlags) Compute(userFlags ...UserFlags) UserFlags {
+// ComputeUserFlags creates a new user flags structure (discord.UserFlags) from the given user flags
+func ComputeUserFlags(userFlags ...UserFlags) UserFlags {
 	return flags.Compute(userFlags...)
 }
 

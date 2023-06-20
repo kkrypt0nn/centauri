@@ -64,6 +64,24 @@ func (c *Client) GetGuildMember(guildID, userID discord.Snowflake) (*discord.Mem
 	return member, err
 }
 
+// ListGuildMembers returns a list of member structures (discord.Member) for the given guild ID
+func (c *Client) ListGuildMembers(guildID, after discord.Snowflake, limit int) ([]discord.Member, error) {
+	queryParams := make(QueryParameters)
+	if after != 0 {
+		queryParams["after"] = after.String()
+	}
+	if limit >= 1 && limit <= 1000 {
+		queryParams["limit"] = strconv.Itoa(limit)
+	}
+	members, err := DoRequestAsList[discord.Member](c, "GET", endpoints.GuildMembers(guildID), nil, queryParams, 1)
+	if members != nil {
+		for i := 0; i < len(members); i++ {
+			members[i].GuildID = guildID
+		}
+	}
+	return members, err
+}
+
 // SearchGuildMember returns a list of member structures (discord.Member) matching the given query in the given guild ID
 func (c *Client) SearchGuildMember(guildID discord.Snowflake, query string, limit int) ([]discord.Member, error) {
 	queryParams := make(QueryParameters)

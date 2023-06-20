@@ -14,6 +14,7 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"net/url"
 	"nhooyr.io/websocket"
 	"nhooyr.io/websocket/wsjson"
 	"runtime"
@@ -170,6 +171,20 @@ func (c *Client) Login() error {
 		}
 	}
 
+	// Handle the next incoming event differently, just to make sure we are authenticated
+	_, message, err = connection.Reader(c.context)
+	if err != nil {
+		return fmt.Errorf("failed reading second event coming from the gateway: %s", err)
+	}
+	event, err = NewEvent(message)
+	if err != nil {
+		return fmt.Errorf("failed parsing an event coming from the gateway: %s", err)
+	}
+	eventErr := c.onEvent(event, c.context)
+	if eventErr != nil {
+		return eventErr
+	}
+
 	// Start sending heartbeats and listening to events
 	go c.doHeartbeat(c.context, connection)
 	go c.listenForEvents(c.context, connection)
@@ -290,9 +305,9 @@ func (c *Client) listenForEvents(ctx context.Context, connection *websocket.Conn
 		case <-c.connectionClose:
 			return
 		default:
-			event, defaultErr := NewEvent(message)
-			if defaultErr != nil {
-				c.Logger.Error(fmt.Sprintf("failed parsing an event coming from the gateway: %s", err))
+			event, newEventErr := NewEvent(message)
+			if newEventErr != nil {
+				c.Logger.Error(fmt.Sprintf("failed parsing an event coming from the gateway: %s", newEventErr))
 			} else {
 				eventErr := c.onEvent(event, ctx)
 				if eventErr != nil {
@@ -387,6 +402,7 @@ func (c *Client) onEvent(event *Event, ctx context.Context) error {
 			c.handleEvent(event.Type, event.Struct)
 		} else {
 			c.Logger.Warn(fmt.Sprintf("Unknown Event :: OpCode: %d, Sequence %d, Type: %s, Data: %s", event.OpCode, event.Sequence, event.Type, string(event.Data)))
+			c.Logger.Warn(fmt.Sprintf("Please consider opening an issue at https://github.com/kkrypt0nn/centauri/issues/new?title=%%5BBug%%5D%%20Unknown%%20Event%%3A%%20%%60%s%%60", url.QueryEscape(event.Type)))
 		}
 	}
 	return nil

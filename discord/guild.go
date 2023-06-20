@@ -172,8 +172,8 @@ const (
 	SystemChannelFlagsSuppressRoleSubscriptionPurchaseNotificationsReplies
 )
 
-// Compute creates a new channel flags structure (discord.SystemChannelFlags) from the given channel flags
-func (f SystemChannelFlags) Compute(systemChannelFlags ...SystemChannelFlags) SystemChannelFlags {
+// ComputeSystemChannelFlags creates a new system channel flags structure (discord.SystemChannelFlags) from the given channel flags
+func ComputeSystemChannelFlags(systemChannelFlags ...SystemChannelFlags) SystemChannelFlags {
 	return flags.Compute(systemChannelFlags...)
 }
 

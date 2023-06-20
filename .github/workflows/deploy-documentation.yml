@@ -1,13 +1,6 @@
 name: Centauri CD (Deploy Documentation)
 
-on:
-    workflow_run:
-        workflows:
-            - "Centauri CI (Lint & Test)"
-        branches:
-            - main
-        types:
-            - completed
+on: release
 
 permissions:
     contents: read

@@ -91,8 +91,8 @@ const (
 	PermissionsSendVoiceMessages
 )
 
-// Compute creates a new permissions structure (discord.Permissions) from the given permissions
-func (p *Permissions) Compute(permissions ...Permissions) Permissions {
+// ComputePermissions creates a new permissions structure (discord.Permissions) from the given permissions
+func ComputePermissions(permissions ...Permissions) Permissions {
 	return flags.Compute(permissions...)
 }
 

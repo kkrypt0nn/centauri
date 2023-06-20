@@ -289,8 +289,8 @@ const (
 	MessageFlagIsVoiceMessage
 )
 
-// Compute creates a new message flags structure (discord.MessageFlags) from the given message flags
-func (f MessageFlags) Compute(messageFlags ...MessageFlags) MessageFlags {
+// ComputeMessageFlags creates a new message flags structure (discord.MessageFlags) from the given message flags
+func ComputeMessageFlags(messageFlags ...MessageFlags) MessageFlags {
 	return flags.Compute(messageFlags...)
 }
 

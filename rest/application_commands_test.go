@@ -7,7 +7,7 @@ import (
 )
 
 func TestGlobalApplicationCommands(t *testing.T) {
-	applicationCommand, err := testingRestClient.CreateGlobalApplicationCommand(testingBotID, discord.CreateGlobalApplicationCommand{
+	applicationCommand, err := testingRestClient.CreateGlobalApplicationCommand(discord.CreateGlobalApplicationCommand{
 		Name:        "test",
 		Description: ptr.New("Testing global application command"),
 		Options: []discord.ApplicationCommandOption{
@@ -30,13 +30,13 @@ func TestGlobalApplicationCommands(t *testing.T) {
 		return
 	}
 
-	_, err = testingRestClient.EditGlobalApplicationCommand(testingBotID, applicationCommand.ID, discord.EditGlobalApplicationCommand{Name: ptr.New("test_global")})
+	_, err = testingRestClient.EditGlobalApplicationCommand(applicationCommand.ID, discord.EditGlobalApplicationCommand{Name: ptr.New("test_global")})
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	applicationCommand, err = testingRestClient.GetGlobalApplicationCommand(testingBotID, applicationCommand.ID)
+	applicationCommand, err = testingRestClient.GetGlobalApplicationCommand(applicationCommand.ID)
 	if err != nil {
 		t.Error(err)
 		return
@@ -47,7 +47,7 @@ func TestGlobalApplicationCommands(t *testing.T) {
 		return
 	}
 
-	err = testingRestClient.DeleteGlobalApplicationCommand(testingBotID, applicationCommand.ID)
+	err = testingRestClient.DeleteGlobalApplicationCommand(applicationCommand.ID)
 	if err != nil {
 		t.Error(err)
 		return
@@ -57,7 +57,7 @@ func TestGlobalApplicationCommands(t *testing.T) {
 }
 
 func TestGuildApplicationCommands(t *testing.T) {
-	applicationCommand, err := testingRestClient.CreateGuildApplicationCommand(testingBotID, testingGuildID, discord.CreateGuildApplicationCommand{
+	applicationCommand, err := testingRestClient.CreateGuildApplicationCommand(testingGuildID, discord.CreateGuildApplicationCommand{
 		Name:        "test",
 		Description: ptr.New("Testing guild application command"),
 		Options: []discord.ApplicationCommandOption{
@@ -80,13 +80,13 @@ func TestGuildApplicationCommands(t *testing.T) {
 		return
 	}
 
-	_, err = testingRestClient.EditGuildApplicationCommand(testingBotID, testingGuildID, applicationCommand.ID, discord.EditGuildApplicationCommand{Name: ptr.New("test_guild")})
+	_, err = testingRestClient.EditGuildApplicationCommand(testingGuildID, applicationCommand.ID, discord.EditGuildApplicationCommand{Name: ptr.New("test_guild")})
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	applicationCommand, err = testingRestClient.GetGuildApplicationCommand(testingBotID, testingGuildID, applicationCommand.ID)
+	applicationCommand, err = testingRestClient.GetGuildApplicationCommand(testingGuildID, applicationCommand.ID)
 	if err != nil {
 		t.Error(err)
 		return
@@ -97,7 +97,7 @@ func TestGuildApplicationCommands(t *testing.T) {
 		return
 	}
 
-	err = testingRestClient.DeleteGuildApplicationCommand(testingBotID, testingGuildID, applicationCommand.ID)
+	err = testingRestClient.DeleteGuildApplicationCommand(testingGuildID, applicationCommand.ID)
 	if err != nil {
 		t.Error(err)
 		return

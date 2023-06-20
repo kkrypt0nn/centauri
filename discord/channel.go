@@ -158,8 +158,8 @@ const (
 	ChannelFlagRequireTag
 )
 
-// Compute creates a new channel flags structure (discord.ChannelFlags) from the given channel flags
-func (f ChannelFlags) Compute(channelFlags ...ChannelFlags) ChannelFlags {
+// ComputeChannelFlags creates a new channel flags structure (discord.ChannelFlags) from the given channel flags
+func ComputeChannelFlags(channelFlags ...ChannelFlags) ChannelFlags {
 	return flags.Compute(channelFlags...)
 }
 

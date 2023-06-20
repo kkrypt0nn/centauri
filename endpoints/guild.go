@@ -33,6 +33,10 @@ func GuildMember(guildID, userID discord.Snowflake) string {
 	return fmt.Sprintf("%s/%d/members/%d", GuildsEndpoint, guildID, userID)
 }
 
+func GuildMembers(guildID discord.Snowflake) string {
+	return fmt.Sprintf("%s/%d/members", GuildsEndpoint, guildID)
+}
+
 func GuildMembersSearch(guildID discord.Snowflake) string {
 	return fmt.Sprintf("%s/%d/members/search", GuildsEndpoint, guildID)
 }

@@ -32,6 +32,7 @@ type Client struct {
 
 	isBot               bool
 	authorizationHeader string
+	selfUser            discord.User
 }
 
 // QueryParameters is a map of query parameters when sending requests
@@ -43,6 +44,11 @@ func (c *Client) SetAuthorizationHeader(authorizationHeader string) {
 	if strings.HasPrefix(c.authorizationHeader, "Bot ") {
 		c.isBot = true
 	}
+	user, err := c.GetSelfUser()
+	if err != nil {
+		panic("improper token passed")
+	}
+	c.selfUser = *user
 }
 
 // DoRequest performs a request to the given URL with the given method, it will make sure to follow rate limits, and returns the body and the response individually
