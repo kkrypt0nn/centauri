@@ -20,7 +20,10 @@ func main() {
 	botClient.On(gateway.EventTypeMessageCreate, func(c *gateway.Client, message *gateway.MessageCreate) {
 		botClient.Logger.Info(fmt.Sprintf("Got a new message from %s: %s", message.Author.Username, message.Content))
 		if message.Content == "updateActivity" {
-			botClient.SetActivity(discord.StatusTypeDND, discord.ActivityTypeWatching, "the series Dark")
+			err := botClient.SetActivity(discord.StatusTypeDND, discord.ActivityTypeWatching, "the series Dark")
+			if err != nil {
+				botClient.Logger.Error(err.Error())
+			}
 		}
 	})
 

@@ -8,17 +8,16 @@ import (
 	"fmt"
 	"github.com/kkrypt0nn/centauri/discord"
 	"github.com/kkrypt0nn/centauri/endpoints"
-	"github.com/kkrypt0nn/centauri/ext/tasks"
 	"github.com/kkrypt0nn/centauri/rest"
 	"github.com/kkrypt0nn/logger.go"
 	"io"
 	"net"
-	"net/http"
 	"net/url"
 	"nhooyr.io/websocket"
 	"nhooyr.io/websocket/wsjson"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -42,6 +41,7 @@ type Client struct {
 	connectionClose   chan bool
 	gatewayURL        string
 	context           context.Context
+	mutex             sync.Mutex
 
 	restClient *rest.Client
 }
@@ -60,18 +60,7 @@ func New(token string, intents discord.Intents) *Client {
 		context:         context.Background(),
 	}
 	gatewayClient.SetToken(token)
-	restClient := &rest.Client{
-		HttpClient: &rest.HttpClient{
-			Client: &http.Client{
-				Timeout: 20 * time.Second,
-			},
-			Interceptor: nil,
-		},
-		Logger:      newLogger,
-		RateLimiter: rest.NewRateLimiter(),
-		TaskManager: tasks.NewTaskManager(),
-	}
-	restClient.SetAuthorizationHeader(token)
+	restClient := rest.New(token)
 	gatewayClient.SetRestClient(restClient)
 	registerEventInterfaces()
 	return gatewayClient
@@ -100,10 +89,12 @@ func (c *Client) Rest() *rest.Client {
 func (c *Client) On(eventType EventType, handlerFunction interface{}) {
 	eventHandler := handlerForFunction(handlerFunction)
 	if handlerFunction == nil {
-		c.Logger.Error("Invalid handler function type")
+		c.Logger.Error("invalid handler function type")
 		return
 	}
 
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
 	if c.eventHandlers == nil {
 		c.eventHandlers = map[EventType][]EventHandler{}
 	}
@@ -148,7 +139,7 @@ func (c *Client) Login() error {
 		return fmt.Errorf("expecting OpCode 10, got OpCode %d instead", event.OpCode)
 	}
 	if c.Debug {
-		c.Logger.Info("Got HELLO event from Discord")
+		c.Logger.Info("got HELLO event from Discord")
 	}
 	c.lastHeartbeatAck = time.Now()
 	var hello Hello
@@ -186,30 +177,32 @@ func (c *Client) Login() error {
 	}
 
 	// Start sending heartbeats and listening to events
-	go c.doHeartbeat(c.context, connection)
+	go c.doHeartbeat(connection)
 	go c.listenForEvents(c.context, connection)
 
 	return nil
 }
 
 // Send will send an event to the gateway
-func (c *Client) Send(event EventSend) {
+func (c *Client) Send(event EventSend) error {
 	if c.Connection == nil || c.context == nil {
-		c.Logger.Error("The client is not connected to the Gateway API")
-		return
+		return fmt.Errorf("the client is not connected to the Gateway API")
 	}
+
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
 
 	eventSendErr := wsjson.Write(c.context, c.Connection, event)
 	if eventSendErr != nil {
-		c.Logger.Error(fmt.Sprintf("Failed sending the event: %s", eventSendErr))
-		return
+		return fmt.Errorf("failed sending the event: %s", eventSendErr)
 	}
+	return nil
 }
 
 // SetActivity sets the activity of the client connected to the gateway
-func (c *Client) SetActivity(statusType discord.StatusType, activityType discord.ActivityType, activity string) {
+func (c *Client) SetActivity(statusType discord.StatusType, activityType discord.ActivityType, activity string) error {
 	c.Logger.Error(string(statusType))
-	c.Send(NewUpdatePresenceEvent(0, []discord.Activity{
+	return c.Send(NewUpdatePresenceEvent(0, []discord.Activity{
 		{
 			Type: activityType,
 			Name: activity,
@@ -226,6 +219,8 @@ func (c *Client) Close() {
 func (c *Client) CloseWithStatusCode(statusCode websocket.StatusCode, reason string) {
 	_ = c.Connection.Close(statusCode, reason)
 	c.Connection = nil
+	c.SessionID = ""
+	c.gatewayURL = endpoints.GatewayURL
 	c.connectionClose <- true
 }
 
@@ -244,7 +239,7 @@ func (c *Client) identify(ctx context.Context) error {
 }
 
 // doHeartbeat will make sure to send a new heartbeat to the gateway for the given interval
-func (c *Client) doHeartbeat(ctx context.Context, connection *websocket.Conn) {
+func (c *Client) doHeartbeat(connection *websocket.Conn) {
 	if connection == nil {
 		return
 	}
@@ -252,16 +247,16 @@ func (c *Client) doHeartbeat(ctx context.Context, connection *websocket.Conn) {
 	ticker := time.NewTicker(c.heartbeatInterval * time.Millisecond)
 	for {
 		c.lastHeartbeat = time.Now()
-		err := wsjson.Write(ctx, connection, NewHeartbeatEvent(c.LastSequence))
+		err := c.Send(NewHeartbeatEvent(c.LastSequence))
 		if err != nil || time.Since(c.lastHeartbeatAck) > (c.heartbeatInterval*5*time.Millisecond) {
-			c.Logger.Error(fmt.Sprintf("Error sending a heartbeat or receiving a heartbeat ACK from the gateway: %s", err))
+			c.Logger.Error(fmt.Sprintf("error sending a heartbeat or receiving a heartbeat ACK from the gateway: %s", err))
 			c.Close()
 			c.reconnect()
 			return
 		}
 
 		if c.Debug {
-			c.Logger.Info("Sent a heartbeat event")
+			c.Logger.Info("sent a heartbeat event")
 		}
 
 		select {
@@ -275,12 +270,14 @@ func (c *Client) doHeartbeat(ctx context.Context, connection *websocket.Conn) {
 // listenForEvents will listen for gateway events and send it over to the event handler
 func (c *Client) listenForEvents(ctx context.Context, connection *websocket.Conn) {
 	if c.Debug {
-		c.Logger.Debug("Now listening for events coming from the Gateway API")
+		c.Logger.Debug("now listening for events coming from the Gateway API")
 	}
 	for {
 		_, message, err := connection.Reader(ctx)
 		if err != nil {
+			c.mutex.Lock()
 			sameConnection := c.Connection == connection
+			c.mutex.Unlock()
 			if !sameConnection {
 				return
 			}
@@ -292,7 +289,7 @@ func (c *Client) listenForEvents(ctx context.Context, connection *websocket.Conn
 
 			c.CloseWithStatusCode(websocket.StatusServiceRestart, "restarting...")
 			if reconnect {
-				c.Logger.Info("Need a gateway reconnection...")
+				c.Logger.Info("need a gateway reconnection...")
 				c.reconnect()
 				return
 			}
@@ -322,22 +319,22 @@ func (c *Client) listenForEvents(ctx context.Context, connection *websocket.Conn
 func (c *Client) reconnect() {
 	timer := time.Duration(1)
 	for {
-		c.Logger.Info("Trying to reconnect to the gateway")
+		c.Logger.Info("trying to reconnect to the gateway")
 		err := c.Login()
 		if err != nil {
 			if err == ErrClientAlreadyConnected {
-				c.Logger.Info("Client is already connected to the gateway, restart not necessary")
+				c.Logger.Info("client is already connected to the gateway, restart not necessary")
 				return
 			}
 
-			c.Logger.Error(fmt.Sprintf("Failed reconnecting to the gateway: %s", err))
+			c.Logger.Error(fmt.Sprintf("failed reconnecting to the gateway: %s", err))
 			<-time.After(timer * time.Second)
 			timer *= 2
 			if timer > 600 {
 				timer = 600
 			}
 		} else {
-			c.Logger.Info("Successfully reconnected to the gateway")
+			c.Logger.Info("successfully reconnected to the gateway")
 			return
 		}
 	}
@@ -346,14 +343,14 @@ func (c *Client) reconnect() {
 // onEvent handles the various event opcodes
 func (c *Client) onEvent(event *Event, ctx context.Context) error {
 	if c.Debug {
-		c.Logger.Debug(fmt.Sprintf("New Event :: OpCode: %d, Sequence %d, Type: %s, Data: %s", event.OpCode, event.Sequence, event.Type, string(event.Data)))
+		c.Logger.Debug(fmt.Sprintf("new event :: OpCode: %d, Sequence %d, Type: %s, Data: %s", event.OpCode, event.Sequence, event.Type, string(event.Data)))
 	}
 
 	c.LastSequence = event.Sequence
 
 	if event.OpCode == OpCodeHeartbeat {
 		if c.Debug {
-			c.Logger.Info("Sending heartbeat event in response to a heartbeat request")
+			c.Logger.Info("sending heartbeat event in response to a heartbeat request")
 		}
 		heartbeatEvent, err := json.Marshal(NewHeartbeatEvent(c.LastSequence))
 		if err != nil {
@@ -368,7 +365,7 @@ func (c *Client) onEvent(event *Event, ctx context.Context) error {
 
 	if event.OpCode == OpCodeReconnect {
 		if c.Debug {
-			c.Logger.Info("Closing and reconnecting due to the gateway asking so")
+			c.Logger.Info("closing and reconnecting due to the gateway asking so")
 		}
 		c.CloseWithStatusCode(websocket.StatusServiceRestart, "restarting")
 		c.reconnect()
@@ -377,7 +374,7 @@ func (c *Client) onEvent(event *Event, ctx context.Context) error {
 
 	if event.OpCode == OpCodeInvalidSession {
 		if c.Debug {
-			c.Logger.Info("Identifying once again due to the gateway asking so")
+			c.Logger.Info("identifying once again due to the gateway asking so")
 		}
 		if err := c.identify(ctx); err != nil {
 			return fmt.Errorf("failed sending IDENTIFY event: %s", err)
@@ -387,7 +384,7 @@ func (c *Client) onEvent(event *Event, ctx context.Context) error {
 
 	if event.OpCode == OpCodeHeartbeatACK {
 		if c.Debug {
-			c.Logger.Info("Got a heartbeat ACK event")
+			c.Logger.Info("got a heartbeat ACK event")
 		}
 		c.lastHeartbeatAck = time.Now()
 		return nil
@@ -401,8 +398,8 @@ func (c *Client) onEvent(event *Event, ctx context.Context) error {
 			}
 			c.handleEvent(event.Type, event.Struct)
 		} else {
-			c.Logger.Warn(fmt.Sprintf("Unknown Event :: OpCode: %d, Sequence %d, Type: %s, Data: %s", event.OpCode, event.Sequence, event.Type, string(event.Data)))
-			c.Logger.Warn(fmt.Sprintf("Please consider opening an issue at https://github.com/kkrypt0nn/centauri/issues/new?title=%%5BBug%%5D%%20Unknown%%20Event%%3A%%20%%60%s%%60", url.QueryEscape(event.Type)))
+			c.Logger.Warn(fmt.Sprintf("unknown event :: OpCode: %d, Sequence %d, Type: %s, Data: %s", event.OpCode, event.Sequence, event.Type, string(event.Data)))
+			c.Logger.Warn(fmt.Sprintf("please consider opening an issue at https://github.com/kkrypt0nn/centauri/issues/new?title=%%5BBug%%5D%%20Unknown%%20Event%%3A%%20%%60%s%%60", url.QueryEscape(event.Type)))
 		}
 	}
 	return nil

@@ -165,3 +165,101 @@ type Resolved struct {
 	Messages    map[Snowflake]Message    `json:"messages,omitempty"`
 	Attachments map[Snowflake]Attachment `json:"attachments,omitempty"`
 }
+
+// CreateInteractionResponse represents the payload to send to Discord to respond to an interaction (discord.Interaction)
+// https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object
+type CreateInteractionResponse struct {
+	Type InteractionResponseType `json:"type"`
+	Data InteractionResponse     `json:"data"`
+}
+
+// InteractionResponseType represents the interaction response types
+// https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
+type InteractionResponseType int
+
+const (
+	InteractionResponseTypePong InteractionResponseType = 1 + iota
+	_
+	_
+	InteractionResponseTypeMessage
+	InteractionResponseTypeDefer
+	InteractionResponseTypeDeferUpdateMessage
+	InteractionResponseTypeUpdateMessage
+	InteractionResponseTypeAutoCompleteResult
+	InteractionResponseTypeModal
+)
+
+// InteractionResponse represents an interface that is implemented by all interaction response types
+type InteractionResponse interface {
+	Type() InteractionResponseType
+}
+
+// MessageInteractionResponse represents a response to an interaction (discord.Interaction) with a message
+// https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-messages
+type MessageInteractionResponse struct {
+	TTS             bool            `json:"tts"`
+	Content         *string         `json:"content,omitempty"`
+	Embeds          []Embed         `json:"embeds"`
+	AllowedMentions AllowedMentions `json:"allowed_mentions"`
+	Flags           MessageFlags    `json:"flags"`
+	Components      []Component     `json:"components"`
+	Attachments     []Attachment    `json:"attachments,omitempty"`
+
+	Files []File `json:"-"`
+}
+
+// Type returns the type of interaction response
+func (r MessageInteractionResponse) Type() InteractionResponseType {
+	return InteractionResponseTypeMessage
+}
+
+// AutoCompleteInteractionResponse represents a response to an interaction (discord.Interaction) with auto complete choices
+// https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-autocomplete
+type AutoCompleteInteractionResponse[T IntegerChoice | StringChoice | NumberChoice] struct {
+	Choices []T `json:"choices"`
+}
+
+// Type returns the type of interaction response
+func (r AutoCompleteInteractionResponse[T]) Type() InteractionResponseType {
+	return InteractionResponseTypeAutoCompleteResult
+}
+
+// ModalInteractionResponse represents a response to an interaction (discord.Interaction) with a modal
+// https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-modal
+type ModalInteractionResponse struct {
+	CustomID   string      `json:"custom_id"`
+	Title      string      `json:"title"`
+	Components []TextInput `json:"components"`
+}
+
+// Type returns the type of interaction response
+func (r ModalInteractionResponse) Type() InteractionResponseType {
+	return InteractionResponseTypeModal
+}
+
+// EditOriginalInteractionResponse represents the payload to send to Discord to edit an original interaction response
+// https://discord.com/developers/docs/resources/webhook#edit-webhook-message-jsonform-params
+type EditOriginalInteractionResponse struct {
+	EditWebhookMessage
+}
+
+// CreateFollowupMessage represents the payload to send to Discord to create a followup message
+// https://discord.com/developers/docs/resources/webhook#execute-webhook-jsonform-params
+type CreateFollowupMessage struct {
+	Content         *string          `json:"content,omitempty"`
+	TTS             *bool            `json:"tts,omitempty"`
+	Embeds          []Embed          `json:"embeds,omitempty"`
+	AllowedMentions *AllowedMentions `json:"allowed_mentions,omitempty"`
+	Components      []Component      `json:"components,omitempty"`
+	Flags           *MessageFlags    `json:"flags,omitempty"`
+	ThreadName      *string          `json:"thread_name,omitempty"`
+	Attachments     []Attachment     `json:"attachments,omitempty"`
+
+	Files []File `json:"-"`
+}
+
+// EditFollowupMessage represents the payload to send to Discord to edit a followup message
+// https://discord.com/developers/docs/resources/webhook#edit-webhook-message-jsonform-params
+type EditFollowupMessage struct {
+	EditWebhookMessage
+}

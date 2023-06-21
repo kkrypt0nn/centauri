@@ -46,6 +46,11 @@ type Channel struct {
 	DefaultForumLayout            DefaultForumLayoutView `json:"default_forum_layout,omitempty"`
 }
 
+// Mention returns the string to mention the channel (discord.Channel)
+func (c *Channel) Mention() string {
+	return fmt.Sprintf("<#%d>", c.ID)
+}
+
 // CreatedAt returns the creation time of the channel (discord.Channel)
 func (c *Channel) CreatedAt() time.Time {
 	return c.ID.CreatedAt()

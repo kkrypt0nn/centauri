@@ -35,11 +35,25 @@ type Client struct {
 	selfUser            discord.User
 }
 
-// QueryParameters is a map of query parameters when sending requests
-type QueryParameters map[string]string
+// New creates a new REST API client
+func New(token string) *Client {
+	restClient := &Client{
+		HttpClient: &HttpClient{
+			Client: &http.Client{
+				Timeout: 20 * time.Second,
+			},
+			Interceptor: nil,
+		},
+		Logger:      logger.NewLogger(),
+		RateLimiter: NewRateLimiter(),
+		TaskManager: tasks.NewTaskManager(),
+	}
+	restClient.setAuthorizationHeader(token)
+	return restClient
+}
 
-// SetAuthorizationHeader sets the authorization header of the RestClient
-func (c *Client) SetAuthorizationHeader(authorizationHeader string) {
+// setAuthorizationHeader sets the authorization header of the RestClient
+func (c *Client) setAuthorizationHeader(authorizationHeader string) {
 	c.authorizationHeader = authorizationHeader
 	if strings.HasPrefix(c.authorizationHeader, "Bot ") {
 		c.isBot = true
@@ -50,6 +64,9 @@ func (c *Client) SetAuthorizationHeader(authorizationHeader string) {
 	}
 	c.selfUser = *user
 }
+
+// QueryParameters is a map of query parameters when sending requests
+type QueryParameters map[string]string
 
 // DoRequest performs a request to the given URL with the given method, it will make sure to follow rate limits, and returns the body and the response individually
 func (c *Client) DoRequest(method, url string, requestBody []byte, queryParams QueryParameters, attempt int, requestOptions ...RequestOption) ([]byte, *http.Response, error) {
@@ -131,7 +148,7 @@ func (c *Client) DoRequest(method, url string, requestBody []byte, queryParams Q
 			return nil, nil, &errors.RateLimitExceeded{RateLimitExceeded: &rateLimitExceeded}
 		}
 
-		c.Logger.Info(fmt.Sprintf("Got rate limited, trying again in %v [Attempt %d of %d]", rateLimitExceeded.RetryAfter, attempt, c.RateLimiter.MaxRetries))
+		c.Logger.Info(fmt.Sprintf("got rate limited, trying again in %v [Attempt %d of %d]", rateLimitExceeded.RetryAfter, attempt, c.RateLimiter.MaxRetries))
 
 		integer, frac := math.Modf(rateLimitExceeded.RetryAfter)
 		time.Sleep(time.Duration(integer)*time.Second + time.Duration(frac*1000)*time.Millisecond)
@@ -222,7 +239,7 @@ func DoRequestAsList[T any](client *Client, method, url string, requestBody any,
 
 // CreateMultipartBodyWithJSON returns the new bytes for when uploading files to Discord
 // https://discord.com/developers/docs/reference#uploading-files
-func CreateMultipartBodyWithJSON[T discord.CreateMessage | discord.EditMessage | discord.ExecuteWebhook | discord.EditWebhookMessage | discord.StartThreadInForumChannel | discord.CreateGuildSticker](data T, files []discord.File) (string, []byte, error) {
+func CreateMultipartBodyWithJSON[T discord.CreateMessage | discord.EditMessage | discord.ExecuteWebhook | discord.EditWebhookMessage | discord.StartThreadInForumChannel | discord.CreateGuildSticker | discord.CreateInteractionResponse | discord.EditOriginalInteractionResponse | discord.CreateFollowupMessage | discord.EditFollowupMessage](data T, files []discord.File) (string, []byte, error) {
 	body := &bytes.Buffer{}
 	bodyWriter := multipart.NewWriter(body)
 

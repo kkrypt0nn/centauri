@@ -18,6 +18,14 @@ type Emoji struct {
 	Available     bool            `json:"available,omitempty"`
 }
 
+// String returns the string to send the emoji (discord.Emoji)
+func (e *Emoji) String() string {
+	if e.Animated {
+		return fmt.Sprintf("<a:%s:%d>", e.Name, e.ID)
+	}
+	return fmt.Sprintf("<%s:%d>", e.Name, e.ID)
+}
+
 // CreatedAt returns the creation time of the emoji (discord.Emoji)
 func (e *Emoji) CreatedAt() time.Time {
 	return e.ID.CreatedAt()

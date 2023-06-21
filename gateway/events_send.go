@@ -63,6 +63,11 @@ type ResumeData struct {
 	Sequence  int64  `json:"seq"`
 }
 
+// EventSend is an interface that is implemented by all events that can be sent to the gateway
+type EventSend interface {
+	GetOpCode() OpCode
+}
+
 // Heartbeat represents a heartbeat event that should be sent to the gateway to keep the connection alive
 // https://discord.com/developers/docs/topics/gateway-events#heartbeat
 type Heartbeat struct {
@@ -70,17 +75,17 @@ type Heartbeat struct {
 	Sequence int64  `json:"d"`
 }
 
+// GetOpCode returns the OpCode of the event
+func (e *Heartbeat) GetOpCode() OpCode {
+	return OpCodeHeartbeat
+}
+
 // NewHeartbeatEvent creates a new Heartbeat event
-func NewHeartbeatEvent(sequence int64) Heartbeat {
-	return Heartbeat{
+func NewHeartbeatEvent(sequence int64) *Heartbeat {
+	return &Heartbeat{
 		OpCode:   OpCodeHeartbeat,
 		Sequence: sequence,
 	}
-}
-
-// EventSend is an interface that is implemented by all events that can be sent to the gateway
-type EventSend interface {
-	GetOpCode() OpCode
 }
 
 // RequestGuildMembers represents the event to send to the gateway to receive all members for a guild or list of guilds

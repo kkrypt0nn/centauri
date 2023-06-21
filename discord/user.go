@@ -40,6 +40,11 @@ type User struct {
 	Phone             string            `json:"phone,omitempty"`
 }
 
+// Mention returns the string to mention the user (discord.User)
+func (u *User) Mention() string {
+	return fmt.Sprintf("<@%d>", u.ID)
+}
+
 // CreatedAt returns the creation time of the user (discord.User)
 func (u *User) CreatedAt() time.Time {
 	return u.ID.CreatedAt()

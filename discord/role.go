@@ -21,6 +21,11 @@ type Role struct {
 	Tags         *RoleTags   `json:"tags,omitempty"`
 }
 
+// Mention returns the string to mention the role (discord.Role)
+func (r *Role) Mention() string {
+	return fmt.Sprintf("<@&%d>", r.ID)
+}
+
 // CreatedAt returns the creation time of the role (discord.Role)
 func (r *Role) CreatedAt() time.Time {
 	return r.ID.CreatedAt()

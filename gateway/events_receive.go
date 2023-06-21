@@ -142,15 +142,15 @@ type ThreadMembersUpdate struct {
 // https://discord.com/developers/docs/topics/gateway-events#guild-create
 type GuildCreate struct {
 	discord.Guild
-	JoinedAt    time.Time            `json:"joined_at"`
-	Large       bool                 `json:"large"`
-	Unavailable bool                 `json:"unavailable,omitempty"`
-	MemberCount int                  `json:"member_count"`
-	VoiceStates []discord.VoiceState `json:"voice_states"`
-	Members     []discord.Member     `json:"members"`
-	Channels    []discord.Channel    `json:"channels"`
-	Threads     []discord.Channel    `json:"threads"`
-	// TODO: Presences
+	JoinedAt             time.Time                     `json:"joined_at"`
+	Large                bool                          `json:"large"`
+	Unavailable          bool                          `json:"unavailable,omitempty"`
+	MemberCount          int                           `json:"member_count"`
+	VoiceStates          []discord.VoiceState          `json:"voice_states"`
+	Members              []discord.Member              `json:"members"`
+	Channels             []discord.Channel             `json:"channels"`
+	Threads              []discord.Channel             `json:"threads"`
+	Presences            []PresenceUpdate              `json:"presences"`
 	StageInstances       []discord.StageInstance       `json:"stage_instances"`
 	GuildScheduledEvents []discord.GuildScheduledEvent `json:"guild_scheduled_events"`
 }
@@ -250,8 +250,8 @@ type GuildMembersChunk struct {
 	ChunkIndex int                     `json:"chunk_index"`
 	ChunkCount int                     `json:"chunk_count"`
 	NotFound   discord.ArraySnowflakes `json:"not_found"`
-	// TODO: Presences
-	Nonce string `json:"nonce"`
+	Presences  []PresenceUpdate        `json:"presences"`
+	Nonce      string                  `json:"nonce"`
 }
 
 // GenericGuildRole is the common data of the Guild Role Create/Update events

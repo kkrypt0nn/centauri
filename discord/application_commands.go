@@ -24,6 +24,11 @@ type ApplicationCommand struct {
 	Version                  Snowflake                 `json:"version"`
 }
 
+// Mention returns the string to mention the application command (discord.ApplicationCommand)
+func (c *ApplicationCommand) Mention() string {
+	return fmt.Sprintf("</%s:%d>", c.Name, c.ID)
+}
+
 // CreatedAt returns the creation time of the application command (discord.ApplicationCommand)
 func (c *ApplicationCommand) CreatedAt() time.Time {
 	return c.ID.CreatedAt()
