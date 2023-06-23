@@ -8,7 +8,14 @@ import (
 // CreateInteractionResponse creates a response to an interaction (discord.Interaction) for the given interaction ID and token
 func (c *Client) CreateInteractionResponse(interactionID discord.Snowflake, interactionToken string, interactionResponse discord.CreateInteractionResponse) error {
 	if interactionResponse.Data != nil && interactionResponse.Data.Type() == discord.InteractionResponseTypeMessage {
-		if len(interactionResponse.Data.(discord.MessageInteractionResponse).Files) >= 1 {
+		data := interactionResponse.Data.(discord.MessageInteractionResponse)
+		if len(data.Files) >= 1 {
+			for id, file := range data.Files {
+				data.Attachments = append(data.Attachments, discord.AttachmentSend{
+					ID:          id,
+					Description: file.Description,
+				})
+			}
 			contentType, body, err := CreateMultipartBodyWithJSON(interactionResponse, interactionResponse.Data.(discord.MessageInteractionResponse).Files)
 			if err != nil {
 				return err
@@ -37,6 +44,12 @@ func (c *Client) EditOriginalInteractionResponse(interactionToken string, thread
 		queryParams["thread_id"] = threadID.String()
 	}
 	if len(message.Files) >= 1 {
+		for id, file := range message.Files {
+			message.Attachments = append(message.Attachments, discord.AttachmentSend{
+				ID:          id,
+				Description: file.Description,
+			})
+		}
 		contentType, body, err := CreateMultipartBodyWithJSON(message, message.Files)
 		if err != nil {
 			return nil, err
@@ -55,6 +68,12 @@ func (c *Client) DeleteOriginalInteractionResponse(interactionToken string) erro
 // CreateFollowupMessage creates a followup message (discord.Message) for the given interaction token
 func (c *Client) CreateFollowupMessage(interactionToken string, message discord.CreateFollowupMessage) (*discord.Message, error) {
 	if len(message.Files) >= 1 {
+		for id, file := range message.Files {
+			message.Attachments = append(message.Attachments, discord.AttachmentSend{
+				ID:          id,
+				Description: file.Description,
+			})
+		}
 		contentType, body, err := CreateMultipartBodyWithJSON(message, message.Files)
 		if err != nil {
 			return nil, err
@@ -77,6 +96,12 @@ func (c *Client) EditFollowupMessage(interactionToken string, messageID, threadI
 		queryParams["thread_id"] = threadID.String()
 	}
 	if len(message.Files) >= 1 {
+		for id, file := range message.Files {
+			message.Attachments = append(message.Attachments, discord.AttachmentSend{
+				ID:          id,
+				Description: file.Description,
+			})
+		}
 		contentType, body, err := CreateMultipartBodyWithJSON(message, message.Files)
 		if err != nil {
 			return nil, err

@@ -74,7 +74,7 @@ type ExecuteWebhook struct {
 	Components      []Component      `json:"components,omitempty"`
 	Flags           *MessageFlags    `json:"flags,omitempty"`
 	ThreadName      *string          `json:"thread_name,omitempty"`
-	Attachments     []Attachment     `json:"attachments,omitempty"`
+	Attachments     []AttachmentSend `json:"attachments,omitempty"`
 
 	Files []File `json:"-"`
 }
@@ -86,7 +86,7 @@ type EditWebhookMessage struct {
 	Embeds          []Embed          `json:"embeds,omitempty"`
 	AllowedMentions *AllowedMentions `json:"allowed_mentions,omitempty"`
 	Components      []Component      `json:"components,omitempty"`
-	Attachments     []Attachment     `json:"attachments,omitempty"`
+	Attachments     []AttachmentSend `json:"attachments,omitempty"`
 
 	Files []File `json:"-"`
 }

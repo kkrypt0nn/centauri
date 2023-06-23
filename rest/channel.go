@@ -36,6 +36,12 @@ func (c *Client) GetChannelMessage(channelID, messageID discord.Snowflake) (*dis
 // CreateMessage posts a message (discord.Message) in a given channel ID and returns its structure
 func (c *Client) CreateMessage(channelID discord.Snowflake, message discord.CreateMessage) (*discord.Message, error) {
 	if len(message.Files) >= 1 {
+		for id, file := range message.Files {
+			message.Attachments = append(message.Attachments, discord.AttachmentSend{
+				ID:          id,
+				Description: file.Description,
+			})
+		}
 		contentType, body, err := CreateMultipartBodyWithJSON(message, message.Files)
 		if err != nil {
 			return nil, err
@@ -91,6 +97,12 @@ func (c *Client) DeleteAllReactionsForEmoji(channelID, messageID discord.Snowfla
 // EditMessage edits a message (discord.Message) from the given channel and message IDs and returns its structure
 func (c *Client) EditMessage(channelID, messageID discord.Snowflake, message discord.EditMessage) (*discord.Message, error) {
 	if len(message.Files) >= 1 {
+		for id, file := range message.Files {
+			message.Attachments = append(message.Attachments, discord.AttachmentSend{
+				ID:          id,
+				Description: file.Description,
+			})
+		}
 		contentType, body, err := CreateMultipartBodyWithJSON(message, message.Files)
 		if err != nil {
 			return nil, err
@@ -174,6 +186,12 @@ func (c *Client) StartThreadWithoutMessage(channelID discord.Snowflake, thread d
 // StartThreadInForumChannel creates a new thread in the given channel ID and returns a channel structure (discord.Channel) with a nested message structure (discord.Message)
 func (c *Client) StartThreadInForumChannel(channelID discord.Snowflake, thread discord.StartThreadInForumChannel) (*discord.Channel, error) {
 	if len(thread.Message.Files) >= 1 {
+		for id, file := range thread.Message.Files {
+			thread.Message.Attachments = append(thread.Message.Attachments, discord.AttachmentSend{
+				ID:          id,
+				Description: file.Description,
+			})
+		}
 		contentType, body, err := CreateMultipartBodyWithJSON(thread, thread.Message.Files)
 		if err != nil {
 			return nil, err

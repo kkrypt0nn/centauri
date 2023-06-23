@@ -382,7 +382,7 @@ type ForumThreadMessage struct {
 	Components      []Component      `json:"components,omitempty"`
 	StickerIDs      ArraySnowflakes  `json:"sticker_ids,omitempty"`
 	Flags           MessageFlags     `json:"flags,omitempty"`
-	Attachments     []Attachment     `json:"attachments,omitempty"`
+	Attachments     []AttachmentSend `json:"attachments,omitempty"`
 
 	Files []File `json:"-"`
 }

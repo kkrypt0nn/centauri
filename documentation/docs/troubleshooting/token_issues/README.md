@@ -3,8 +3,6 @@ title: Token Issues
 description: The library may throw errors when giving a wrong token, on this page you will understand how to fix such issues.
 ---
 
-# Token Issues
-
 ## Discord Tokens 101
 
 In order for your application to work, you will need to use a so-called **token**. Such a token is composed as a mix of letters, numbers and symbols, which is essential for your application. It acts as a key to send REST API request and connect to Discord's Gateway. That way it will be possible for you to control a Discord bot and act based on certain events.
@@ -23,7 +21,7 @@ Here is an example of a (now invalidated) Discord token:
 OTA5Nzc0MTgyMzM5MDA2NzIu.OXIME5.5MbvcVgSQHiuwRGPX0mlECrNO4-Tgd4RFG5DbE
 ```
 
-When using Centauri, if you use an **invalid/wrong token**, you might encounter a `discord.Error` with the message being `401: Unauthorized` error while performing requests.
+When using Centauri, if you use an **invalid/wrong token**, you will encounter a panic that will tell you you have given an improper token.
 
 ## Get a token
 

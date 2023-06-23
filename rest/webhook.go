@@ -60,6 +60,12 @@ func (c *Client) ExecuteWebhook(webhookID discord.Snowflake, webhookToken string
 		queryParams["thread_id"] = threadID.String()
 	}
 	if len(message.Files) >= 1 {
+		for id, file := range message.Files {
+			message.Attachments = append(message.Attachments, discord.AttachmentSend{
+				ID:          id,
+				Description: file.Description,
+			})
+		}
 		contentType, body, err := CreateMultipartBodyWithJSON(message, message.Files)
 		if err != nil {
 			return nil, err
@@ -86,6 +92,12 @@ func (c *Client) EditWebhookMessage(webhookID, messageID discord.Snowflake, webh
 		queryParams["thread_id"] = threadID.String()
 	}
 	if len(message.Files) >= 1 {
+		for id, file := range message.Files {
+			message.Attachments = append(message.Attachments, discord.AttachmentSend{
+				ID:          id,
+				Description: file.Description,
+			})
+		}
 		contentType, body, err := CreateMultipartBodyWithJSON(message, message.Files)
 		if err != nil {
 			return nil, err
