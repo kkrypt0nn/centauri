@@ -127,78 +127,10 @@ func (a *Attachment) CreatedAt() time.Time {
 	return a.ID.CreatedAt()
 }
 
-// Embed represents embedded content in a message (discord.Message)
-// https://discord.com/developers/docs/resources/channel#embed-object-embed-structure
-type Embed struct {
-	Title       string         `json:"title,omitempty"`
-	Type        EmbedType      `json:"type,omitempty"`
-	Description string         `json:"description,omitempty"`
-	URL         string         `json:"url,omitempty"`
-	Timestamp   time.Time      `json:"timestamp,omitempty"`
-	Color       int            `json:"color,omitempty"`
-	Footer      *EmbedFooter   `json:"footer,omitempty"`
-	Image       *EmbedResource `json:"image,omitempty"`
-	Thumbnail   *EmbedResource `json:"thumbnail,omitempty"`
-	Video       *EmbedResource `json:"video,omitempty"`
-	Provider    *EmbedProvider `json:"provider,omitempty"`
-	Author      *EmbedAuthor   `json:"author,omitempty"`
-	Fields      []EmbedField   `json:"fields,omitempty"`
-}
-
-// EmbedType represents the type of embedded content (discord.Embed)
-// https://discord.com/developers/docs/resources/channel#embed-object-embed-types
-type EmbedType string
-
-const (
-	EmbedTypeRich    EmbedType = "rich"
-	EmbedTypeImage   EmbedType = "image"
-	EmbedTypVideo    EmbedType = "video"
-	EmbedTypeGIFV    EmbedType = "gifv"
-	EmbedTypeArticle EmbedType = "article"
-	EmbedTypeLink    EmbedType = "link"
-)
-
-// EmbedFooter represents footer information in embedded content (discord.Embed)
-// https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure
-type EmbedFooter struct {
-	Text         string `json:"text"`
-	IconURL      string `json:"icon_url,omitempty"`
-	ProxyIconURL string `json:"proxy_icon_url,omitempty"`
-}
-
-// EmbedResource represents resource information in embedded content (discord.Embed)
-// https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure
-// https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure
-// https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure
-type EmbedResource struct {
-	Text         string `json:"text"`
-	ProxyIconURL string `json:"proxy_icon_url,omitempty"`
-	Height       int    `json:"height,omitempty"`
-	Width        int    `json:"width,omitempty"`
-}
-
-// EmbedProvider represents the provider information in embedded content (discord.Embed)
-// https://discord.com/developers/docs/resources/channel#embed-object-embed-provider-structure
-type EmbedProvider struct {
-	Name string `json:"name"`
-	URL  string `json:"url,omitempty"`
-}
-
-// EmbedAuthor represents the author information in embedded content (discord.Embed)
-// https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure
-type EmbedAuthor struct {
-	Name         string `json:"name"`
-	URL          string `json:"url,omitempty"`
-	IconURL      string `json:"icon_url,omitempty"`
-	ProxyIconURL string `json:"proxy_icon_url,omitempty"`
-}
-
-// EmbedField represents the field information in embedded content (discord.Embed)
-// https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure
-type EmbedField struct {
-	Name   string `json:"name"`
-	Value  string `json:"value"`
-	Inline bool   `json:"inline,omitempty"`
+// AttachmentSend represents an attachment that is attached to a message to send, these are the only fields necessary when sending an attachment
+type AttachmentSend struct {
+	ID          int    `json:"id"`
+	Description string `json:"description"`
 }
 
 // MessageType represents the type of message (discord.Message)
@@ -346,8 +278,9 @@ func (i *MessageInteraction) CreatedAt() time.Time {
 
 // File represents a file that can be used to send to Discord in a message
 type File struct {
-	Name   string
-	Reader io.Reader
+	Name        string
+	Description string
+	Reader      io.Reader
 }
 
 // CreateMessage represents the payload to send to Discord to post a message (discord.Message) in a channel (discord.Channel)
@@ -362,7 +295,7 @@ type CreateMessage struct {
 	Components       []Component       `json:"components,omitempty"`
 	StickerIDs       ArraySnowflakes   `json:"sticker_ids,omitempty"`
 	Flags            *MessageFlags     `json:"flags,omitempty"`
-	Attachments      []Attachment      `json:"attachments,omitempty"`
+	Attachments      []AttachmentSend  `json:"attachments,omitempty"`
 
 	Files []File `json:"-"`
 }
@@ -374,7 +307,7 @@ type EditMessage struct {
 	Embeds          []Embed          `json:"embeds,omitempty"`
 	Flags           *MessageFlags    `json:"flags,omitempty"`
 	AllowedMentions *AllowedMentions `json:"allowed_mentions,omitempty"`
-	Attachments     []Attachment     `json:"attachments,omitempty"`
+	Attachments     []AttachmentSend `json:"attachments,omitempty"`
 
 	Files []File `json:"-"`
 }

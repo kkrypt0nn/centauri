@@ -197,13 +197,13 @@ type InteractionResponse interface {
 // MessageInteractionResponse represents a response to an interaction (discord.Interaction) with a message
 // https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-messages
 type MessageInteractionResponse struct {
-	TTS             bool            `json:"tts"`
-	Content         *string         `json:"content,omitempty"`
-	Embeds          []Embed         `json:"embeds"`
-	AllowedMentions AllowedMentions `json:"allowed_mentions"`
-	Flags           MessageFlags    `json:"flags"`
-	Components      []Component     `json:"components"`
-	Attachments     []Attachment    `json:"attachments,omitempty"`
+	TTS             bool             `json:"tts"`
+	Content         *string          `json:"content,omitempty"`
+	Embeds          []Embed          `json:"embeds"`
+	AllowedMentions AllowedMentions  `json:"allowed_mentions"`
+	Flags           MessageFlags     `json:"flags"`
+	Components      []Component      `json:"components"`
+	Attachments     []AttachmentSend `json:"attachments,omitempty"`
 
 	Files []File `json:"-"`
 }
@@ -253,7 +253,7 @@ type CreateFollowupMessage struct {
 	Components      []Component      `json:"components,omitempty"`
 	Flags           *MessageFlags    `json:"flags,omitempty"`
 	ThreadName      *string          `json:"thread_name,omitempty"`
-	Attachments     []Attachment     `json:"attachments,omitempty"`
+	Attachments     []AttachmentSend `json:"attachments,omitempty"`
 
 	Files []File `json:"-"`
 }

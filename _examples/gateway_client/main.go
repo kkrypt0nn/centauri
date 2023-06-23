@@ -5,7 +5,6 @@ import (
 	"github.com/kkrypt0nn/centauri"
 	"github.com/kkrypt0nn/centauri/discord"
 	"github.com/kkrypt0nn/centauri/gateway"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -29,7 +28,9 @@ func main() {
 
 	err := botClient.Login()
 	if err != nil {
-		log.Fatal(err)
+		botClient.Logger.Error(err.Error())
+		botClient.Close()
+		return
 	}
 
 	sc := make(chan os.Signal, 1)
