@@ -35,7 +35,7 @@ func (c *Client) DeleteGlobalApplicationCommand(commandID discord.Snowflake) err
 }
 
 // BulkOverwriteGlobalApplicationCommand overwrites all the existing global application commands (discord.ApplicationCommand) and returns a list of application command structures
-func (c *Client) BulkOverwriteGlobalApplicationCommand(applicationCommands []discord.ApplicationCommand) ([]discord.ApplicationCommand, error) {
+func (c *Client) BulkOverwriteGlobalApplicationCommand(applicationCommands []discord.CreateGlobalApplicationCommand) ([]discord.ApplicationCommand, error) {
 	return DoRequestAsList[discord.ApplicationCommand](c, "PUT", endpoints.GlobalApplicationCommands(c.selfUser.ID), applicationCommands, nil, 1)
 }
 
@@ -69,7 +69,7 @@ func (c *Client) DeleteGuildApplicationCommand(guildID, commandID discord.Snowfl
 }
 
 // BulkOverwriteGuildApplicationCommand overwrites all the existing guild application commands (discord.ApplicationCommand) for the given guild ID and returns a list of application command structures
-func (c *Client) BulkOverwriteGuildApplicationCommand(guildID discord.Snowflake, applicationCommands []discord.ApplicationCommand) ([]discord.ApplicationCommand, error) {
+func (c *Client) BulkOverwriteGuildApplicationCommand(guildID discord.Snowflake, applicationCommands []discord.CreateGuildApplicationCommand) ([]discord.ApplicationCommand, error) {
 	return DoRequestAsList[discord.ApplicationCommand](c, "PUT", endpoints.GuildApplicationCommands(c.selfUser.ID, guildID), applicationCommands, nil, 1)
 }
 
